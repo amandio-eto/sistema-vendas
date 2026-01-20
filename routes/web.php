@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+#Ida Nee mak Route husi Controller AuthController
+Route::get('login',[\App\Http\Controllers\AuthController::class,'index'])->name('Auth.index');
+
+
 
 Route::post('client',[\App\Http\Controllers\ClientController::class,'create'])->name('client.create');
 
