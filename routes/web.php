@@ -19,6 +19,12 @@ Route::get('/', function () {
 
 #Ida Nee mak Route husi Controller AuthController
 Route::get('login',[\App\Http\Controllers\AuthController::class,'index'])->name('Auth.index');
+Route::get('users',[\App\Http\Controllers\AuthController::class,'users'])->name('users.list');
+
+#Product Controller
+Route::get('products',[\App\Http\Controllers\ProductController::class,'index'])->name('product.index');
+
+#End Products Controller
 
 
 

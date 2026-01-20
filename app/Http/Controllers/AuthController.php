@@ -12,4 +12,9 @@ class AuthController extends Controller
 
         return view('Auth.login');
     }
+
+    public function users(){
+
+        return view('Auth.user');
+    }
 }
