@@ -17,7 +17,11 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return 'client';
+
+        $clients= DB::table('clients')
+                    ->orderByDesc('id')
+                    ->simplePaginate(3);
+        return view('Clients.index',compact('clients'));
     }
 
     /**
@@ -38,19 +42,13 @@ public function create(Request $request)
 
     try {
         DB::table('clients')->insert($validated);
-
-        return response()->json([
-            'code'      => 200,
-            'status'    => 'OK',
-            'condition' => 'Submitted',
-        ], 200);
+        toastr()->success('Message','Successfully');
+        return back();
 
     } catch (\Exception $e) {
-        return response()->json([
-            'code'    => 500,
-            'status'  => 'Error',
-            'message' => $e->getMessage(),
-        ], 500);
+        toastr()->error('Message',$e->getMessage());
+        return back();
+           
     }
 }
 

@@ -34,7 +34,7 @@
                         </a>
                         <ul class="nxl-submenu">
                             <li class="nxl-item"><a class="nxl-link" href="reports-sales.html">Sales Report</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="reports-leads.html">Customer Report</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('client.index') }}">Customer Report</a></li>
                            
                            
                         </ul>
@@ -57,7 +57,7 @@
                             <span class="nxl-mtext">Customers</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="customers.html">Customers</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('client.index') }}">Customers</a></li>
                         </ul>
                     </li>
                     

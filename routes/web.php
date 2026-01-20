@@ -17,16 +17,21 @@ Route::get('/', function () {
     return view('Dashboard.index');
 });
 
+
 #Ida Nee mak Route husi Controller AuthController
 Route::get('login',[\App\Http\Controllers\AuthController::class,'index'])->name('Auth.index');
 Route::get('users',[\App\Http\Controllers\AuthController::class,'users'])->name('users.list');
-
 #Product Controller
 Route::get('products',[\App\Http\Controllers\ProductController::class,'index'])->name('product.index');
 
 #End Products Controller
 
-
-
+#Client
+Route::get('client',[\App\Http\Controllers\ClientController::class,'index'])->name('client.index');
 Route::post('client',[\App\Http\Controllers\ClientController::class,'create'])->name('client.create');
+
+#End Client
+
+
+
 
