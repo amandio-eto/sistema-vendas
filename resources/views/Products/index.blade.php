@@ -12,12 +12,13 @@
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body">
 
-                <div class="mb-3">
+                <div class="mb-3 text-center">
                     <h5 class="fw-semibold mb-0">Create Product</h5>
                     <small class="text-muted">Add new product information</small>
                 </div>
+                <hr>
 
-                <form action="" method="POST">
+                <form action="{{ route('product.store') }}" method="POST">
                     @csrf
 
                     <div class="row g-4">
@@ -54,11 +55,11 @@
 
                     <!-- Action -->
                     <div class="d-flex justify-content-end mt-4">
-                        <button type="reset" class="btn btn-light me-2">
+                        <button type="reset" class="btn btn-danger me-2">
                             Reset
                         </button>
                         <button type="submit" class="btn btn-success px-4">
-                            ✔ Save Product
+                            ✔ Save
                         </button>
                     </div>
 
@@ -72,9 +73,10 @@
         <div class="card border-0 shadow-sm">
             <div class="card-body">
 
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h6 class="fw-semibold mb-0">Product List</h6>
+                <div class="d-flex justify-content-between align-items-center mb-3 text-center">
+                    <h6 class="fw-semibold mb-0 text-center">{{ Str::upper('Product List') }}</h6>
                 </div>
+                <hr>
 
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -91,31 +93,37 @@
                         <tbody>
 
                             {{-- Example Static Data --}}
+                            @foreach ($products as $key=>$p)
+                                
+                           
                             <tr>
-                                <td>1</td>
-                                <td>PRD-001</td>
-                                <td>Rice Premium</td>
+                                <td>{{ $products->firstItem() + $key }}</td>
+                                <td>{{ $p->code_product }}</td>
+                                <td>{{ $p->product_name }}</td>
                                 <td>
                                     <span class="badge bg-success-subtle text-success">
-                                        High
+                                        {{ '#'.$p->quality }}
                                     </span>
                                 </td>
                                 <td class="text-muted small">
-                                    2026-01-19
+                                    {{ \Carbon\Carbon::parse($p->created_at)->format('d-m-Y') }}
                                 </td>
                                 <td class="text-end">
-                                    <button class="btn btn-sm btn-outline-primary">
+                                    <button class="btn btn-sm btn-warning">
                                         Edit
                                     </button>
-                                    <button class="btn btn-sm btn-outline-danger">
+                                    <button class="btn btn-sm btn-danger">
                                         Delete
                                     </button>
                                 </td>
                             </tr>
+                        @endforeach
 
                         </tbody>
                     </table>
+                  
                 </div>
+                  {{ $products->links() }}
 
             </div>
         </div>

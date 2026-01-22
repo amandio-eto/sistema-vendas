@@ -34,11 +34,25 @@
                         </a>
                         <ul class="nxl-submenu">
                             <li class="nxl-item"><a class="nxl-link" href="reports-sales.html">Sales Report</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('client.index') }}">Customer Report</a></li>
                            
                            
                         </ul>
                     </li>
+
+
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-users"></i></span>
+                            <span class="nxl-mtext">Clients</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('client.index')}}">List Client</a></li>
+                            {{-- <li class="nxl-item"><a class="nxl-link" href="invoice-view.html">Invoice View</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="invoice-create.html">Invoice Create</a></li> --}}
+                        </ul>
+                    </li>
+
+
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-send"></i></span>
@@ -51,7 +65,7 @@
                     </li>
                    
                    
-                    <li class="nxl-item nxl-hasmenu">
+                    {{-- <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-users"></i></span>
                             <span class="nxl-mtext">Customers</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
@@ -59,7 +73,7 @@
                         <ul class="nxl-submenu">
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('client.index') }}">Customers</a></li>
                         </ul>
-                    </li>
+                    </li> --}}
                     
                    
                     

@@ -80,9 +80,15 @@ public function create(Request $request)
      * @param  \App\Models\client  $client
      * @return \Illuminate\Http\Response
      */
-    public function edit(client $client)
+    public function edit($id)
     {
-        //
+        $client = DB::table('clients')->where('id',$id)->first();
+    if (!$client) {
+        toastr()->error('Client not found');
+        return back();
+    }
+
+    return view('Clients.edit', compact('client'));
     }
 
     /**
@@ -92,9 +98,36 @@ public function create(Request $request)
      * @param  \App\Models\client  $client
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateclientRequest $request, client $client)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+        'client_name' => 'required|string|max:255',
+        'email'       => 'required|email|max:255',
+        'phone'       => 'nullable|string|max:20',
+        'address'     => 'nullable|string|max:255',
+    ]);
+
+    try {
+        DB::table('clients')
+            ->where('id', $id)
+            ->update([
+                'client_name' => $request->client_name,
+                'email'       => $request->email,
+                'phone'       => $request->phone,
+                'address'     => $request->address,
+                'updated_at'  => now(),
+            ]);
+
+        toastr()->success('Client updated successfully');
+        return redirect()->route('client.index');
+
+    } catch (\Exception $e) {
+
+        toastr()->error('Failed to update client');
+        return back()->withInput();
+    }
+
+
     }
 
     /**
@@ -103,8 +136,26 @@ public function create(Request $request)
      * @param  \App\Models\client  $client
      * @return \Illuminate\Http\Response
      */
-    public function destroy(client $client)
+    public function destroy($id)
     {
-        //
+
+       try {
+        $deleted = DB::table('clients')
+            ->where('id', $id)
+            ->delete();
+
+        if ($deleted) {
+            toastr()->success('Client deleted successfully');
+        } else {
+            toastr()->warning('Client not found');
+        }
+
+    } catch (\Exception $e) {
+        toastr()->error('Failed to delete client');
     }
+    return back();
+    }
+
+
+
 }

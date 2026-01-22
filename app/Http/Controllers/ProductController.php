@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -13,8 +14,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        
-        return view('Products.index');
+
+        $products = DB::table('products')->orderByDesc('id')
+                                    ->simplePaginate(3);
+        return view('Products.index',compact('products'));
     }
 
     /**
@@ -35,7 +38,32 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       $request->validate([
+        'code_product' => 'required|string|max:255',
+        'product_name' => 'required|string|max:255',
+        'quality'      => 'required|string|max:255',
+    ]);
+
+    try {
+        DB::table('products')->insert([
+            'code_product' => $request->code_product,
+            'product_name' => $request->product_name,
+            'quality'      => $request->quality,
+            'created_at'   => now(),
+            'updated_at'   => now(),
+        ]);
+
+        toastr()->success('Product berhasil disimpan');
+
+        return back();
+
+    } catch (\Exception $e) {
+
+        toastr()->error('Product gagal disimpan');
+
+        return back();
+    }
+
     }
 
     /**
