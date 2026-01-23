@@ -24,25 +24,29 @@ Route::get('/', function () {
 
 Route::get('test',function(){
     $agent = new Agent();
-    $browser = $agent->browser(); 
+    $browser = $agent->browser();    
+    $version = $agent->version($browser); 
+    $os = $agent->platform();        
+    $device = $agent->device();
 
 
-   
     $hostname = gethostname();
     $ip =  request()->getClientIp();
 
     $user = [
         "hostname" => $hostname,
         "ip" => $ip,
-        "browser" => $browser
+        "browser" => $browser,
+        "version" => $version,
+        "os" => $os,
+        "device" => $device,
+        "method" => request()->method()
+    
     ];
 
- 
- 
-   
 
-
-
+  
+  return response()->json($user);
 
 });
 

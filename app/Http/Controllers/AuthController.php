@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Jenssegers\Agent\Agent;
 
 class AuthController extends Controller
 {
@@ -42,6 +43,8 @@ class AuthController extends Controller
         'gender' => 'nullable|in:male,female',
     ]);
 
+
+
     try {
         // Insert ke database
         $indata = DB::table('users')->insert([
@@ -57,6 +60,29 @@ class AuthController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+
+
+        $agent = new Agent();
+        $browser = $agent->browser();    
+        $version = $agent->version($browser); 
+        $os = $agent->platform();        
+        $device = $agent->device();
+        $hostname = gethostname();
+
+        DB::table('user_logs')->insert([
+        "hostname" => $hostname,
+        "ip" => $request->ip(),
+        "browser" => $browser,
+        "version" => $version,
+        "os" => $os,
+        "device" => $device,
+        "method" => request()->method(),
+        "description" => "Register User ..",
+        "user_id" => 16
+        ]);
+
+
 
         // Success toastr
         toastr()->success('User created successfully!', 'Success');
@@ -101,6 +127,27 @@ class AuthController extends Controller
             'updated_at' => now(),
         ]);
 
+
+        $agent = new Agent();
+        $browser = $agent->browser();    
+        $version = $agent->version($browser); 
+        $os = $agent->platform();        
+        $device = $agent->device();
+        $hostname = gethostname();
+
+        DB::table('user_logs')->insert([
+        "hostname" => $hostname,
+        "ip" => $request->ip(),
+        "browser" => $browser,
+        "version" => $version,
+        "os" => $os,
+        "device" => $device,
+        "method" => request()->method(),
+        "description" => " Update Users ..",
+        "user_id" => 16
+        ]);
+
+
         toastr()->success('User Update successfully!', 'Success');
         return redirect()->route('users.list');
 
@@ -122,6 +169,27 @@ class AuthController extends Controller
         $del= DB::table('users')->where('id',$id);
         $del->delete();
         if($del){
+
+
+            $agent = new Agent();
+        $browser = $agent->browser();    
+        $version = $agent->version($browser); 
+        $os = $agent->platform();        
+        $device = $agent->device();
+        $hostname = gethostname();
+
+        DB::table('user_logs')->insert([
+        "hostname" => $hostname,
+        "ip" => request()->ip(),
+        "browser" => $browser,
+        "version" => $version,
+        "os" => $os,
+        "device" => $device,
+        "method" => request()->method(),
+        "description" => "Delete User ..",
+        "user_id" => 16
+        ]);
+
 
               toastr()->success('Message','Successfuly Delete User');
         }else{
