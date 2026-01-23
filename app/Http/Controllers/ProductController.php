@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Jenssegers\Agent\Agent;
 
 class ProductController extends Controller
 {
@@ -51,6 +53,26 @@ class ProductController extends Controller
             'quality'      => $request->quality,
             'created_at'   => now(),
             'updated_at'   => now(),
+        ]);
+
+
+             $agent = new Agent();
+        $browser = $agent->browser();    
+        $version = $agent->version($browser); 
+        $os = $agent->platform();        
+        $device = $agent->device();
+        $hostname = gethostname();
+
+        DB::table('user_logs')->insert([
+        "hostname" => $hostname,
+        "ip" => request()->ip(),
+        "browser" => $browser,
+        "version" => $version,
+        "os" => $os,
+        "device" => $device,
+        "method" => request()->method(),
+        "description" => "User Create Product ..",
+        "user_id" => Auth::user()->id
         ]);
 
         toastr()->success('Product berhasil disimpan');
@@ -110,6 +132,26 @@ public function update(Request $request, $id)
                 'updated_at'   => now(),
             ]);
 
+
+                 $agent = new Agent();
+        $browser = $agent->browser();    
+        $version = $agent->version($browser); 
+        $os = $agent->platform();        
+        $device = $agent->device();
+        $hostname = gethostname();
+
+        DB::table('user_logs')->insert([
+        "hostname" => $hostname,
+        "ip" => request()->ip(),
+        "browser" => $browser,
+        "version" => $version,
+        "os" => $os,
+        "device" => $device,
+        "method" => request()->method(),
+        "description" => "User Update Product ..",
+        "user_id" => Auth::user()->id
+        ]);
+
         toastr()->success('Product updated successfully');
         return redirect()->route('product.index');
 
@@ -134,6 +176,28 @@ public function update(Request $request, $id)
             ->delete();
 
         if ($deleted) {
+
+
+              $agent = new Agent();
+        $browser = $agent->browser();    
+        $version = $agent->version($browser); 
+        $os = $agent->platform();        
+        $device = $agent->device();
+        $hostname = gethostname();
+
+        DB::table('user_logs')->insert([
+        "hostname" => $hostname,
+        "ip" => request()->ip(),
+        "browser" => $browser,
+        "version" => $version,
+        "os" => $os,
+        "device" => $device,
+        "method" => request()->method(),
+        "description" => "User Delete Product ..",
+        "user_id" => Auth::user()->id
+        ]);
+
+
             toastr()->success('Product deleted successfully');
         } else {
             toastr()->warning('Product not found');

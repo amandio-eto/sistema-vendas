@@ -23,7 +23,7 @@
                             <span class="nxl-mtext">Dashboards</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="index.html">Daily</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('dashboard.index') }}">Daily</a></li>
                           
                         </ul>
                     </li>
@@ -33,7 +33,7 @@
                             <span class="nxl-mtext">Delivery Order</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="reports-sales.html">Sales Report</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('transaction.index') }}">Delivery Order</a></li>
                            
                            
                         </ul>
@@ -88,7 +88,7 @@
                                
                                 
                                     <li class="nxl-item"><a class="nxl-link" href="{{ route('users.list') }}">User</a></li>
-                                    <li class="nxl-item"><a class="nxl-link" href="./auth-login-minimal.html">User Logs</a></li>
+                                    <li class="nxl-item"><a class="nxl-link" href="{{ route('logs.index') }}">User Logs</a></li>
                                    
                             
                             </li>
@@ -396,10 +396,13 @@
                                 <span>Account Settings</span>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="./auth-login-minimal.html" class="dropdown-item">
+                            <form action="{{ route('logout') }}" method="post">
+                                @csrf
+                            <button type="submit" class="dropdown-item">
                                 <i class="feather-log-out"></i>
                                 <span>Logout</span>
-                            </a>
+                            </button>
+                            </form>
                         </div>
                     </div>
                 </div>

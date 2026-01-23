@@ -3,11 +3,41 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Jenssegers\Agent\Agent;
 
 class AuthController extends Controller
 {
+
+
+    public function dologin(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            toastr()->success('Successfully','Message');
+            return redirect()->intended('/dashboard');
+        }
+
+
+        toastr()->error('Error','Login Failed');
+        return back();
+    }
+
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        toastr()->success('Sucessfully Logout','Message');
+        return redirect('/login');
+    }
     
 
     public function index(){
@@ -79,7 +109,7 @@ class AuthController extends Controller
         "device" => $device,
         "method" => request()->method(),
         "description" => "Register User ..",
-        "user_id" => 16
+        "user_id" => Auth::user()->id
         ]);
 
 
@@ -144,7 +174,7 @@ class AuthController extends Controller
         "device" => $device,
         "method" => request()->method(),
         "description" => " Update Users ..",
-        "user_id" => 16
+        "user_id" => Auth::user()->id
         ]);
 
 
@@ -187,7 +217,7 @@ class AuthController extends Controller
         "device" => $device,
         "method" => request()->method(),
         "description" => "Delete User ..",
-        "user_id" => 16
+        "user_id" => Auth::user()->id
         ]);
 
 

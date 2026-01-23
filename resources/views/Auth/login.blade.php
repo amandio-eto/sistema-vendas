@@ -48,7 +48,8 @@
                         <p class="text-center">Portal Eletronica Esperaca Group</p>
                        
                      
-                        <form action="index.html" class="w-100 mt-4 pt-2">
+                        <form action="{{ route('dologin') }}" class="w-100 mt-4 pt-2" method="POST">
+                            @csrf
                             <div class="mb-4">
                                 <label for="">Email :</label>
                                 <input type="email" class="form-control" name="email" placeholder="Email or Username"  required>

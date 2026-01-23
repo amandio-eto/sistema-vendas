@@ -6,7 +6,9 @@ use App\Http\Requests\StoreclientRequest;
 use App\Http\Requests\UpdateclientRequest;
 use App\Models\client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Jenssegers\Agent\Agent;
 
 class ClientController extends Controller
 {
@@ -42,7 +44,31 @@ public function create(Request $request)
 
     try {
         DB::table('clients')->insert($validated);
+
+        $agent = new Agent();
+        $browser = $agent->browser();    
+        $version = $agent->version($browser); 
+        $os = $agent->platform();        
+        $device = $agent->device();
+        $hostname = gethostname();
+
+        DB::table('user_logs')->insert([
+        "hostname" => $hostname,
+        "ip" => request()->ip(),
+        "browser" => $browser,
+        "version" => $version,
+        "os" => $os,
+        "device" => $device,
+        "method" => request()->method(),
+        "description" => "User Register Client",
+        "user_id" => Auth::user()->id
+        ]);
         toastr()->success('Message','Successfully');
+
+
+        
+
+
         return back();
 
     } catch (\Exception $e) {
@@ -118,6 +144,31 @@ public function create(Request $request)
                 'updated_at'  => now(),
             ]);
 
+
+               $agent = new Agent();
+        $browser = $agent->browser();    
+        $version = $agent->version($browser); 
+        $os = $agent->platform();        
+        $device = $agent->device();
+        $hostname = gethostname();
+
+        DB::table('user_logs')->insert([
+        "hostname" => $hostname,
+        "ip" => request()->ip(),
+        "browser" => $browser,
+        "version" => $version,
+        "os" => $os,
+        "device" => $device,
+        "method" => request()->method(),
+        "description" => "User Update Client",
+        "user_id" => Auth::user()->id
+        ]);
+
+
+            
+
+
+    
         toastr()->success('Client updated successfully');
         return redirect()->route('client.index');
 
@@ -145,6 +196,29 @@ public function create(Request $request)
             ->delete();
 
         if ($deleted) {
+
+
+            $agent = new Agent();
+        $browser = $agent->browser();    
+        $version = $agent->version($browser); 
+        $os = $agent->platform();        
+        $device = $agent->device();
+        $hostname = gethostname();
+
+        DB::table('user_logs')->insert([
+        "hostname" => $hostname,
+        "ip" => request()->ip(),
+        "browser" => $browser,
+        "version" => $version,
+        "os" => $os,
+        "device" => $device,
+        "method" => request()->method(),
+        "description" => "User Delete Client",
+        "user_id" => Auth::user()->id
+        ]);
+
+
+
             toastr()->success('Client deleted successfully');
         } else {
             toastr()->warning('Client not found');
