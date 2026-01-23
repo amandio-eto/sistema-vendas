@@ -59,7 +59,7 @@
                             Reset
                         </button>
                         <button type="submit" class="btn btn-success px-4">
-                            ✔ Save
+                             Save <i class="bi bi-send"></i>
                         </button>
                     </div>
 
@@ -108,13 +108,18 @@
                                 <td class="text-muted small">
                                     {{ \Carbon\Carbon::parse($p->created_at)->format('d-m-Y') }}
                                 </td>
+                                <form action="{{ route('product.destroy',['id'=>$p->id]) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
                                 <td class="text-end">
-                                    <button class="btn btn-sm btn-warning">
-                                        Edit
+                                   <a href="{{ route('product.edit',['id'=>$p->id]) }}" class="btn btn-sm btn-warning">
+                                       <i class="bi bi-pencil-square"></i>
+                                    </a> |
+                                    
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                       <i class="bi bi-trash"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-danger">
-                                        Delete
-                                    </button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

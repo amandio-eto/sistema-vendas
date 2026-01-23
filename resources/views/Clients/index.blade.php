@@ -58,11 +58,11 @@
                 </div>
 
                 <div class="d-flex justify-content-end mt-4">
-                    <button type="reset" class="btn btn-light btn-sm me-2">
+                    <button type="reset" class="btn btn-danger btn-sm me-2">
                         Reset
                     </button>
                     <button type="submit" class="btn btn-success btn-sm px-4">
-                        Save Client
+                        Save <i class="bi bi-send"></i>
                     </button>
                 </div>
             </form>

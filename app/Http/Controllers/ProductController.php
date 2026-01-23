@@ -83,22 +83,42 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
-    }
+   public function edit($id)
+{
+    $product = DB::table('products')->where('id', $id)->first();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+    if (!$product) {
+        toastr()->error('Product not found');
+        return back();
     }
+    return view('Products.edit', compact('product'));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'product_name' => 'required|string|max:255',
+        'quality'      => 'required|string|max:255',
+    ]);
+
+    try {
+        DB::table('products')
+            ->where('id', $id)
+            ->update([
+                'product_name' => $request->product_name,
+                'quality'      => $request->quality,
+                'updated_at'   => now(),
+            ]);
+
+        toastr()->success('Product updated successfully');
+        return redirect()->route('product.index');
+
+    } catch (\Exception $e) {
+
+        toastr()->error('Failed to update product');
+        return back()->withInput();
+    }
+}
 
     /**
      * Remove the specified resource from storage.
@@ -106,8 +126,23 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+ public function destroy($id)
+{
+    try {
+        $deleted = DB::table('products')
+            ->where('id', $id)
+            ->delete();
+
+        if ($deleted) {
+            toastr()->success('Product deleted successfully');
+        } else {
+            toastr()->warning('Product not found');
+        }
+
+    } catch (\Exception $e) {
+        toastr()->error('Failed to delete product');
     }
+
+    return back();
+}
 }

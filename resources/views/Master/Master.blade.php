@@ -29,8 +29,8 @@
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-cast"></i></span>
-                            <span class="nxl-mtext">Reports</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-micon"><i class="bi bi-fuel-pump-diesel-fill"></i></span>
+                            <span class="nxl-mtext">Delivery Order</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
                             <li class="nxl-item"><a class="nxl-link" href="reports-sales.html">Sales Report</a></li>
@@ -419,11 +419,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Dashboard</h5>
+                       <h5 class="m-b-10">{{ Str::upper(request()->path()) }}</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item">Dashboard</li>
+                       
+                        <li class="breadcrumb-item">{{ \Carbon\Carbon::now()->format('l, F - Y : H:i:s A') }}</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
