@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use Jenssegers\Agent\Agent;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +20,48 @@ Route::get('/', function () {
 });
 
 
+
+
+Route::get('test',function(){
+    $agent = new Agent();
+    $browser = $agent->browser(); 
+
+
+   
+    $hostname = gethostname();
+    $ip =  request()->getClientIp();
+
+    $user = [
+        "hostname" => $hostname,
+        "ip" => $ip,
+        "browser" => $browser
+    ];
+
+ 
+ 
+   
+
+
+
+
+});
+
+
+
+
+#Ida nee AuthController
+Route::get('users',[\App\Http\Controllers\AuthController::class,'users'])->name('users.list');
+Route::post('user',[\App\Http\Controllers\AuthController::class,'store'])->name('user.store');
+Route::delete('user/{id}',[\App\Http\Controllers\AuthController::class,'destroy'])->name('user.destroy');
+Route::get('users/{id}',[\App\Http\Controllers\AuthController::class,'edit'])->name('user.edit');
+Route::put('user/{id}',[\App\Http\Controllers\AuthController::class,'update'])->name('user.update');
+#End AuthController
+
+
+
 #Ida Nee mak Route husi Controller AuthController
 Route::get('login',[\App\Http\Controllers\AuthController::class,'index'])->name('Auth.index');
-Route::get('users',[\App\Http\Controllers\AuthController::class,'users'])->name('users.list');
+
 #Product Controller
 Route::get('products',[\App\Http\Controllers\ProductController::class,'index'])->name('product.index');
 Route::post('products',[\App\Http\Controllers\ProductController::class,'store'])->name('product.store');

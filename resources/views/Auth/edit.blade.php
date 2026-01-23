@@ -13,7 +13,7 @@
             <div class="card-body">
 
                 <div class="mb-4 text-center">
-                    <h5 class="fw-semibold mb-1 text-center">Register User</h5>
+                    <h5 class="fw-semibold mb-1 text-center">Update User {{ $user->name }}</h5>
                     <small class="text-muted fs-12">Fill user information carefully</small>
                 </div>
                 <div class="row">
@@ -30,8 +30,9 @@
                     </div>
                 </div>
 
-                <form action="{{ route('user.store') }}" method="POST">
+                <form action="{{ route('user.update',['id'=>$user->id]) }}" method="POST">
                     @csrf
+                    @method('PUT')
 
                     <div class="row g-3">
 
@@ -42,7 +43,7 @@
                                 <span class="input-group-text bg-white">
                                   <i class="bi bi-person-fill"></i>
                                 </span>
-                                <input type="text" name="name" class="form-control" placeholder="Name" required>
+                                <input type="text" value="{{ $user->name }}" name="name" class="form-control" placeholder="Name" required>
                             </div>
                         </div>
 
@@ -53,7 +54,7 @@
                                 <span class="input-group-text bg-white">
                                     <i class="bi bi-envelope"></i>
                                 </span>
-                                <input type="email" name="email" class="form-control" placeholder="user@email.com" required>
+                                <input value="{{ $user->email }}" type="email" name="email" class="form-control" placeholder="user@email.com" required>
                             </div>
                         </div>
 
@@ -75,7 +76,7 @@
                                 <span class="input-group-text bg-white">
                                     <i class="bi bi-telephone"></i>
                                 </span>
-                                <input type="text" name="phone" class="form-control" placeholder="+670...">
+                                <input value="{{ $user->phone }}" type="text" name="phone" class="form-control" placeholder="+670...">
                             </div>
                         </div>
 
@@ -85,7 +86,7 @@
                                 <span class="input-group-text bg-white">
                                 <i class="bi bi-briefcase"></i>
                                 </span>
-                                <input type="text" name="possition" class="form-control" placeholder="Possition">
+                                <input value="{{ $user->possition }}" type="text" name="possition" class="form-control" placeholder="Possition">
                             </div>
                         </div>
 
@@ -95,8 +96,14 @@
                             <label class="form-label fs-12 text-muted">Gender</label>
                             <select name="gender" class="form-select form-select-sm">
                                 <option selected disabled>Choose</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
+                            
+                             <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>
+                                    Male
+                            </option>
+                            <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>
+                                    Female
+                            </option>
+
                             </select>
                         </div>
 
@@ -104,10 +111,10 @@
                         <div class="col-md-3">
                             <label class="form-label fs-12 text-muted">Roles</label>
                             <select  class="form-select form-select-sm" name="roles">
-                                <option selected disabled>Roles</option>
-                                <option value="administrator">Administrator</option>
-                                <option value="staff">Staff</option>
-                                <option value="manager">Manager</option>
+                                <option selected disabled >Roles</option>
+                                <option value="administrator" {{ ($user->roles== 'administrator') ? 'selected' : '' }} >Administrator</option>
+                                <option value="staff" {{ ($user->roles== 'staff') ? 'selected' : '' }}>Staff</option>
+                                <option value="manager" {{ ($user->roles== 'manager') ? 'selected' : '' }}>Manager</option>
                             </select>
                         </div>
 
@@ -125,77 +132,15 @@
 
                     <!-- Actions -->
                     <div class="d-flex justify-content-end mt-4">
-                        <button type="reset" class="btn btn-danger btn-sm me-2">Reset</button>
-                        <button type="submit" class="btn btn-success btn-sm px-4">Save <i class="bi bi-person-plus"></i></button>
+                        <a href="{{ route('users.list') }}" type="reset" class="btn btn-primary btn-sm me-2">Back</a>
+                        <button type="submit" class="btn btn-warning btn-sm px-4">Update <i class="bi bi-pencil-square"></i></button>
                     </div>
 
                 </form>
             </div>
         </div>
 
-        <!-- ===================== -->
-        <!-- Users Table -->
-        <!-- ===================== -->
-        <div class="card border-0 shadow-sm">
-            <div class="card-body">
-
-                <h6 class="fw-semibold mb-3">User List</h6>
-
-                <div class="table-responsive">
-                    <table class="table table-hover table-sm align-middle">
-                        <thead class="bg-light text-uppercase small text-muted">
-                            <tr>
-                                <th>N <sup><u>0</u></sup></th>
-                                  <th>Photo</th>
-                                <th>Email</th>
-                                <th>Gender</th>
-                                <th>Position</th>
-                                <th>Status</th>
-                                <th>Phone</th>
-                              
-                                <th class="text-end">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($users as $key => $user)
-                            <tr style="font-size:12px;" style="text-transform: capitalize;">
-                                <td>{{ $users->firstItem() + $key }}</td>
-                                <td>
-                                    @if($user->photo)
-                                        <img src="{{ asset('storage/' . $user->photo) }}" class="rounded-circle" width="36" height="36">
-                                    @else
-                                        <img src="{{ asset('users.png') }}" class="rounded-circle" width="40" height="40">
-                                    @endif
-                                </td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ ucfirst($user->gender ?? '-') }}</td>
-                                <td>{{ $user->possition }}</td>
-                                  <td></td>
-                                <td>{{ $user->phone ?? '-' }}</td>
-                              
-                                
-                                <td class="text-end">
-                                    <a href="{{ route('user.edit',['id'=>$user->id]) }}" class="btn btn-warning btn-sm px-2 me-1"><i class=" text-white bi bi-pencil-square"></i></a>
-                                    <form action="{{route('user.destroy',['id'=>$user->id])}}" method="POST" class="d-inline" >
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger btn-sm px-2"><i class="text-white bi bi-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-
-                    <!-- Pagination -->
-                    <div class="mt-3">
-                        {{ $users->links() }}
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
+      
 
     </div>
 </div>
