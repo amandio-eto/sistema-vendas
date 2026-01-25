@@ -3,14 +3,24 @@
     <!--! ================================================================ !-->
     <!--! [Start] Navigation Manu !-->
     <!--! ================================================================ !-->
+
+    @php
+
+    $tx = DB::table('transaction')
+        ->where('status', false)
+        ->orWhere('statusedit', true)
+                                                  
+    @endphp
+                 
     <nav class="nxl-navigation">
         <div class="navbar-wrapper">
             <div class="m-header">
-                <a href="index.html" class="b-brand">
+               
                     <!-- ========   change your logo hear   ============ -->
-                   <h2>e-ETO TL</h2>
-                    
-                </a>
+                   <img src="{{ asset('tank.jpg') }}" class="text-center" alt="" height="60" width="60">
+                   <p. class="pt-2">Oil Management</p.>
+        
+              
             </div>
             <div class="navbar-content">
                 <ul class="nxl-navbar">
@@ -23,19 +33,59 @@
                             <span class="nxl-mtext">Dashboards</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('dashboard.index') }}">Daily</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('dashboard.index') }}"><i class="bi bi-speedometer"></i> Daily</a></li>
                           
                         </ul>
                     </li>
+                   
+
+
+                            <li class="nxl-item nxl-hasmenu">
+                            <a href="javascript:void(0);" class="nxl-link">
+                                <span class="nxl-micon"><i class="bi bi-fuel-pump-diesel-fill"></i></span>
+                                <span class="nxl-mtext">Delivery Order</span>
+                                <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            </a>
+
+                            <ul class="nxl-submenu">
+                                <li class="nxl-item">
+                                    <a class="nxl-link" href="{{ route('transaction.index') }}">
+                                        <i class="bi bi-truck-flatbed"></i> Delivery Order
+                                    </a>
+                                </li>
+
+                                @if(Auth::user()->roles==='staff')
+
+                                @else
+                                   <li class="nxl-item">
+                                    <a class="nxl-link position-relative" href="{{ route('transaction.approve') }}">
+                                        <i class="bi bi-bell"></i> Approve DO
+                                        @if($tx->count() > 0)
+                                            <sup class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm">
+                                                {{ $tx->count() }}
+                                            </sup>
+                                        @endif
+                                    </a>
+                                </li>
+
+                             
+                             
+                                 @endif
+
+                                  <li class="nxl-item"><a class="nxl-link" href="{{ route('transactions.report') }}">
+                                      <i class="bi bi-journal"></i> Report</a></li>
+                            </ul>
+                        </li>
+
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="bi bi-fuel-pump-diesel-fill"></i></span>
-                            <span class="nxl-mtext">Delivery Order</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-micon"><i class="bi bi-truck"></i></span>
+                            <span class="nxl-mtext">Drivers</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('transaction.index') }}">Delivery Order</a></li>
-                           
-                           
+                        <ul class="nxl-submenu" style="display: none;">
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('drivers.index') }}">
+                                <i class="bi bi-person-badge"></i> List Driver</a></li>
+                            
                         </ul>
                     </li>
 
@@ -46,38 +96,35 @@
                             <span class="nxl-mtext">Clients</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('client.index')}}">List Client</a></li>
-                            {{-- <li class="nxl-item"><a class="nxl-link" href="invoice-view.html">Invoice View</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="invoice-create.html">Invoice Create</a></li> --}}
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('client.index')}}"><i class="bi bi-file-earmark-person-fill"></i> List Client</a></li>
+                          
                         </ul>
                     </li>
 
 
-                    <li class="nxl-item nxl-hasmenu">
+                    @auth
+                        @if(Auth::user()->roles === 'staff')
+                          
+
+                    @else
+                  
+                        
+                       
+                          <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-send"></i></span>
                             <span class="nxl-mtext">Products</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('product.index') }}">My Products</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('product.index') }}"> <i class="bi bi-fuel-pump-fill text-success"></i> My Products</a></li>
                            
                         </ul>
                     </li>
-                   
-                   
-                    {{-- <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-users"></i></span>
-                            <span class="nxl-mtext">Customers</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                        </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('client.index') }}">Customers</a></li>
-                        </ul>
-                    </li> --}}
                     
                    
-                    
                    
+                 
+                    
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-power"></i></span>
@@ -87,8 +134,8 @@
                             <li class="nxl-item nxl-hasmenu">
                                
                                 
-                                    <li class="nxl-item"><a class="nxl-link" href="{{ route('users.list') }}">User</a></li>
-                                    <li class="nxl-item"><a class="nxl-link" href="{{ route('logs.index') }}">User Logs</a></li>
+                                    <li class="nxl-item"><a class="nxl-link" href="{{ route('users.list') }}"><i class="bi bi-person-fill-lock"></i> User</a></li>
+                                    <li class="nxl-item"><a class="nxl-link" href="{{ route('logs.index') }}"><i class="bi bi-funnel-fill"></i> User Logs</a></li>
                                    
                             
                             </li>
@@ -99,6 +146,11 @@
                           
                         </ul>
                     </li>
+                     @endif
+                    @endauth
+                                    
+
+                   
                     
                 </ul>
                 
@@ -177,35 +229,22 @@
                             <i class="feather-sun"></i>
                         </a>
                     </div>
-                    <div class="dropdown nxl-h-item">
-                        <a href="javascript:void(0);" class="nxl-head-link me-0" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
-                            <i class="feather-clock"></i>
-                            <span class="badge bg-success nxl-h-badge">2</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-timesheets-menu">
-                            <div class="d-flex justify-content-between align-items-center timesheets-head">
-                                <h6 class="fw-bold text-dark mb-0">Timesheets</h6>
-                                <a href="javascript:void(0);" class="fs-11 text-success text-end ms-auto" data-bs-toggle="tooltip" title="Upcomming Timers">
-                                    <i class="feather-clock"></i>
-                                    <span>3 Upcomming</span>
-                                </a>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center flex-column timesheets-body">
-                                <i class="feather-clock fs-1 mb-4"></i>
-                                <p class="text-muted">No started timers found yes!</p>
-                                <a href="javascript:void(0);" class="btn btn-sm btn-primary">Started Timer</a>
-                            </div>
-                            <div class="text-center timesheets-footer">
-                                <a href="javascript:void(0);" class="fs-13 fw-semibold text-dark">Alls Timesheets</a>
-                            </div>
-                        </div>
-                    </div>
+
+                    @if(Auth::user()->roles==='administrator')
                     <div class="dropdown nxl-h-item">
                         <a class="nxl-head-link me-3" data-bs-toggle="dropdown" href="#" role="button" data-bs-auto-close="outside">
                             <i class="feather-bell"></i>
-                            <span class="badge bg-danger nxl-h-badge">3</span>
+
+                            @if($tx->count() > 0)
+                              <span class="badge bg-danger nxl-h-badge">{{  $tx->count() }}</span>
+
+                            @else
+
+                            @endif
+                          
                         </a>
-                        <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu">
+                  
+                       <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu">
                             <div class="d-flex justify-content-between align-items-center notifications-head">
                                 <h6 class="fw-bold text-dark mb-0">Notifications</h6>
                                 <a href="javascript:void(0);" class="fs-11 text-success text-end ms-auto" data-bs-toggle="tooltip" title="Make as Read">
@@ -213,12 +252,31 @@
                                     <span>Make as Read</span>
                                 </a>
                             </div>
+
+                        @php
+                        $notifications = DB::table('transaction')
+                        ->where('status', false)
+                        ->orderBy('created_at', 'desc')
+                        ->limit(3)
+                        ->get();
+                        @endphp
+                         @foreach ($notifications as $n)
                             <div class="notifications-item">
-                                <img src="assets/images/avatar/2.png" alt="" class="rounded me-3 border" />
+                               
+                                    
+                            
+                               
                                 <div class="notifications-desc">
-                                    <a href="javascript:void(0);" class="font-body text-truncate-2-line"> <span class="fw-semibold text-dark">Malanie Hanvey</span> We should talk about that at lunch!</a>
+                                    <a href="{{ route('transaction.approve') }}" class="font-body text-truncate-2-line"> {{ "Do :".$n->do_number }}<span class="fw-semibold text-dark"></span> {{ 
+
+                                    "Product: ".$n->product_type. "Company Name :".$n->client_name
+                                        
+                                        
+                                        }}</a>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <div class="notifications-date text-muted border-bottom border-bottom-dashed">2 minutes ago</div>
+                                        <div class="notifications-date text-muted border-bottom border-bottom-dashed">
+                                            {{ \Carbon\Carbon::parse($n->created_at)->diffForHumans() }}
+                                        </div>
                                         <div class="d-flex align-items-center float-end gap-2">
                                             <a href="javascript:void(0);" class="d-block wd-8 ht-8 rounded-circle bg-gray-300" data-bs-toggle="tooltip" title="Make as Read"></a>
                                             <a href="javascript:void(0);" class="text-danger" data-bs-toggle="tooltip" title="Remove">
@@ -227,174 +285,63 @@
                                         </div>
                                     </div>
                                 </div>
+                              
                             </div>
-                            <div class="notifications-item">
-                                <img src="assets/images/avatar/3.png" alt="" class="rounded me-3 border" />
-                                <div class="notifications-desc">
-                                    <a href="javascript:void(0);" class="font-body text-truncate-2-line"> <span class="fw-semibold text-dark">Valentine Maton</span> You can download the latest invoices now.</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="notifications-date text-muted border-bottom border-bottom-dashed">36 minutes ago</div>
-                                        <div class="d-flex align-items-center float-end gap-2">
-                                            <a href="javascript:void(0);" class="d-block wd-8 ht-8 rounded-circle bg-gray-300" data-bs-toggle="tooltip" title="Make as Read"></a>
-                                            <a href="javascript:void(0);" class="text-danger" data-bs-toggle="tooltip" title="Remove">
-                                                <i class="feather-x fs-12"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="notifications-item">
-                                <img src="assets/images/avatar/4.png" alt="" class="rounded me-3 border" />
-                                <div class="notifications-desc">
-                                    <a href="javascript:void(0);" class="font-body text-truncate-2-line"> <span class="fw-semibold text-dark">Archie Cantones</span> Don't forget to pickup Jeremy after school!</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="notifications-date text-muted border-bottom border-bottom-dashed">53 minutes ago</div>
-                                        <div class="d-flex align-items-center float-end gap-2">
-                                            <a href="javascript:void(0);" class="d-block wd-8 ht-8 rounded-circle bg-gray-300" data-bs-toggle="tooltip" title="Make as Read"></a>
-                                            <a href="javascript:void(0);" class="text-danger" data-bs-toggle="tooltip" title="Remove">
-                                                <i class="feather-x fs-12"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                              @endforeach
+                            
+                           
                             <div class="text-center notifications-footer">
-                                <a href="javascript:void(0);" class="fs-13 fw-semibold text-dark">Alls Notifications</a>
+                                <a href="{{ route('transaction.approve') }}" class="fs-13 fw-semibold text-dark">Alls Notifications</a>
                             </div>
                         </div>
                     </div>
+
+                    @endif
+                 
                     <div class="dropdown nxl-h-item">
                         <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
-                            <img src="assets/images/avatar/1.png" alt="user-image" class="img-fluid user-avtar me-0" />
+                          <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('users.png') }}" 
+                         alt="Profile Photo" 
+                         id="preview" 
+                         class="rounded-circle shadow-sm" 
+                         style="width:50px; height:50px; object-fit:cover; border:2px solid #ddd;">
                         </a>
                         <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-user-dropdown">
                             <div class="dropdown-header">
                                 <div class="d-flex align-items-center">
-                                    <img src="assets/images/avatar/1.png" alt="user-image" class="img-fluid user-avtar" />
+                                   <img class="mr-2" src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : asset('users.png') }}" 
+                         alt="Profile Photo" 
+                         id="preview" 
+                         class="rounded-circle shadow-sm" 
+                         style="width:55px; height:55px; object-fit:cover; border:2px solid #ddd;">
+                        </a>
                                     <div>
-                                        <h6 class="text-dark mb-0">Alexandra Della <span class="badge bg-soft-success text-success ms-1">PRO</span></h6>
-                                        <span class="fs-12 fw-medium text-muted">alex@example.com</span>
+                                        <h6 class="text-dark mb-0">{{ Auth::user()->name }}</h6>
+                                        <span class="fs-12 fw-medium text-muted">{{  maskEmail(Auth::user()->email)  }}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="dropdown">
-                                    <span class="hstack">
-                                        <i class="wd-10 ht-10 border border-2 border-gray-1 bg-success rounded-circle me-2"></i>
-                                        <span>Active</span>
-                                    </span>
-                                    <i class="feather-chevron-right ms-auto me-0"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-warning rounded-circle me-2"></i>
-                                            <span>Always</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-success rounded-circle me-2"></i>
-                                            <span>Active</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-danger rounded-circle me-2"></i>
-                                            <span>Bussy</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-info rounded-circle me-2"></i>
-                                            <span>Inactive</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-dark rounded-circle me-2"></i>
-                                            <span>Disabled</span>
-                                        </span>
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-primary rounded-circle me-2"></i>
-                                            <span>Cutomization</span>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="dropdown">
-                                    <span class="hstack">
-                                        <i class="feather-dollar-sign me-2"></i>
-                                        <span>Subscriptions</span>
-                                    </span>
-                                    <i class="feather-chevron-right ms-auto me-0"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
-                                            <span>Plan</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
-                                            <span>Billings</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
-                                            <span>Referrals</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
-                                            <span>Payments</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
-                                            <span>Statements</span>
-                                        </span>
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
-                                            <span>Subscriptions</span>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <a href="javascript:void(0);" class="dropdown-item">
+                           
+                           
+                           
+                          
+                            <a href="{{ route('profile.image') }}" class="dropdown-item">
                                 <i class="feather-user"></i>
-                                <span>Profile Details</span>
+                                <span>Change Profile</span>
                             </a>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                                <i class="feather-activity"></i>
-                                <span>Activity Feed</span>
+                            <a href="{{ route('password.edit') }}" class="dropdown-item">
+                                <i class="bi bi-key"></i>
+                                <span>Change Password</span>
                             </a>
-                            <a href="javascript:void(0);" class="dropdown-item">
-                                <i class="feather-dollar-sign"></i>
-                                <span>Billing Details</span>
-                            </a>
-                            <a href="javascript:void(0);" class="dropdown-item">
+                           
+                            {{-- <a href="javascript:void(0);" class="dropdown-item">
                                 <i class="feather-bell"></i>
                                 <span>Notifications</span>
                             </a>
                             <a href="javascript:void(0);" class="dropdown-item">
                                 <i class="feather-settings"></i>
                                 <span>Account Settings</span>
-                            </a>
+                            </a> --}}
                             <div class="dropdown-divider"></div>
                             <form action="{{ route('logout') }}" method="post">
                                 @csrf

@@ -132,7 +132,7 @@
 
                     <!-- Actions -->
                     <div class="d-flex justify-content-end mt-4">
-                        <a href="{{ route('users.list') }}" type="reset" class="btn btn-primary btn-sm me-2">Back</a>
+                        <a href="{{ route('users.list') }}" type="reset" class="btn btn-primary btn-sm me-2"> <i class="bi bi-arrow-left-circle"></i> Back</a>
                         <button type="submit" class="btn btn-warning btn-sm px-4">Update <i class="bi bi-pencil-square"></i></button>
                     </div>
 

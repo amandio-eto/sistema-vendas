@@ -56,7 +56,7 @@ class ProductController extends Controller
         ]);
 
 
-             $agent = new Agent();
+        $agent = new Agent();
         $browser = $agent->browser();    
         $version = $agent->version($browser); 
         $os = $agent->platform();        

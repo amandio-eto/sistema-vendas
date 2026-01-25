@@ -26,7 +26,7 @@ public function index(Request $request)
                   ->orWhere('ul.browser', 'like', "%$search%");
         })
         ->orderByDesc('ul.created_at')
-        ->paginate(10);
+        ->simplePaginate(10);
 
     return view('User_Logs.index', compact('logs', 'search'));
 }

@@ -35,7 +35,24 @@
     <!--[if lt IE 9]>
 			<script src="https:oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 			<script src="https:oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        
 		<![endif]-->
+           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <style>
+    .table-hover tbody tr:hover {
+        background-color: #f1f9ff !important;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f9fbfd;
+    }
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+    .badge {
+        font-size: 0.8rem;
+    }
+</style>
 </head>
 
 <body>

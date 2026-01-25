@@ -2,14 +2,11 @@
 @section('title', 'Edit Product')
 
 @section('content')
-<div class="container-fluid px-4">
+<div class="container-fluid px-4 mt-3">
 
     <div class="row justify-content-center">
         <div class="col-lg-10 col-xl-9">
 
-            <!-- ===================== -->
-            <!-- Edit Product Card -->
-            <!-- ===================== -->
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
 
@@ -50,10 +47,15 @@
                                 </label>
                                 <input type="text"
                                        name="product_name"
-                                       class="form-control form-control-sm"
+                                       class="form-control form-control-sm @error('product_name') is-invalid @enderror"
                                        value="{{ old('product_name', $product->product_name) }}"
-                                       placeholder="Product name"
-                                       required>
+                                       placeholder="Product name">
+
+                                @error('product_name')
+                                    <small class="text-danger">
+                                        {{ $message }}
+                                    </small>
+                                @enderror
                             </div>
 
                             <!-- Quality -->
@@ -63,9 +65,15 @@
                                 </label>
                                 <input type="text"
                                        name="quality"
-                                       class="form-control form-control-sm"
+                                       class="form-control form-control-sm @error('quality') is-invalid @enderror"
                                        value="{{ old('quality', $product->quality) }}"
                                        placeholder="High / Medium / Low">
+
+                                @error('quality')
+                                    <small class="text-danger">
+                                        {{ $message }}
+                                    </small>
+                                @enderror
                             </div>
 
                         </div>
@@ -73,12 +81,12 @@
                         <!-- Actions -->
                         <div class="d-flex justify-content-end align-items-center mt-5">
                             <a href="{{ route('product.index') }}"
-                               class="btn btn-outline-secondary btn-sm me-2">
-                                Cancel
+                               class="btn btn-primary btn-sm me-2">
+                                Back
                             </a>
                             <button type="submit"
                                     class="btn btn-warning btn-sm px-4">
-                                Update Product
+                                Update <i class="bi bi-pencil-square"></i>
                             </button>
                         </div>
 
@@ -86,7 +94,6 @@
 
                 </div>
             </div>
-            <!-- End Card -->
 
         </div>
     </div>

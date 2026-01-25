@@ -5,10 +5,67 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Jenssegers\Agent\Agent;
 
 class AuthController extends Controller
 {
+
+    #Ida nee mak Photo
+    public function image(){
+        return view('Auth.photo');
+    }
+    public function updatePhoto(Request $request)
+{
+    $request->validate([
+        'photo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+    ]);
+
+    $user = Auth::user();
+
+    if($request->hasFile('photo')) {
+    $path = $request->file('photo')->store('profile_photos', 'public');
+
+    $user = Auth::user();
+    $user->photo = $path;
+    $user->save();
+}
+    toastr()->success('success', 'Profile photo updated successfully!');
+    return back();
+}
+    #Ida nee mak Rohan Husi Photo
+
+    #Ida nee ProfileController
+     public function profileedit()
+    {
+        return view('Auth.auth'); // pastikan nama file blade sama
+    }
+
+
+      public function profileupdate(Request $request)
+    {
+        $request->validate([
+        'current_password' => 'required',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+
+    $user = Auth::user();
+
+    if (!Hash::check($request->current_password, $user->password)) {
+        toastr()->error('error', 'Current password is incorrect.');
+        return back();
+    }
+
+    // Update password via model
+    $user->password = Hash::make($request->password);
+    $user->save();
+
+    toastr()->success('Password updated successfully!');
+    return back();
+    }
+
+    #End ProfileController
 
 
     public function dologin(Request $request)
