@@ -54,23 +54,23 @@
                                     </a>
                                 </li>
 
-                                @if(Auth::user()->roles==='staff')
+                               @auth
+                                    @if(!in_array(Auth::user()->roles, ['manager', 'administrator']))
+                                    @else
+                                     <li class="nxl-item">
+                                            <a class="nxl-link position-relative" href="{{ route('transaction.approve') }}">
+                                                <i class="bi bi-bell"></i> Approve DO
 
-                                @else
-                                   <li class="nxl-item">
-                                    <a class="nxl-link position-relative" href="{{ route('transaction.approve') }}">
-                                        <i class="bi bi-bell"></i> Approve DO
-                                        @if($tx->count() > 0)
-                                            <sup class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm">
-                                                {{ $tx->count() }}
-                                            </sup>
-                                        @endif
-                                    </a>
-                                </li>
+                                                @if($tx->count() > 0)
+                                                    <sup class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm">
+                                                        {{ $tx->count() }}
+                                                    </sup>
+                                                @endif
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endauth
 
-                             
-                             
-                                 @endif
 
                                   <li class="nxl-item"><a class="nxl-link" href="{{ route('transactions.report') }}">
                                       <i class="bi bi-journal"></i> Report</a></li>
@@ -102,15 +102,8 @@
                     </li>
 
 
-                    @auth
-                        @if(Auth::user()->roles === 'staff')
-                          
-
-                    @else
-                  
-                        
-                       
-                          <li class="nxl-item nxl-hasmenu">
+                   @if(Auth::user()->roles=='administrator')
+                    <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-send"></i></span>
                             <span class="nxl-mtext">Products</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
@@ -120,11 +113,7 @@
                            
                         </ul>
                     </li>
-                    
-                   
-                   
-                 
-                    
+
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-power"></i></span>
@@ -136,9 +125,7 @@
                                 
                                     <li class="nxl-item"><a class="nxl-link" href="{{ route('users.list') }}"><i class="bi bi-person-fill-lock"></i> User</a></li>
                                     <li class="nxl-item"><a class="nxl-link" href="{{ route('logs.index') }}"><i class="bi bi-funnel-fill"></i> User Logs</a></li>
-                                   
-                            
-                            </li>
+                    </li>
                           
                           
                          
@@ -146,8 +133,19 @@
                           
                         </ul>
                     </li>
-                     @endif
-                    @endauth
+
+                   @else
+
+                  
+                        
+                       
+                   
+            
+                   
+                   
+                 
+                    
+                 @endif
                                     
 
                    

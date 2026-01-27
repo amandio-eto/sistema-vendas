@@ -7,18 +7,13 @@
     <!-- ===================== -->
     <!-- Breadcrumb -->
     <!-- ===================== -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-3 bg-light p-2 rounded">
-            <li class="breadcrumb-item">
-                <a href="{{ url('/') }}">Home</a>
-            </li>
-            <li class="breadcrumb-item active">Transactions</li>
-        </ol>
-    </nav>
+   
 
     <!-- ===================== -->
     <!-- CREATE TRANSACTION FORM -->
     <!-- ===================== -->
+    @if(Auth::user()->roles==='manager')
+    @else
     <div class="card border-0 shadow-sm rounded-4 mb-4">
         <div class="card-body p-4">
 
@@ -150,11 +145,13 @@
             </form>
         </div>
     </div>
+    
+    @endif
 
     <!-- ===================== -->
     <!-- TRANSACTION TABLE -->
     <!-- ===================== -->
-    <div class="card border-0 shadow-sm rounded">
+    <div class="card border-0 shadow-sm rounded mt-2">
         <div class="card-body">
 
             <!-- Table Header -->
@@ -232,6 +229,9 @@
 
                             <!-- ACTION -->
                             <td class="text-end">
+                                @if(Auth::user()->roles==='staff' || Auth::user()->roles==='manager' )
+                                
+                                @else
                                 <a href="{{ route('transaction.edit',$tx->id) }}"
                                    class="btn btn-sm btn-warning me-1">
                                     <i class="bi bi-pencil-square"></i>
@@ -247,6 +247,8 @@
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
+                                
+                                @endif
 
                                 @if($tx->status)
                                     <a href="{{ route('transaction.print',$tx->id) }}"
@@ -254,6 +256,7 @@
                                         <i class="bi bi-printer"></i>
                                     </a>
                                 @endif
+                            
                             </td>
                         </tr>
                         @empty

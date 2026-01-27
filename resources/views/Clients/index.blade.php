@@ -140,10 +140,8 @@
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
 
-                                @if(Auth::user()->roles==='staff')
-
-                                @else
-                                <form action="{{ route('client.destroy', $cl->id) }}"
+                                @if(Auth::user()->roles==='administrator')
+                                 <form action="{{ route('client.destroy', $cl->id) }}"
                                       method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
@@ -153,6 +151,9 @@
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
+
+                                @else
+                               
                                 
                                 @endif
 

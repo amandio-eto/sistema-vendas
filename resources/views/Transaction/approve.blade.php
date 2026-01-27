@@ -90,7 +90,7 @@
                                 </td>
                                 <td class="text-muted">{{ \Carbon\Carbon::parse($tx->created_at)->translatedFormat('d M Y H:i') }}</td>
                                 <td class="text-end">
-                                   @if(Auth::user()->roles==='staff' || Auth::user()->roles==='manager')
+                                   @if(Auth::user()->roles==='administrator')
                                    @else
                                      <a href="{{ route('transaction.edit', $tx->id) }}" class="btn btn-sm btn-warning me-1 shadow-sm" title="Edit Transaction">
                                         <i class="bi bi-pencil-square"></i>
