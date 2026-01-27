@@ -65,17 +65,33 @@ $transactions = DB::table('transaction as t')
 
 #Ida mak Filter Perproduct 
 $filterDate = $request->date ?? Carbon::today()->toDateString(); // default hari ini
-$prod = DB::table('transaction as t')
-    ->join('products as p', 'p.id', '=', 't.id_product')
+$prod = DB::table('products as p')
+    ->leftJoin('transaction as t', function ($join) use ($filterDate) {
+        $join->on('p.id', '=', 't.id_product')
+             ->whereDate('t.created_at', $filterDate);
+    })
     ->select(
-        'p.product_name','p.quality',
-        DB::raw('SUM(t.quantity) as total_quantity')
+        'p.id',
+        'p.product_name',
+        'p.quality',
+        DB::raw('COALESCE(SUM(t.quantity), 0) as total_quantity')
     )
-    ->whereDate('t.created_at', $filterDate) // filter berdasarkan tanggal
-    ->groupBy('p.id', 'p.product_name')
+    ->groupBy(
+        'p.id',
+        'p.product_name',
+        'p.quality'
+    )
     ->orderByDesc('total_quantity')
     ->get();
       #Ba iha Dashboard
-    return view('Dashboard.index',compact('prod','allMonths','transactions','year','clientsMonths'));
+
+      
+    // Cek User Agent untuk device
+   $userAgent = request()->header('User-Agent');
+    $isMobile = preg_match('/Mobile|Android|iPhone|iPad|Tablet/i', $userAgent);
+
+    // Default height chart (desktop only)
+    $defaultHeight = $isMobile ? null : 600;
+    return view('Dashboard.index',compact('prod','allMonths','transactions','year','clientsMonths','defaultHeight', 'isMobile'));
     }
 }

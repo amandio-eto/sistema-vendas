@@ -52,6 +52,19 @@
     .badge {
         font-size: 0.8rem;
     }
+
+    #piechart {
+    width: 100%;
+    height: 600px; /* default desktop */
+    max-width: 100%;
+}
+
+/* Mobile / tablet */
+@media (max-width: 767.98px) {
+    #piechart {
+        height: 300px; /* height lebih kecil di mobile */
+    }
+}
 </style>
 </head>
 

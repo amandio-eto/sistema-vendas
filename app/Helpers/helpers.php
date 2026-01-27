@@ -20,3 +20,9 @@ function format_liter($liter, $decimals = 2)
         $ton = $kg / 1000; // 1000 kg = 1 ton
         return number_format($ton, $decimals, ',', '.') . ' Ton';
     }
+
+      function kl($kg, $decimals = 2)
+    {
+        $ton = $kg / 1000; // 1000 kg = 1 ton
+        return number_format($ton, $decimals, ',', '.') . ' kL';
+    }

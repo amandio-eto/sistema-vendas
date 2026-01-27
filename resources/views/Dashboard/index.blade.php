@@ -2,36 +2,74 @@
 @section('title','Dashboard')
 @section('content')
 
-<div class="main-content">
-                <div class="row">
+
+
                     <!-- [Invoices Awaiting Payment] start -->
-                    <div class="row">
-                        @foreach($prod as $p)
-                       
-                        <div class="col">
-                            <div class="card stretch stretch-full">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-start justify-content-between mb-4">
-                                        <div class="d-flex gap-4 align-items-center">
-                                            <div class="avatar-text avatar-lg bg-gray-200">
-                                               <img src="{{ asset('tank.jpg') }}" alt="" height="60" width="60">
-                                            </div>
-                                            <div>
-                                                <div class="fs-4 fw-bold text-dark"><span class="counter">{{ format_ton($p->total_quantity) }}</span></div>
-                                                <h3 class="fs-13 fw-semibold text-truncate-1-line">
-                                                {{ $p->product_name . '/' . $p->quality }}
-                                            </h3>
-                                            </div>
-                                        </div>
-                                        <a href="javascript:void(0);" class="">
-                                            <i class="feather-more-vertical"></i>
-                                        </a>
-                                    </div>
-                                    
-                                </div>
-                            </div>
+               
+                     
+<div class="row g-3 m-3">
+
+@forelse($prod as $p)
+
+    @php
+        // Mapping warna berdasarkan quality
+        $colors = [
+            'RON92'   => '#2787F5',
+            'RON98'   => '#CA02F2',
+            '10PPM'   => '#F5B727',
+            'JET-A1'  => '#02F226',
+        ];
+
+        // Ambil warna, default abu-abu kalau tidak ada
+        $color = $colors[strtoupper(trim($p->quality))] ?? '#6c757d';
+    @endphp
+
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+        <div class="card border-0 shadow-sm h-100 hover-shadow">
+            <div class="card-body d-flex align-items-center justify-content-between p-3">
+
+                <!-- ICON TANK -->
+                <div class="d-flex align-items-center gap-2">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                         style="width:40px; height:40px; background-color: {{ $color }};">
+                        <i class="bi bi-fuel-pump-fill text-white fs-18"></i>
+                    </div>
+
+                    <div class="lh-1 ms-2">
+                        <div class="fw-semibold text-dark fs-15 text-truncate" title="{{ $p->product_name }}">
+                            {{ $p->product_name }}
                         </div>
-                     @endforeach
+                        <small class="text-muted fs-12">{{ $p->quality }}</small>
+                    </div>
+                </div>
+
+                <!-- TOTAL QUANTITY -->
+                <div class="text-end">
+                    <div class="fw-bold text-primary fs-16">
+                        {{ kl($p->total_quantity) }}
+                    </div>
+                    <small class="text-muted fs-11">Total</small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+@empty
+    <div class="col-12">
+        <div class="alert alert-light text-center border">
+            <i class="bi bi-inbox fs-4 d-block mb-1"></i>
+            <span class="fw-semibold fs-14">Data belum tersedia</span>
+        </div>
+    </div>
+@endforelse
+
+</div>
+
+
+
+
+
                     <!-- [Invoices Awaiting Payment] end -->
                  
                     <!-- [Converted Leads] end -->
@@ -39,7 +77,7 @@
                    
                     <!-- [Conversion Rate] end -->
                     <!-- [Payment Records] start -->
-                    <div class="col-xxl-8">
+                    <div class="col-md-12">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
                                 <h5 class="card-title">Payment Record</h5>
@@ -53,35 +91,41 @@
                                 </div>
                                 </div>
                             </div>
+                    </div>
                           
                            
-                        </div>
-                    </div>
-                
-
-                 
-
-                      <div class="col-xxl-8">
-                        <div class="card stretch stretch-full">
-                            <div class="card-header">
-                                <h5 class="card-title">CLIENT RECORD</h5>
-                             
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-                                    <div>
-                                    <canvas id="mydataChart"></canvas>
+                    
+                    
+        
+                        <div class="col-md-12">
+                            <div class="card stretch stretch-full h-100">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">CLIENT RECORD</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div style="position: relative; width: 100%; height: 400px;">
+                                        <canvas id="mydataChart"></canvas>
                                     </div>
-
-                                 
-                                </div>
                                 </div>
                             </div>
-                          
-                           
                         </div>
-                    </div>
+
+                   <div class="row g-3">
+                                <div class="col-12 col-xxl-6">
+                                    <div class="card shadow-sm h-100">
+                                        <div class="card-header">
+                                            <h5 class="card-title mb-0">Client Record</h5>
+                                        </div>
+                                        <div class="card-body p-3">
+                                            <div id="piechart"
+                                                @if(!$isMobile) style="width: 100%; height: {{ $defaultHeight }}px;" @endif>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
 
                   
                  
@@ -89,29 +133,9 @@
                    
                  
                 
-                    <!--! END: [Upcoming Schedule] !-->
-                    <!--! BEGIN: [Project Status] !-->
-                    <div class="col-xxl-4">
-                        <div class="card stretch stretch-full">
-                            <div class="card-header">
-                               <h5 class="card-title text-center">LITER RECORD | {{ \Carbon\Carbon::now()->format('Y') }}</h5>
+                   
 
-                                
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                      <div class="p-4">
-                                    <div id="piechart" style="width: 900px; height: 500px;"></div>
-                                </div>
-                                </div>
-                            </div>
-                           
-                           
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
+            
 
 
 @endsection

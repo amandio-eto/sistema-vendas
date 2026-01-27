@@ -206,7 +206,7 @@ public function printPdf($id)
                       ->orWhere('t.so_number', 'like', "%$search%")
                       ->orWhere('c.client_name', 'like', "%$search%")
                       ->orWhere('d.driver_name', 'like', "%$search%")
-                      ->orWhere('p.product_type', 'like', "%$search%");
+                      ->orWhere('p.product_name', 'like', "%$search%");
             })
             ->orderByDesc('t.created_at')
             ->paginate(10);
@@ -255,6 +255,12 @@ public function printPdf($id)
                 if (!$driver || !$client) {
                     return back()->withErrors('Driver or Client not found');
                 } 
+
+        $attachedPath = null;
+        if ($request->hasFile('attached')) {
+            $attachedPath = $request->file('attached')
+                ->store('transaction_files', 'public');
+        }
         DB::table('transaction')->insert([
             'do_number'      => $ndo,
             'lo_number'      => $request->lo_number,
@@ -263,6 +269,7 @@ public function printPdf($id)
             'id_product'     => $request->id_product,
             'id_user'        => auth()->id(),
             'status'         => false,
+            "attached"         => $attachedPath,
             'product_type' => $prod->code_product."-".$prod->quality,
             'button' => false,
             'quantity'       => $request->quantity,
@@ -271,7 +278,7 @@ public function printPdf($id)
             'id_driver'      => $request->id_driver,
             'driver_name'    => $driver->driver_name,
             'plat_number'    => $request->plat_number,
-            'created_at'     => Carbon::now(),
+            'created_at' => Carbon::parse($request->created_at),
             'updated_at'     => Carbon::now(),
         ]);
 
@@ -343,7 +350,11 @@ public function printPdf($id)
     if (!$driver || !$client) {
         return back()->withErrors('Driver or Client not found');
     }
-
+ $attachedPath = null;
+        if ($request->hasFile('attached')) {
+            $attachedPath = $request->file('attached')
+                ->store('transaction_files', 'public');
+        }
     // Update transaksi
     DB::table('transaction')->where('id', $id)->update([
         'lo_number'      => $request->lo_number,
@@ -353,6 +364,7 @@ public function printPdf($id)
         'id_user'        => auth()->id(),
         'status'         => false,
         'button'         => false,
+        'attached' => $attachedPath,
         'product_type' => $prod->code_product."-".$prod->quality,
         'quantity'       => $request->quantity,
         'id_client'      => $request->id_client,
@@ -360,7 +372,7 @@ public function printPdf($id)
         'id_driver'      => $request->id_driver,
         'driver_name'    => $driver->driver_name,
         'plat_number'    => $request->plat_number,
-        'updated_at'     => Carbon::now(),
+        'created_at' => Carbon::parse($request->created_at),
     ]);
 
        $agent = new Agent();
