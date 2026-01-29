@@ -171,7 +171,7 @@
             <div class="table-responsive">
                 <table class="table table-hover table-bordered align-middle table-striped"
                        style="font-size:10px">
-                    <thead class="table-dark text-secondary text-uppercase small" style="color: white !important;">
+                <thead class="bg-light text-uppercase small fw-semibold sticky-top">
                         <tr>
                             <th>#</th>
                             <th>DO</th>
