@@ -2,7 +2,7 @@
 @section('title','Transactions')
 
 @section('content')
-<div class="container-fluid px-4">
+<div class="container-fluid px-4 mt-2">
 
     <!-- ===================== -->
     <!-- Breadcrumb -->
@@ -15,7 +15,7 @@
     @if(Auth::user()->roles==='manager')
     @else
     <div class="card border-0 shadow-sm rounded-4 mb-4">
-        <div class="card-body p-4">
+        <div class="card-body p-4 mt-3">
 
             <!-- Header -->
             <div class="text-center mb-4">
@@ -181,7 +181,7 @@
                             <th>Client</th>
                             <th>Driver</th>
                             <th>Qty (L)</th>
-                            <th>Qty (Ton)</th>
+                            <th>Request</th>
                             <th>Status</th>
                             <th>Plat</th>
                             <th>Attachment</th>
@@ -197,11 +197,26 @@
                             <td class="fw-bold">{{ $tx->do_number }}</td>
                             <td>{{ $tx->so_number }}</td>
                             <td>{{ $tx->lo_number }}</td>
-                            <td>{{ $tx->product_name }}</td>
+                            <td>{{ $tx->product_name."/".$tx->quality }}</td>
                             <td>{{ $tx->client_name }}</td>
                             <td>{{ $tx->driver_name }}</td>
                             <td>{{ number_format($tx->quantity,2,',','.') }}</td>
-                            <td>{{ format_ton($tx->quantity) }}</td>
+                            <td>
+
+                                @if ($tx->statusedit==true && Auth::user()->roles==='staff')
+                                <i class="bi bi-unlock text-danger"></i>
+                                @else
+                                <form action="{{ route('statusedit',['id'=>$tx->id]) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                <button class="btn btn-success btn-sm">
+                                    <i class="bi bi-lock"></i>
+                                </button>
+                                </form>
+                                    
+                                @endif
+                                
+                            </td>
                             <td>
                                 <span class="badge {{ $tx->status ? 'bg-success' : 'bg-warning text-dark' }}">
                                     {{ $tx->status ? 'Completed' : 'Pending' }}

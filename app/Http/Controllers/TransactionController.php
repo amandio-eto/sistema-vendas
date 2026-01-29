@@ -88,7 +88,7 @@ public function printPdf($id)
 
         $data = DB::table('transaction')->where('id',$id);
         $data->update([
-            "statusedit" => true
+            "statusedit" => 1
         ]);
         toastr()->success('Message','Request Successfully');
         return back();
@@ -209,7 +209,7 @@ public function printPdf($id)
                       ->orWhere('p.product_name', 'like', "%$search%");
             })
             ->orderByDesc('t.created_at')
-            ->paginate(10);
+            ->simplePaginate(10);
 
         // Ambil data untuk form select
         $products = DB::table('products')->get();
