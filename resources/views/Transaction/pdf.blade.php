@@ -169,7 +169,7 @@
                 font-weight:600;
                 padding:6px;
             ">
-                {{ $transaction->client_name }}<br>
+                {{ Str::upper($transaction->client_name) }}<br>
                 Phone: {{ $transaction->phone ?? '-' }}<br>
                 Email: {{ $transaction->email ?? '-' }}<br>
                 Address: {{ $transaction->address ?? '-' }}
@@ -203,7 +203,7 @@
                  <th>{{ $transaction->lo_number }}</th>
                 <td>{{ number_format($transaction->quantity) }} L</td>
                
-                <td>{{ $transaction->driver_name }}</td>
+                <td>{{ Str::upper("$transaction->driver_name") }}</td>
                 <td>{{ $transaction->plat_number }}</td>
             </tr>
         </tbody>
