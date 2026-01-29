@@ -21,7 +21,7 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         $transactions = $this->getFilteredTransactions($request)
-            ->paginate(20);
+            ->simplePaginate(13);
 
         $clients  = DB::table('clients')->get();
         $products = DB::table('products')->get();

@@ -101,7 +101,7 @@
         </tbody>
     </table>
 
-    {{ $transactions->withQueryString()->links() }}
+    {{ $transactions->links() }}
 
 </div>
 @endsection
