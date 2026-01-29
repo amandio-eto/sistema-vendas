@@ -3,9 +3,17 @@
 <head>
     <meta charset="utf-8">
     <title>Delivery Order #{{ $transaction->tdi }}</title>
+    
     <style>
         body { font-family: DejaVu Sans, sans-serif; color:#333; margin:0; padding:0; font-size:12px; }
-        .container { width:95%; margin:auto; padding:10px 0; }
+        .container { width:95%; margin:auto; padding:10px 0;
+              text-align:center;
+                font-size:12px;
+                font-weight:600;
+                padding:6px;
+              
+        
+        }
 
         /* HEADER */
         header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; }
@@ -13,20 +21,66 @@
         header img.qrcode { height:70px; }
         header h2 { margin:0; text-align:center; flex:1; font-size:18px; color:black; }
 
-        /* COMPANY & CLIENT INFO */
-        .info { display:flex; justify-content:space-between; gap:10px; margin-bottom:10px; }
+        /* .info { display:flex; justify-content:space-between; gap:10px; margin-bottom:10px; }
         .info div { flex:1; border:1px solid #ccc; padding:8px; border-radius:4px; }
-        .info h4 { margin:0 0 5px 0; color:#555; font-size:13px; }
+        .info h4 { margin:0 0 5px 0; color:#555; font-size:13px; } */
+
+             .info {
+                font-size: 8px;
+                line-height: 1.4;
+                margin: 0;
+            }
+
+            .info strong {
+                font-weight: 600;
+                font-size: 8px;
+                text-transform: uppercase;
+                display: inline-block;
+                margin-bottom: 2px;
+            }
+
+            .info .col-6 {
+                padding-left: 6px;
+                padding-right: 6px;
+            }
+
+.info .col-6:first-child {
+    border-right: 1px solid #e5e5e5;
+}
+
 
         /* PRODUCT TABLE */
-        table { width:100%; border-collapse: collapse; margin-top:5px; }
-        table th, table td { border:1px solid #ccc; padding:5px; text-align:left; font-size:12px; }
-        table th { background-color:#f8f8f8; }
-        table tr:nth-child(even) td { background-color:#fdfdfd; }
+        table { width:100%; border-collapse: collapse; margin-top:5px; 
+          border:1px solid #000;
+          text-align:center;
+                font-size:12px;
+                font-weight:600;
+                padding:6px;
+        }
+        table th, table td { border:1px solid #ccc; padding:5px; text-align:left; font-size:12px; 
+            text-align:center;
+                font-size:12px;
+                font-weight:600;
+                padding:6px;
+          border:1px solid #000;}
+        table th { background-color:#f8f8f8; 
+            text-align:center;
+                font-size:12px;
+                font-weight:600;
+                padding:6px;
+          border:1px solid #000;}
+        table tr:nth-child(even) td { background-color:#fdfdfd;
+            text-align:center;
+                font-size:12px;
+                font-weight:600;
+                padding:6px;
+              border:1px solid #000;
+        
+        }
 
         /* STATUS */
-        .status { font-weight:bold; color:#fff; padding:3px 6px; border-radius:4px; display:inline-block; font-size:12px; }
-        .status.pending { background-color:#ff9800; }
+         .status { font-weight:bold; color:#fff; padding:3px 6px; border-radius:4px; display:inline-block; font-size:12px; }
+         .status.pending { background-color:#ff9800; }
         .status.completed { background-color:#4caf50; }
 
         /* SIGNATURE */
@@ -34,7 +88,7 @@
         .signature-box { height:60px; border-bottom:1px solid #000; margin-bottom:5px; width:80%; margin:auto; }
 
         /* FOOTER */
-        footer { text-align:center; font-size:11px; margin-top:15px; color:#777; }
+        footer { text-align:center; font-size:11px; margin-top:15px; color:#777; } */ */ */
     </style>
 </head>
 <body>
@@ -43,35 +97,98 @@
     <!-- HEADER -->
     <header>
         <img src="{{ public_path('eto.jpeg') }}" alt="Logo" class="logo">
-        <h2>Delivery Order #{{ $transaction->do_number }}</h2>
+        <h2 style="text-align:center;
+                font-size:20px;
+                font-weight:600;
+                padding:6px;">{{ Str::upper('Delivery Order') }}#{{ $transaction->do_number }}</h2>
        
     </header>
+    <hr>
+    <hr>
 
-    <!-- FROM & TO (Satu Row, Dua Kolom) -->
-    <div class="info">
-        <!-- FROM -->
-        <div>
-            <h4>Fornecedor:</h4>
-            Esperanca Timor Oan,Lda <br>
-            {{ Str::upper('parque de armazenamento de combustível-hera')."(PAC-hera)" }} <br>
-            Tin : 1052139 <br>
-            Email: info@eto.tl
-        </div>
-        <!-- TO -->
-        <div>
-            <h4>Comprador:</h4>
-            {{ $transaction->client_name }} <br>
-            Phone: {{ $transaction->phone ?? '-' }} <br>
-            Email: {{ $transaction->email ?? '-' }} <br>
-            Address: {{ $transaction->address ?? '-' }}
-        </div>
-    </div>
+
+
+
+  
+    
+   
+
+<table class="signature-table" style="
+    margin-top:50px;
+    width:100%;
+    border-collapse:collapse;
+    font-size:8px;
+    text-align:left;
+">
+    <thead>
+        <tr>
+            <th style="
+                text-align:center;
+                font-size:12px;
+                font-weight:600;
+                padding:6px;
+                border:1px solid #000;
+            ">
+                Fornecedor
+            </th>
+            <th style="
+                text-align:center;
+                font-size:12px;
+                font-weight:600;
+                padding:6px;
+                border:1px solid #000;
+            ">
+                Comprador
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="
+                text-align:left;
+                padding:8px;
+                border:1px solid #000;
+                line-height:1.5;
+                vertical-align:top;
+                 font-size:11px;
+                font-weight:600;
+                padding:6px;
+            ">
+                <span style="font-size: 10px">{{ Str::upper('parque de armazenamento de combustível-hera') }} (PAC-HERA)</span><br>
+                Tin: 1052139<br>
+                Email: info@eto.tl
+            </td>
+
+            <td style="
+                 text-align:left;
+                padding:8px;
+                border:1px solid #000;
+                line-height:1.5;
+                vertical-align:top;
+                 font-size:11px;
+                font-weight:600;
+                padding:6px;
+            ">
+                {{ $transaction->client_name }}<br>
+                Phone: {{ $transaction->phone ?? '-' }}<br>
+                Email: {{ $transaction->email ?? '-' }}<br>
+                Address: {{ $transaction->address ?? '-' }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+ 
+
+
+
 
     <!-- PRODUCT DETAIL TABLE -->
-    <table>
-        <thead>
+    <table border="1">
+        <thead >
             <tr>
-                <th>Producto</th>
+                <th>Produto</th>
                 <th>Numero Codigo</th>
                 <th>Quantidade (L)</th>
                
@@ -91,15 +208,15 @@
     </table>
 
     <!-- ADDITIONAL INFO -->
-    <table>
+    <table style="margin-top: 30px;">
         <tr>
-            <th>DO Number</th>
+            <th>Numero DO</th>
             <td>{{ $transaction->do_number }}</td>
-            <th>SO Number</th>
+            <th>Numero SO</th>
             <td>#{{ $transaction->so_number }}</td>
         </tr>
         <tr>
-            <th>Codigo de autorização</th>
+            <th>Codigo de Autorização</th>
             <td>{{ $transaction->approve_number }}</td>
             <th>Autorização Por</th>
             <td>{{ $transaction->authorized_by }} / {{ $transaction->approved }}</td>
@@ -123,19 +240,19 @@
     </table>
 
     <!-- SIGNATURE -->
-    <table class="signature-table" style="margin-top:20px; width:100%;" border="1">
+    <table class="signature-table" style="margin-top:50px; width:100%;" border="1">
         <tr>
-            <th>Operador</th>
-            <th>Authorized Signature</th>
+            <th>Operador :</th>
+            <th>Rebebido Por :</th>
         </tr>
         <tr >
             <td>
                 <div class="signature-box"></div>
-                (Fullname)
+                (Nome Completo)
             </td>
             <td>
                 <div class="signature-box"></div>
-                (Signature)
+                (Cliente)
             </td>
         </tr>
     </table>
