@@ -104,7 +104,7 @@
        
     </header>
     <hr>
-    <hr>
+
 
 
 
@@ -243,7 +243,7 @@
     <table class="signature-table" style="margin-top:50px; width:100%;" border="1">
         <tr>
             <th>Operador :</th>
-            <th>Rebebido Por :</th>
+            <th>Resebido Por :</th>
         </tr>
         <tr >
             <td>
