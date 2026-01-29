@@ -189,18 +189,20 @@
         <thead >
             <tr>
                 <th>Produto</th>
-                <th>Numero Codigo</th>
+                <th>Número Codigo</th>
+                <th>Número LO</th>
                 <th>Quantidade (L)</th>
-               
                 <th>Motorista</th>
                 <th>Número de Matrícula</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>{{ $transaction->product_name }} / {{ $transaction->q }}</td>
+                <td>{{ $transaction->product_name  }}</td>
                 <td>#{{ $transaction->cp }}</td>
+                 <th>{{ $transaction->lo_number }}</th>
                 <td>{{ number_format($transaction->quantity) }} L</td>
+               
                 <td>{{ $transaction->driver_name }}</td>
                 <td>{{ $transaction->plat_number }}</td>
             </tr>
