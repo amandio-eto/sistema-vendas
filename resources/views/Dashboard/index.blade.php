@@ -126,6 +126,8 @@
                             </div>
 
 
+                            
+
 
                   
                  
@@ -143,23 +145,30 @@
 @section('footer')
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+
     const ctx = document.getElementById('myChart').getContext('2d');
 
-    // Data dari PHP
-    const labels = {!! json_encode($allMonths->pluck('month_name')) !!};
-    const data = {!! json_encode($allMonths->pluck('total_quantity')) !!};
+    // Data dari PHP / Laravel
+    const labels = {!! json_encode($allMonths->pluck('month_name')->values()) !!};
+    const dataValues = {!! json_encode($allMonths->pluck('total_quantity')->values()) !!};
 
     new Chart(ctx, {
-        type: 'bar',
+        type: 'line', // ✅ Ubah jadi line chart
         data: {
             labels: labels,
             datasets: [{
                 label: 'Total Quantity per Month (Liters)',
-                data: data,
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
+                data: dataValues,
+                fill: false, // garis tidak diisi
+                borderColor: 'rgb(54, 162, 235)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                tension: 0.3, // membuat garis sedikit melengkung
+                borderWidth: 2,
+                pointRadius: 4,
+                pointBackgroundColor: 'rgb(54, 162, 235)'
             }]
         },
         options: {
@@ -180,7 +189,14 @@
             }
         }
     });
+
+});
 </script>
+
+
+
+
+
 
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -242,6 +258,11 @@
         }
     });
 </script>
+
+
+
+
+
 
 
 

@@ -171,7 +171,7 @@
             <div class="table-responsive">
                 <table class="table table-hover table-bordered align-middle table-striped"
                        style="font-size:10px">
-                    <thead class="table-light text-uppercase small">
+                    <thead class="table-dark text-secondary text-uppercase small" style="color: white !important;">
                         <tr>
                             <th>#</th>
                             <th>DO</th>
@@ -242,9 +242,12 @@
                                 {{ \Carbon\Carbon::parse($tx->created_at)->translatedFormat('d M Y H:i') }}
                             </td>
 
+                           
+
                             <!-- ACTION -->
                             <td class="text-end">
-                                @if(Auth::user()->roles==='staff' || Auth::user()->roles==='manager' )
+                                @if(Auth::user()->roles==='staff')
+                                
                                 
                                 @else
                                 <a href="{{ route('transaction.edit',$tx->id) }}"

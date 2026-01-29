@@ -196,19 +196,23 @@ public function printPdf($id)
                 't.*',
                 'u.name as user_name',
                 'c.client_name',
+                't.lo_number',
                 'p.product_name',
                 'p.code_product',
                 'p.quality',
+                't.lo_number',
                 'd.driver_name'
             )
-            ->when($search, function ($query) use ($search) {
-                $query->where('t.do_number', 'like', "%$search%")
-                      ->orWhere('t.so_number', 'like', "%$search%")
-                      ->orWhere('c.client_name', 'like', "%$search%")
-                      ->orWhere('d.driver_name', 'like', "%$search%")
-                      ->orWhere('p.product_name', 'like', "%$search%");
+           ->when($search, function ($query) use ($search) {
+            return $query->where('t.do_number', 'like', "%$search%")
+                 ->orWhere('t.so_number', 'like', "%$search%")
+                 ->orWhere('c.client_name', 'like', "%$search%")
+                 ->orWhere('d.driver_name', 'like', "%$search%")
+                 ->orWhere('t.lo_number','like',"$search%")
+                 ->orWhere('p.product_name', 'like', "%$search%");
             })
-            ->orderByDesc('t.created_at')
+
+            ->orderByDesc('t.id')
             ->simplePaginate(10);
 
         // Ambil data untuk form select

@@ -12,7 +12,7 @@ class DriverController extends Controller
         $drivers = DB::table('drivers')
             ->whereNull('deleted_at')
             ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->simplePaginate(10);
         return view('Drivers.index', compact('drivers'));
     }
 

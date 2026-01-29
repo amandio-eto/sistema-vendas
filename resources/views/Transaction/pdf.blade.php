@@ -43,7 +43,7 @@
     <!-- HEADER -->
     <header>
         <img src="{{ public_path('eto.jpeg') }}" alt="Logo" class="logo">
-        <h2>Delivery Order #{{ $transaction->tdi }}</h2>
+        <h2>Delivery Order #{{ $transaction->do_number }}</h2>
        
     </header>
 
@@ -51,15 +51,15 @@
     <div class="info">
         <!-- FROM -->
         <div>
-            <h4>From:</h4>
+            <h4>Fornecedor:</h4>
             Esperanca Timor Oan,Lda <br>
-            PAAKH <br>
-            Phone: +670 77027766 <br>
+            {{ Str::upper('parque de armazenamento de combustível-hera')."(PAC-hera)" }} <br>
+            Tin : 1052139 <br>
             Email: info@eto.tl
         </div>
         <!-- TO -->
         <div>
-            <h4>To:</h4>
+            <h4>Comprador:</h4>
             {{ $transaction->client_name }} <br>
             Phone: {{ $transaction->phone ?? '-' }} <br>
             Email: {{ $transaction->email ?? '-' }} <br>
@@ -71,12 +71,12 @@
     <table>
         <thead>
             <tr>
-                <th>Product</th>
-                <th>Code</th>
-                <th>Quantity (L)</th>
-                <th>Quantity (Ton)</th>
-                <th>Driver</th>
-                <th>Plat Number</th>
+                <th>Producto</th>
+                <th>Numero Codigo</th>
+                <th>Quantidade (L)</th>
+               
+                <th>Motorista</th>
+                <th>Número de Matrícula</th>
             </tr>
         </thead>
         <tbody>
@@ -84,7 +84,6 @@
                 <td>{{ $transaction->product_name }} / {{ $transaction->q }}</td>
                 <td>#{{ $transaction->cp }}</td>
                 <td>{{ number_format($transaction->quantity) }} L</td>
-                <td>{{ format_ton($transaction->quantity) }}</td>
                 <td>{{ $transaction->driver_name }}</td>
                 <td>{{ $transaction->plat_number }}</td>
             </tr>
@@ -100,13 +99,13 @@
             <td>#{{ $transaction->so_number }}</td>
         </tr>
         <tr>
-            <th>Authorization Code</th>
+            <th>Codigo de autorização</th>
             <td>{{ $transaction->approve_number }}</td>
-            <th>Authorized By</th>
+            <th>Autorização Por</th>
             <td>{{ $transaction->authorized_by }} / {{ $transaction->approved }}</td>
         </tr>
         <tr>
-            <th>Teller</th>
+            <th>Emitido Por </th>
             <td>{{ $transaction->user_name }}</td>
             <th>Status</th>
             <td>
@@ -116,7 +115,7 @@
             </td>
         </tr>
         <tr>
-            <th>Date</th>
+            <th>Data de Emissão</th>
             <td>{{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y H:i') }}</td>
             <td></td>
             <td></td>
@@ -126,7 +125,7 @@
     <!-- SIGNATURE -->
     <table class="signature-table" style="margin-top:20px; width:100%;" border="1">
         <tr>
-            <th>Received By</th>
+            <th>Operador</th>
             <th>Authorized Signature</th>
         </tr>
         <tr >
