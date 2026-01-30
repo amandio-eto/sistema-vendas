@@ -100,7 +100,8 @@
 }
 
         .logo-wrap img {
-            width: 100px;
+            width: 189px;
+            height: 113.9px;
             margin-bottom: 100px;
             display: inline-block;
         }
@@ -116,7 +117,7 @@
 
     
     <div class="logo-wrap">
-    <img src="{{ public_path('eto.jpeg') }}">
+    <img src="{{ public_path('LOGOETO.png') }}">
 </div>
     <header>
   
