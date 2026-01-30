@@ -152,9 +152,36 @@ $pieSeries = DB::table('transaction as t')
         ];
     });
 
+
+    #LineChart 
+    $monthly = DB::table('transaction')
+    ->select(
+        DB::raw('MONTH(created_at) as month'),
+        DB::raw('SUM(quantity) as total_liter')
+    )
+    ->whereYear('created_at', $year)
+    ->groupBy(DB::raw('MONTH(created_at)'))
+    ->orderBy('month')
+    ->get()
+    ->keyBy('month');
+
+// Siapkan 12 bulan (biar bulan kosong tetap muncul)
+$categories = [];
+$seriesData = [];
+
+for ($m = 1; $m <= 12; $m++) {
+    $categories[] = Carbon::create()->month($m)->translatedFormat('F');
+    $seriesData[] = isset($monthly[$m])
+        ? (float) $monthly[$m]->total_liter
+        : 0;
+}
+
+
     return view('Dashboard.index', compact(
         'prod','allMonths','transactions','year','clientsMonths','defaultHeight','isMobile','categories','series',
-        'pieSeries', 'year'
+        'pieSeries', 'year', 'year',
+    'categories',
+    'seriesData'
     ));
 
 

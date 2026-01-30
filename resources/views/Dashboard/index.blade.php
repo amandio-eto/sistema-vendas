@@ -91,7 +91,11 @@
 
 
 
-<
+<div class="row">
+    <div class="col">
+        <div id="lineMonthly" style="height:420px;"></div>
+    </div>
+</div>
 
 @endsection
 
@@ -127,7 +131,7 @@ Highcharts.chart('pieProduct', {
         type: 'pie'
     },
     title: {
-        text: 'Total Transaction per Product - {{ $year }}'
+        text: 'Total Transaction Per Product - {{ $year }}'
     },
     tooltip: {
         pointFormatter: function () {
@@ -156,6 +160,70 @@ Highcharts.chart('pieProduct', {
     }]
 });
 </script>
+
+
+
+<script>
+function formatLiter(value) {
+    return new Intl.NumberFormat('id-ID', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(value);
+}
+
+Highcharts.chart('lineMonthly', {
+    chart: {
+        type: 'line'
+    },
+    title: {
+        text: 'Total Liter per Month - {{ $year }}'
+    },
+    xAxis: {
+        categories: @json($categories),
+        labels: {
+            style: { fontSize: '12px' }
+        }
+    },
+    yAxis: {
+        title: {
+            text: 'Total Liter (L)',
+            style: { fontSize: '12px' }
+        },
+        labels: {
+            formatter: function () {
+                return formatLiter(this.value);
+            },
+            style: { fontSize: '12px' }
+        }
+    },
+    tooltip: {
+        formatter: function () {
+            return `<b>${this.x}</b><br>
+                    ${formatLiter(this.y)} L`;
+        }
+    },
+    plotOptions: {
+        line: {
+            marker: {
+                radius: 4
+            },
+            dataLabels: {
+                enabled: true,
+                style: { fontSize: '12px' },
+                formatter: function () {
+                    return formatLiter(this.y);
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Total Liter',
+        data: @json($seriesData),
+        color: '#2787F5'
+    }]
+});
+</script>
+
 
 
 
