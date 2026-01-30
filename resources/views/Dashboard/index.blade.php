@@ -124,7 +124,7 @@
 
                                 // Warna produk
                                 $colors = [
-                                    'GASOLINa' => '#0d6efd',  // Blue
+                                    'GASOLINA' => '#0d6efd',  // Blue
                                     'GASÓLEO'   => '#6c757d',  // Secondary
                                     'JET-A1'   => '#20c997',  // Light Green
                                 ];
