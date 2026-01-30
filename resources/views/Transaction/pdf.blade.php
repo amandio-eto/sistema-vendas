@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Delivery Order #{{ $transaction->tdi }}</title>
+     <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('apple-icon.png') }}">
     
     <style>
         body { font-family: DejaVu Sans, sans-serif; color:#333; margin:0; padding:0; font-size:12px; }
