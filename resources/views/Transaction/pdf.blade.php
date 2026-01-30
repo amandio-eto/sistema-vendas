@@ -86,6 +86,23 @@
         /* SIGNATURE */
         .signature-table th, .signature-table td { border:none; text-align:center; padding:8px; font-size:12px; }
         .signature-box { height:60px; border-bottom:1px solid #000; margin-bottom:5px; width:80%; margin:auto; }
+        .logo {
+                display: block;
+                margin-left: 0;        /* pindah ke kiri */
+                margin-right: auto;   /* pastikan tidak ke tengah */
+                width: 120px;         /* ukuran logo ideal */
+                height: auto;         /* jaga rasio gambar */
+                object-fit: contain;
+            }
+            .logo-wrap {
+    text-align: left !important;
+}
+
+        .logo-wrap img {
+            width: 100px;
+            margin-bottom: 100px;
+            display: inline-block;
+        }
 
         /* FOOTER */
         footer { text-align:center; font-size:11px; margin-top:15px; color:#777; } */ */ */
@@ -95,10 +112,16 @@
 <div class="container">
 
     <!-- HEADER -->
+
+    
+    <div class="logo-wrap">
+    <img src="{{ public_path('eto.jpeg') }}">
+</div>
     <header>
-        <img src="{{ public_path('eto.jpeg') }}" alt="Logo" class="logo">
+  
+
         <h2 style="text-align:center;
-                font-size:20px;
+                font-size:14px;
                 font-weight:600;
                 padding:6px;">{{ Str::upper('Delivery Order') }}#{{ $transaction->do_number }}</h2>
        
@@ -172,7 +195,7 @@
                 {{ Str::upper($transaction->client_name) }}<br>
                 Phone: {{ $transaction->phone ?? '-' }}<br>
                 Email: {{ $transaction->email ?? '-' }}<br>
-                Address: {{ $transaction->address ?? '-' }}
+                Enderesso: {{ $transaction->address ?? '-' }}
             </td>
         </tr>
     </tbody>
@@ -212,9 +235,9 @@
     <!-- ADDITIONAL INFO -->
     <table style="margin-top: 30px;">
         <tr>
-            <th>Numero DO</th>
+            <th>Número  DO</th>
             <td>{{ $transaction->do_number }}</td>
-            <th>Numero SO</th>
+            <th>Número  SO</th>
             <td>#{{ $transaction->so_number }}</td>
         </tr>
         <tr>

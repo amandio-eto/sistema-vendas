@@ -71,7 +71,6 @@
                 <th>Client</th>
                 <th>Product</th>
                 <th>Qty (L)</th>
-                <th>Qty (Ton)</th>
                 <th>Driver</th>
                 <th>Plat</th>
                 <th>Status</th>
@@ -87,7 +86,6 @@
                 <td>{{ $t->client_name }}</td>
                 <td>{{ $t->product_name }}</td>
                 <td>{{ number_format($t->quantity) }}</td>
-                <td>{{ format_ton($t->quantity) }}</td>
                 <td>{{ $t->driver_name }}</td>
                 <td>{{ $t->plat_number }}</td>
                 <td>{{ $t->status ? 'Completed' : 'Pending' }}</td>
