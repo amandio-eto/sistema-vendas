@@ -92,6 +92,27 @@ $prod = DB::table('products as p')
 
     // Default height chart (desktop only)
     $defaultHeight = $isMobile ? null : 600;
-    return view('Dashboard.index',compact('prod','allMonths','transactions','year','clientsMonths','defaultHeight', 'isMobile'));
+
+        $month = $month ?? date('m'); // default bulan sekarang
+    $year = $year ?? date('Y');   // default tahun sekarang
+
+    $data = DB::table('transaction as t')
+            ->join('products as p', 'p.id', '=', 't.id_product')
+            ->select(
+        'p.product_name',
+        DB::raw('SUM(t.quantity) as total_liter'),
+        DB::raw('YEAR(t.created_at) as tahun'),
+        DB::raw('MONTH(t.created_at) as bulan_number'),  // untuk sorting
+        DB::raw('MONTHNAME(t.created_at) as bulan')
+    )
+    ->groupBy('p.product_name', 'tahun', 'bulan_number', 'bulan')
+    ->orderBy('tahun', 'asc')
+    ->orderBy('bulan_number', 'asc')
+    ->orderBy('p.product_name')
+    ->simplePaginate(3);
+
+
+
+    return view('Dashboard.index',compact('prod','allMonths','transactions','year','clientsMonths','defaultHeight', 'isMobile','data'));
     }
 }

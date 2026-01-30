@@ -20,9 +20,13 @@
             'JET-A1'  => '#02F226',
         ];
 
+        
+
         // Ambil warna, default abu-abu kalau tidak ada
         $color = $colors[strtoupper(trim($p->quality))] ?? '#6c757d';
     @endphp
+
+    
 
     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
         <div class="card border-0 shadow-sm h-100 hover-shadow">
@@ -59,7 +63,7 @@
     <div class="col-12">
         <div class="alert alert-light text-center border">
             <i class="bi bi-inbox fs-4 d-block mb-1"></i>
-            <span class="fw-semibold fs-14">Data belum tersedia</span>
+            <span class="fw-semibold fs-14">Data is Empty</span>
         </div>
     </div>
 @endforelse
@@ -77,21 +81,135 @@
                    
                     <!-- [Conversion Rate] end -->
                     <!-- [Payment Records] start -->
-                    <div class="col-md-12">
+
+                
+                   <div class="row m-3">
+                         <div class="col-md-7">
                         <div class="card stretch stretch-full">
-                            <div class="card-header">
-                                <h5 class="card-title">Payment Record</h5>
-                             
+                                <div class="card-header">
+                                    <h5 class="card-title">Monthly Liter(L) Record</h5>
+                                
+                                </div>
+                                <canvas id="myChart"></canvas>
+                        </div>
+                    </div>
+
+                
+                        
+                        <div class="col-md-5">
+    <div class="card shadow-sm h-100 border-0">
+        {{-- Card Header --}}
+        <div class="card-header bg-secondary text-white text-center py-2">
+            <h5 class="mb-0 fw-bold fs-6" style="letter-spacing:1px; color:white;">
+                Product Monthly Summary (Liter)
+            </h5>
+        </div>
+
+        {{-- Card Body --}}
+      
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-center" style="font-size:10px;">
+                        <tr>
+                            <th>Product</th>
+                            <th style="width:160px">Total Liter (L)</th>
+                            <th style="width:120px">Month</th>
+                        </tr>
+                    </thead>
+
+                    <tbody style="font-size:10px;">
+                        @foreach($data as $row)
+                            @php
+                                $product = strtoupper(trim($row->product_name));
+
+                                // Warna produk
+                                $colors = [
+                                    'GASOLINE' => '#0d6efd',  // Blue
+                                    'DIESEL'   => '#6c757d',  // Secondary
+                                    'JET-A1'   => '#20c997',  // Light Green
+                                ];
+
+                                $color = $colors[$product] ?? '#adb5bd';
+                            @endphp
+
+                            <tr>
+                                {{-- Product --}}
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                                             style="width:30px; height:30px; background-color: {{ $color }};">
+                                            <i class="bi bi-fuel-pump-fill text-white" style="font-size:12px;"></i>
+                                        </div>
+                                        <span class="fw-semibold text-dark" style="font-size:10px;">
+                                            {{ $row->product_name }}
+                                        </span>
+                                    </div>
+                                </td>
+
+                                {{-- Total Liter --}}
+                                <td class="text-end fw-bold text-dark" style="font-size:10px;">
+                                    {{ number_format($row->total_liter, 2) }}
+                                </td>
+
+                                {{-- Bulan --}}
+                                <td class="text-center">
+                                    <span class="badge rounded-pill px-2 py-1"
+                                          style="background-color:#6c757d33; color:#212529; font-size:9px;">
+                                        {{ $row->bulan }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+
+                    {{-- Footer Total --}}
+                    @if($data->count())
+                        <tfoot class="table-secondary" style="font-size:10px;">
+                            <tr>
+                                <th class="text-end fw-semibold">TOTAL</th>
+                                <th class="text-end fw-bold">
+                                    {{ number_format($data->sum('total_liter'), 2) }}
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    @endif
+                </table>
+                <div class="row m-3">
+                    <div class="col">
+                        {{ $data->links() }}
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+</div>
+
+
+
+
+                            
+                    </div>
+                </div>
+
                             </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <div>
-                                <canvas id="myChart"></canvas>
-                                </div>
-                                </div>
-                            </div>
-                    </div>
+
+                   </div>
+
+
+                    
+                    
+
+
+
+
+
+
+
+
+                    
+                  
                           
                            
                     
