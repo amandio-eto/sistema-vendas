@@ -11,108 +11,153 @@ class DashboardController extends Controller
 {
     
 
-    public function index()
+    public function index(Request $request)
     {
 
-        #ida ba Iha Chart\// Tahun ini
-$year = Carbon::now()->year;
 
-// Ambil jumlah transaksi per bulan
-$monthlyTransactions = DB::table('transaction')
-    ->select(
-        DB::raw('MONTH(created_at) as month'),
-        DB::raw('SUM(quantity) as total_quantity')
-    )
-    ->whereYear('created_at', $year)
-    ->groupBy(DB::raw('MONTH(created_at)'))
-    ->orderBy('month')
-    ->get()
-    ->keyBy('month'); // jadikan key berdasarkan bulan
+        $year = Carbon::now()->year;
 
-// Buat array bulan 1-12
-$allMonths = [];
-for ($m=1; $m<=12; $m++) {
-    $allMonths[$m] = [
-        'month' => $m,
-        'month_name' => date('F', mktime(0,0,0,$m,1)),
-        'total_quantity' => isset($monthlyTransactions[$m]) ? $monthlyTransactions[$m]->total_quantity : 0
-    ];
-}
+    // ==============================
+    // Chart height (desktop/mobile)
+    // ==============================
+    $userAgent = $request->header('User-Agent');
+    $isMobile = preg_match('/Mobile|Android|iPhone|iPad|Tablet/i', $userAgent);
+    $defaultHeight = $isMobile ? null : 600;
 
-// Konversi ke collection kalau mau
-$allMonths = collect($allMonths);
+    // ==============================
+    // Monthly transactions (1-12)
+    // ==============================
+    $monthlyTransactions = DB::table('transaction')
+        ->select(DB::raw('MONTH(created_at) as month'), DB::raw('SUM(quantity) as total_quantity'))
+        ->whereYear('created_at', $year)
+        ->groupBy(DB::raw('MONTH(created_at)'))
+        ->orderBy('month')
+        ->get()
+        ->keyBy('month');
 
-#Ida nee mak Rohann husi Chart
+    $allMonths = [];
+    for ($m = 1; $m <= 12; $m++) {
+        $allMonths[$m] = [
+            'month' => $m,
+            'month_name' => date('F', mktime(0,0,0,$m,1)),
+            'total_quantity' => isset($monthlyTransactions[$m]) ? $monthlyTransactions[$m]->total_quantity : 0
+        ];
+    }
+    $allMonths = collect($allMonths);
 
-$transactions = DB::table('transaction as t')
-    ->join('products as p', 'p.id', '=', 't.id_product')
-    ->select(
-        'p.product_name','p.quality',
-        DB::raw('SUM(t.quantity) as total_quantity')
-    )
-    ->whereYear('t.created_at', $year)
-    ->groupBy('p.product_name','p.quality')
-    ->get();
+    // ==============================
+    // Transactions per product
+    // ==============================
+    $transactions = DB::table('transaction as t')
+        ->join('products as p', 'p.id', '=', 't.id_product')
+        ->select('p.product_name','p.quality', DB::raw('SUM(t.quantity) as total_quantity'))
+        ->whereYear('t.created_at', $year)
+        ->groupBy('p.product_name','p.quality')
+        ->get();
 
-  $clientsMonths = DB::table('transaction as t')
+    // ==============================
+    // Transactions per client
+    // ==============================
+    $clientsMonths = DB::table('transaction as t')
         ->join('clients as c', 'c.id', '=', 't.id_client')
         ->select('c.client_name', DB::raw('SUM(t.quantity) as total_quantity'))
         ->whereYear('t.created_at', $year)
         ->groupBy('c.client_name')
         ->get();
 
-          
+    // ==============================
+    // Filter per product today
+    // ==============================
+    $filterDate = $request->date ?? Carbon::today()->toDateString();
+    $prod = DB::table('products as p')
+        ->leftJoin('transaction as t', function ($join) use ($filterDate) {
+            $join->on('p.id', '=', 't.id_product')
+                 ->whereDate('t.created_at', $filterDate);
+        })
+        ->select('p.id','p.product_name','p.quality', DB::raw('COALESCE(SUM(t.quantity), 0) as total_quantity'))
+        ->groupBy('p.id','p.product_name','p.quality')
+        ->orderByDesc('total_quantity')
+        ->get();
 
-#Ida mak Filter Perproduct 
-$filterDate = $request->date ?? Carbon::today()->toDateString(); // default hari ini
-$prod = DB::table('products as p')
-    ->leftJoin('transaction as t', function ($join) use ($filterDate) {
-        $join->on('p.id', '=', 't.id_product')
-             ->whereDate('t.created_at', $filterDate);
-    })
+    // ==============================
+    // Highcharts data
+    // ==============================
+    $test = DB::table('transaction as t')
+        ->join('products as p', 'p.id', '=', 't.id_product')
+        ->select('p.product_name', DB::raw('SUM(t.quantity) as total_quantity'), DB::raw('MONTH(t.created_at) as month'))
+        ->whereYear('t.created_at', $year)
+        ->groupBy('p.product_name', DB::raw('MONTH(t.created_at)'))
+        ->orderBy('month')
+        ->get();
+
+    $monthNames = [1=>'Januari',2=>'Februari',3=>'Maret',4=>'April',5=>'Mei',6=>'Juni',7=>'Juli',8=>'Agustus',9=>'September',10=>'Oktober',11=>'November',12=>'Desember'];
+
+    $categories = [];
+    foreach ($test as $t) {
+        $t->nBulan = $monthNames[$t->month];
+        if (!in_array($t->nBulan, $categories)) $categories[] = $t->nBulan;
+    }
+
+    $products = $test->pluck('product_name')->unique();
+    $series = [];
+    foreach ($products as $prodName) {
+        $dataSeries = [];
+        foreach ($categories as $monthName) {
+            $item = $test->first(fn($t) => $t->product_name === $prodName && $t->nBulan === $monthName);
+            $dataSeries[] = $item ? (float)$item->total_quantity : 0;
+        }
+        $series[] = ['name'=>$prodName, 'data'=>$dataSeries];
+    }
+
+    // ==============================
+    // Safety fallback
+    // ==============================
+    $prod = $prod ?? collect([]);
+    $allMonths = $allMonths ?? collect([]);
+    $transactions = $transactions ?? collect([]);
+    $clientsMonths = $clientsMonths ?? collect([]);
+    $categories = $categories ?? [];
+    $series = $series ?? [];
+
+
+
+    ############### Pie Chart 
+
+    $year = Carbon::now()->year;
+
+// Mapping warna berdasarkan quality
+$qualityColors = [
+    'RON92'  => '#2787F5',
+    'RON98'  => '#CA02F2',
+    '10PPM'  => '#F5B727',
+    'JET-A1' => '#02F226',
+];
+
+$year = date('Y');
+
+$pieSeries = DB::table('transaction as t')
+    ->join('products as p', 'p.id', '=', 't.id_product')
     ->select(
-        'p.id',
         'p.product_name',
-        'p.quality',
-        DB::raw('COALESCE(SUM(t.quantity), 0) as total_quantity')
+        DB::raw('SUM(t.quantity) as total_quantity')
     )
-    ->groupBy(
-        'p.id',
-        'p.product_name',
-        'p.quality'
-    )
+    ->whereYear('t.created_at', $year)
+    ->groupBy('p.product_name')
     ->orderByDesc('total_quantity')
-    ->get();
-      #Ba iha Dashboard
+    ->get()
+    ->map(function ($row) {
+        return [
+            'name' => $row->product_name,
+            'y'    => (float) $row->total_quantity // WAJIB numeric
+        ];
+    });
 
-      
-    // Cek User Agent untuk device
-   $userAgent = request()->header('User-Agent');
-    $isMobile = preg_match('/Mobile|Android|iPhone|iPad|Tablet/i', $userAgent);
-
-    // Default height chart (desktop only)
-    $defaultHeight = $isMobile ? null : 600;
-
-        $month = $month ?? date('m'); // default bulan sekarang
-    $year = $year ?? date('Y');   // default tahun sekarang
-
-    $data = DB::table('transaction as t')
-            ->join('products as p', 'p.id', '=', 't.id_product')
-            ->select(
-        'p.product_name',
-        DB::raw('SUM(t.quantity) as total_liter'),
-        DB::raw('YEAR(t.created_at) as tahun'),
-        DB::raw('MONTH(t.created_at) as bulan_number'),  // untuk sorting
-        DB::raw('MONTHNAME(t.created_at) as bulan')
-    )
-    ->groupBy('p.product_name', 'tahun', 'bulan_number', 'bulan')
-    ->orderBy('tahun', 'asc')
-    ->orderBy('bulan_number', 'asc')
-    ->orderBy('p.product_name')
-    ->simplePaginate(3);
+    return view('Dashboard.index', compact(
+        'prod','allMonths','transactions','year','clientsMonths','defaultHeight','isMobile','categories','series',
+        'pieSeries', 'year'
+    ));
 
 
 
-    return view('Dashboard.index',compact('prod','allMonths','transactions','year','clientsMonths','defaultHeight', 'isMobile','data'));
     }
 }
