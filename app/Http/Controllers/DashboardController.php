@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
@@ -177,14 +176,60 @@ for ($m = 1; $m <= 12; $m++) {
 }
 
 
-    return view('Dashboard.index', compact(
-        'prod','allMonths','transactions','year','clientsMonths','defaultHeight','isMobile','categories','series',
-        'pieSeries', 'year', 'year',
-    'categories',
-    'seriesData'
-    ));
+#Chart forecast 
+
+$hourlyTransactions = DB::table('transaction as t')
+    ->select(
+        DB::raw('HOUR(t.created_at) as hour'),
+        DB::raw('SUM(t.quantity) as total_quantity')
+    )
+    ->whereDate('t.created_at', now()->toDateString())
+    ->groupBy(DB::raw('HOUR(t.created_at)'))
+    ->orderBy('hour')
+    ->get();
+
+// Lengkapi 24 jam (00–23)
+$hours = array_fill(0, 24, 0);
+
+foreach ($hourlyTransactions as $row) {
+    $hours[(int)$row->hour] = (float)$row->total_quantity;
+}
+
+$actualData = array_values($hours);
+
+// Forecast sederhana (rata-rata transaksi berjalan)
+$nonZero = array_filter($actualData);
+$avg = count($nonZero) ? array_sum($nonZero) / count($nonZero) : 0;
+
+// Forecast 5 jam ke depan
+$forecastData = [];
+for ($i = 0; $i < 5; $i++) {
+    $forecastData[] = round($avg, 2);
+}
+
+
+   return view('Dashboard.index', array_merge(
+    compact(
+        'prod',
+        'allMonths',
+        'transactions',
+        'year',
+        'clientsMonths',
+        'defaultHeight',
+        'isMobile',
+        'categories',
+        'series',
+        'pieSeries',
+        'seriesData'
+    ),
+    [
+        'actualData'   => json_encode($actualData),
+        'forecastData' => json_encode($forecastData),
+    ]
+));
 
 
 
     }
 }
+                                                                                                                                                           

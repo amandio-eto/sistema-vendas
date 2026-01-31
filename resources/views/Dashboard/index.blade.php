@@ -1,3 +1,4 @@
+
 @extends('Master.Master')
 @section('title','Dashboard')
 @section('content')
@@ -91,9 +92,20 @@
 
 
 
+
+
+
+
+
 <div class="row">
-    <div class="col">
+    
+    <div class="col-md-8">
         <div id="lineMonthly" style="height:420px;"></div>
+    </div>
+
+    <div class="col-md-4">
+        <div id="hourlyChart" style="width:100%; height:400px;"></div>
+
     </div>
 </div>
 
@@ -226,6 +238,47 @@ Highcharts.chart('lineMonthly', {
 
 
 
+<script>
+Highcharts.chart('hourlyChart', {
+    title: {
+        text: 'Transaction  Per Hours'
+    },
+    xAxis: {
+        categories: [
+            '00','01','02','03','04','05','06','07',
+            '08','09','10','11','12','13','14','15',
+            '16','17','18','19','20','21','22','23',
+            '24','25','26','27','28'
+        ],
+        title: { text: 'Jam' }
+    },
+    yAxis: {
+        title: { text: 'Total Quantity' }
+    },
+    tooltip: {
+        shared: true
+    },
+    series: [{
+        name: 'Actual',
+        type: 'column',
+        data: {!! $actualData !!}
+    }, {
+        name: 'Forecast',
+        type: 'spline',
+        dashStyle: 'Dash',
+        data: (function () {
+            let actual = {!! $actualData !!};
+            let forecast = {!! $forecastData !!};
+            return actual.concat(forecast);
+        })()
+    }]
+});
+</script>
+
+
+
+
 
 
 @endsection
+
