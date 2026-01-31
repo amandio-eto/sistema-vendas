@@ -208,6 +208,73 @@ for ($i = 0; $i < 5; $i++) {
 }
 
 
+#Client Chart Per Month
+
+
+  $clientMonthProduct = DB::table('transaction as t')
+    ->join('clients as c', 'c.id', '=', 't.id_client')
+    ->join('products as p', 'p.id', '=', 't.id_product')
+    ->select(
+        'c.client_name',
+        DB::raw('MONTH(t.created_at) as month'),
+        'p.product_name',
+        DB::raw('SUM(t.quantity) as total_quantity')
+    )
+    ->whereYear('t.created_at', now()->year)
+    ->whereMonth('t.created_at', now()->month)
+    ->groupBy(
+        'c.client_name',
+        DB::raw('MONTH(t.created_at)'),
+        'p.product_name'
+    )
+    ->orderBy('c.client_name')
+    ->orderBy('p.product_name')
+    ->get();
+
+
+     $rows = DB::table('transaction as t')
+        ->join('clients as c', 'c.id', '=', 't.id_client')
+        ->join('products as p', 'p.id', '=', 't.id_product')
+        ->select(
+            'c.client_name',
+            'p.product_name',
+            DB::raw('SUM(t.quantity) as total_quantity')
+        )
+        ->whereYear('t.created_at', now()->year)
+        ->whereMonth('t.created_at', now()->month)
+        ->groupBy('c.client_name', 'p.product_name')
+        ->orderBy('c.client_name')
+        ->get();
+
+    // ==============================
+    // Siapkan data Highcharts
+    // ==============================
+    $clients = $rows->pluck('client_name')->unique()->values();
+
+    $products = $rows->pluck('product_name')->unique();
+
+    $series = [];
+    foreach ($products as $product) {
+        $data = [];
+        foreach ($clients as $client) {
+            $item = $rows->first(fn ($r) =>
+                $r->product_name === $product &&
+                $r->client_name === $client
+            );
+
+            $data[] = $item ? (float) $item->total_quantity : 0;
+        }
+
+        $series[] = [
+            'name' => $product,
+            'data' => $data
+        ];
+    }
+
+
+
+    $month = now()->translatedFormat('F Y');
+
    return view('Dashboard.index', array_merge(
     compact(
         'prod',
@@ -220,7 +287,12 @@ for ($i = 0; $i < 5; $i++) {
         'categories',
         'series',
         'pieSeries',
-        'seriesData'
+        'seriesData',
+        'clients',
+        'series',
+        'month',
+
+
     ),
     [
         'actualData'   => json_encode($actualData),
