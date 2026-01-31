@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ================= Client x Product =================
     Highcharts.chart('clientProductChart', {
         chart: { type: 'column' },
-        title: { text: 'Transaksi Client per Product ({{ $month }})' },
+        title: { text: 'Transaction Client per Product ({{ $month }})' },
         xAxis: {
             categories: {!! json_encode($clients) !!},
             title: { text: 'Client' }
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ================= Line Monthly =================
     Highcharts.chart('lineMonthly', {
         chart: { type: 'line' },
-        title: { text: 'Total Liter per Month {{ $year }}' },
+        title: { text: 'Total Liter  Month {{ $year }}' },
         xAxis: { categories: @json($categories) },
         yAxis: { title: { text: 'Total Liter (L)' } },
         series: [{
