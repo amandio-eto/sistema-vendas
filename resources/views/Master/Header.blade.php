@@ -84,10 +84,7 @@
 }
 .select2-selection__arrow { height: 36px; }
 .select2-search__field { font-size: 14px; }
- .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    }
+
 
 
 
