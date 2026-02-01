@@ -179,7 +179,7 @@ Highcharts.chart('containe', {
         type: 'column'
     },
     title: {
-        text: 'Total Quantity per Client per Product Tahun Ini'
+        text: 'Total Quantity Per Client Year'
     },
     xAxis: {
         categories: @json($clientNames),
