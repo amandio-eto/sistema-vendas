@@ -192,6 +192,7 @@
                 <thead class="bg-light text-uppercase small fw-semibold sticky-top">
                         <tr>
                             <th>#</th>
+                            <th>Act. Trans</th>
                             <th>DO</th>
                             <th>SO</th>
                             <th>LO</th>
@@ -211,9 +212,24 @@
                     <tbody>
                         @forelse($transactions as $key => $tx)
                         <tr class="{{ !$tx->status ? 'table-warning' : '' }}">
+                               
+
                             <td>{{ $transactions->firstItem() + $key }}</td>
-                            <td class="fw-bold">{{ $tx->do_number }}</td>
-                            <td>{{ $tx->so_number }}</td>
+                             <td class="text-center">
+                                    @if(\Carbon\Carbon::parse($tx->created_at)->isToday())
+                                        <i class="fa-solid fa-circle-check text-success" title="Today"></i>
+                                    @endif
+                                </td>
+                            <td class="fw-bold">
+                                  <a style="color: black;" href="{{ route('transaction.print',$tx->id) }}">
+                                {{ $tx->do_number }}
+                                </a>
+                            </td>
+                            <td>
+                                 <a href="{{ route('transaction.print',$tx->id) }}">
+                                {{ $tx->so_number }}
+                                 </a>
+                            </td>
                             <td>{{ $tx->lo_number }}</td>
                             <td>{{ $tx->product_name."/".$tx->quality }}</td>
                             <td>{{ $tx->client_name }}</td>
