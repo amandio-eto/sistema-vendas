@@ -45,7 +45,7 @@
             <div class="m-header">
                
                     <!-- ========   change your logo hear   ============ -->
-                   <img src="{{ asset('tank.jpg') }}" class="text-center" alt="" height="60" width="60">
+                   <img src="{{ asset('oil.png') }}" class="text-center" alt="" height="60" width="60">
                    <p. class="pt-2">Oil Management</p.>
         
               
