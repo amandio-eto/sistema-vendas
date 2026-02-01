@@ -53,6 +53,13 @@
                         @error('so_number') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
 
+                     <div class="col-md-3">
+                        <label class="form-label small text-muted">Payment References </label>
+                        <input type="text" name="payment_references" value="{{ old('payment_references') }}"
+                               class="form-control form-control-sm">
+                        @error('payment_references') <small class="text-danger">{{ $message }}</small> @enderror
+                    </div>
+
                     <!-- PRODUCT -->
                     <div class="col-md-3">
                         <label class="form-label small text-muted">Product</label>
@@ -122,6 +129,17 @@
                         <input type="date" name="created_at"
                                value="{{ old('created_at') }}"
                                class="form-control form-control-sm">
+                    </div>
+
+
+                    <div class="col-md-6">
+                            <label class="form-label small text-muted">Description</label>
+                            <input type="text" name="description"
+                                value="{{ old('description') }}"
+                                class="form-control form-control-sm">
+                            @error('description')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                     </div>
 
                     <!-- ATTACHMENT -->
@@ -206,6 +224,9 @@
                                 @if ($tx->statusedit==true && Auth::user()->roles==='staff')
                                 <i class="bi bi-unlock text-danger"></i>
                                 @else
+                                
+                                @if (Auth::user()->roles==='administrator' || Auth::user()->roles==='manager')
+                                @else
                                 <form action="{{ route('statusedit',['id'=>$tx->id]) }}" method="POST">
                                     @csrf
                                     @method('PUT')
@@ -213,6 +234,8 @@
                                     <i class="bi bi-lock"></i>
                                 </button>
                                 </form>
+                                    
+                                @endif
                                     
                                 @endif
                                 
@@ -268,12 +291,20 @@
                                 
                                 @endif
 
-                                @if($tx->status)
+                                @if($tx->button===1 && Auth::user()->roles==='staff')
+                                  <a href="{{ route('transaction.edit',$tx->id) }}"
+                                   class="btn btn-sm btn-warning me-1">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+
+                                @endif
+
+                                
                                     <a href="{{ route('transaction.print',$tx->id) }}"
                                        class="btn btn-sm btn-secondary ms-1">
                                         <i class="bi bi-printer"></i>
                                     </a>
-                                @endif
+                          
                             
                             </td>
                         </tr>

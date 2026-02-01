@@ -62,10 +62,11 @@
     </form>
 
     <!-- TRANSACTIONS TABLE -->
-    <table class="table table-bordered table-striped" style="font-size: 10px;">
+    <table class="table table-bordered table-striped" style="font-size: 9px;">
         <thead>
             <tr>
-                <th>#</th>
+                <th>N <sup>0</sup></th>
+                   <th>LO</th>
                 <th>DO</th>
                 <th>SO</th>
                 <th>Client</th>
@@ -73,6 +74,9 @@
                 <th>Qty (L)</th>
                 <th>Driver</th>
                 <th>Plat</th>
+                <th>Attached</th>
+                <th>Payment References</th>
+                <th>Description</th>
                 <th>Status</th>
                 <th>Date</th>
             </tr>
@@ -81,6 +85,7 @@
             @forelse($transactions as $index => $t)
             <tr>
                 <td>{{ $index + 1 }}</td>
+                <th>{{ $t->lo_number }}</th>
                 <td>{{ $t->do_number }}</td>
                 <td>{{ $t->so_number }}</td>
                 <td>{{ $t->client_name }}</td>
@@ -88,6 +93,27 @@
                 <td>{{ number_format($t->quantity) }}</td>
                 <td>{{ $t->driver_name }}</td>
                 <td>{{ $t->plat_number }}</td>
+                  <td class="text-center">
+                                @if($t->attached)
+                                    <a href="{{ asset('storage/'.$t->attached) }}"
+                                       target="_blank"
+                                       class="btn btn-sm btn-outline-primary"
+                                       title="View Attachment">
+                                        <i class="bi bi-paperclip"></i>
+                                    </a>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
+                <th style="font-size: 8px;">
+                    {{ $t->payment_references }}
+                </th>
+                <th style="font-size: 8px;">
+                    {{ 
+                    $t->description
+                        
+                        }}
+                </th>
                 <td>{{ $t->status ? 'Completed' : 'Pending' }}</td>
                 <td>{{ \Carbon\Carbon::parse($t->created_at)->format('d M Y H:i') }}</td>
             </tr>

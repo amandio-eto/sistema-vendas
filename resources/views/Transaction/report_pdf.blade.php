@@ -15,23 +15,35 @@
 </head>
 <body>
 
-<h2 style="text-align:center;">Transactions Report</h2>
-<p>ESPERACA TIMOR OAN,LDA</p>
+<div class="row">
+    <div class="col">
+        <h2 style="text-align:center;">Daily Sales Report <br>
+            <span>Parque de Armazenamento de Combustíveis Hera (PAC-Hera)</span>
+        </h2>
+       
 
-<table>
+
+    </div>
+</div>
+
+
+
+<table style="font-size: 8px;">
     <thead>
         <tr>
             <th>N <sup> <u>0</u> </sup></sub></th>
+            <th>LO</th>
             <th>DO</th>
             <th>SO</th>
             <th>Client</th>
             <th>Product</th>
             <th>Code Product</th>
-            <th>Type Product</th>
+            
             <th>Qty (L)</th>
-            <th>Qty (Ton)</th>
             <th>Driver</th>
             <th>Plat</th>
+            <th>Payment References</th>
+            <th>Description</th>
             <th>Date</th>
         </tr>
     </thead>
@@ -39,6 +51,7 @@
         @foreach($transactions as $index => $t)
         <tr>
             <td>{{ $index + 1 }}</td>
+            <th>{{ $t->lo_number }}</th>
             <td>{{ $t->do_number }}</td>
             <td>{{ $t->so_number }}</td>
             <td>{{ $t->client_name }}</td>
@@ -47,11 +60,12 @@
                 {{  "#".$t->cp }}
                 
             </td>
-            <td>{{  "#".$t->q }}</td>
             <td>{{ number_format($t->quantity) }}</td>
-            <td>{{ format_ton($t->quantity) }}</td>
+
             <td>{{ $t->driver_name }}</td>
             <td>{{ $t->plat_number }}</td>
+            <td style="font-size: 8px;">{{ $t->payment_references }}</td>
+            <td style="font-size: 6px;">{{ $t->description }}</td>
             <td>{{ \Carbon\Carbon::parse($t->created_at)->format('d M Y H:i') }}</td>
         </tr>
         @endforeach

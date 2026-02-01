@@ -194,6 +194,7 @@ public function printPdf($id)
             ->leftJoin('drivers as d', 'd.id', '=', 't.id_driver')
             ->select(
                 't.*',
+                't.id',
                 'u.name as user_name',
                 'c.client_name',
                 't.lo_number',
@@ -276,6 +277,8 @@ public function printPdf($id)
             "attached"         => $attachedPath,
             'product_type' => $prod->code_product."-".$prod->quality,
             'button' => false,
+            'description' => $request->input('description'),
+            'payment_references' => $request->input('payment_references'),
             'quantity'       => $request->quantity,
             'id_client'      => $request->id_client,
             'client_name'    => $client->client_name,

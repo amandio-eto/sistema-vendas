@@ -31,33 +31,6 @@ use Nette\Utils\Json;
 
 
 
-Route::get('test',function(){
-    $clientMonthProduct = DB::table('transaction as t')
-    ->join('clients as c', 'c.id', '=', 't.id_client')
-    ->join('products as p', 'p.id', '=', 't.id_product')
-    ->select(
-        'c.client_name',
-        DB::raw('MONTH(t.created_at) as month'),
-        'p.product_name',
-        DB::raw('SUM(t.quantity) as total_quantity')
-    )
-    ->whereYear('t.created_at', now()->year)
-    ->whereMonth('t.created_at', now()->month)
-    ->groupBy(
-        'c.client_name',
-        DB::raw('MONTH(t.created_at)'),
-        'p.product_name'
-    )
-    ->orderBy('c.client_name')
-    ->orderBy('p.product_name')
-    ->get();
-
-    return json_encode($clientMonthProduct);
-
-
-});
-
-
 
 
 

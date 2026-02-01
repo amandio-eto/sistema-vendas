@@ -8,9 +8,26 @@
 
     $tx = DB::table('transaction')
         ->where('status', false)
-        ->orWhere('statusedit', true)
+        ->orWhere('statusedit', true);
+         $hour = now()->hour;
+
+         $greeting=null;
+   $now  = now();
+    $hour = $now->hour;
+
+    if ($hour < 12) {
+        $greeting = '🌅 Good Morning';
+    } elseif ($hour < 18) {
+        $greeting = '🌞 Good Afternoon';
+    } else {
+        $greeting = '🌙 Good Evening';
+    }
+     $time = $now->format('H:i:s');
                                                   
     @endphp
+
+  
+  
                  
     <nav class="nxl-navigation">
         <div class="navbar-wrapper">
@@ -29,7 +46,7 @@
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-airplay"></i></span>
+                            <span class="nxl-micon"><i class="feather-airplay text-primary"></i></span>
                             <span class="nxl-mtext">Dashboards</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
@@ -42,7 +59,7 @@
 
                             <li class="nxl-item nxl-hasmenu">
                             <a href="javascript:void(0);" class="nxl-link">
-                                <span class="nxl-micon"><i class="bi bi-fuel-pump-diesel-fill"></i></span>
+                                <span class="nxl-micon"><i class="bi bi-fuel-pump-diesel-fill text-info"></i></span>
                                 <span class="nxl-mtext">Delivery Order</span>
                                 <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                             </a>
@@ -72,14 +89,26 @@
                                 @endauth
 
 
-                                  <li class="nxl-item"><a class="nxl-link" href="{{ route('transactions.report') }}">
-                                      <i class="bi bi-journal"></i> Report</a></li>
+                                 
                             </ul>
                         </li>
+                            <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="bi bi-journal-text text-success"></i></span>
+                            <span class="nxl-mtext">Report</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu" style="display: none;">
+                            {{-- <li class="nxl-item"><a class="nxl-link" href="leads.html">Leads</a></li> --}}
+                             <li class="nxl-item"><a class="nxl-link" href="{{ route('transactions.report') }}">
+                                      <i class="bi bi-journal"></i> Report</a></li>
+                            {{-- <li class="nxl-item"><a class="nxl-link" href="leads-view.html">Leads View</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="leads-create.html">Leads Create</a></li> --}}
+                        </ul>
+                    </li>
 
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="bi bi-truck"></i></span>
+                            <span class="nxl-micon"><i class="bi bi-truck text-warning"></i></span>
                             <span class="nxl-mtext">Drivers</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu" style="display: none;">
@@ -92,7 +121,7 @@
 
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-users"></i></span>
+                            <span class="nxl-micon"><i class="feather-users text-dark"></i></span>
                             <span class="nxl-mtext">Clients</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
@@ -101,11 +130,13 @@
                         </ul>
                     </li>
 
+                
+
 
                    @if(Auth::user()->roles=='administrator')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-send"></i></span>
+                            <span class="nxl-micon"><i class="feather-send text-info"></i></span>
                             <span class="nxl-mtext">Products</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
@@ -116,7 +147,7 @@
 
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-power"></i></span>
+                            <span class="nxl-micon"><i class="feather-power text-danger"></i></span>
                             <span class="nxl-mtext">Authentication</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
@@ -361,6 +392,9 @@
     <!--! ================================================================ !-->
     <!--! [Start] Main Content !-->
     <!--! ================================================================ !-->
+
+  
+
     <main class="nxl-container">
         <div class="nxl-content">
             <!-- [ page-header ] start -->
@@ -370,8 +404,19 @@
                        <h5 class="m-b-10">{{ Str::upper(request()->path()) }}</h5>
                     </div>
                     <ul class="breadcrumb">
+
+                        <li>
+                            {{ $greeting }},
+                            {{ Auth::user()->gender === 'female' ? 'Mis.' : 'Mr.' }}
+                            {{ Auth::user()->name }}
+                            <br>
+                            <span style="font-size: 9px;">{{ \Carbon\Carbon::now()->format('l, m-F-Y : H:i:s A')  }} </span>
+                        </li>
+                        <br>
+                        
                        
-                        <li class="breadcrumb-item">{{ \Carbon\Carbon::now()->format('l, F - Y : H:i:s A') }}</li>
+                        {{-- <li class="breadcrumb-item">{{}}</li> --}}
+                       
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">

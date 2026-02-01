@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ================= Client x Product =================
     Highcharts.chart('clientProductChart', {
         chart: { type: 'column' },
-        title: { text: 'Transaction Client per Product ({{ $month }})' },
+        title: { text: 'Transaction Client Per Product ({{ $month }})' },
         xAxis: {
             categories: {!! json_encode($clients) !!},
             title: { text: 'Client' }
