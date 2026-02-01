@@ -332,6 +332,27 @@ foreach($products as $product){
         ];
     }
 
+    #PieChart Animation
+$productQuantitySummary = DB::table('transaction as t')
+        ->join('products as p', 'p.id', '=', 't.id_product')
+        ->select(
+            'p.quality',
+            DB::raw('SUM(t.quantity) as total_quantity')
+        )
+        ->whereYear('t.created_at', date('Y'))
+        ->groupBy('p.quality')
+        ->orderByDesc('total_quantity')
+        ->get();
+
+    $pieSeriesData = $productQuantitySummary->map(function($product){
+        return [
+            'name' => $product->quality,
+            'y'    => (float)$product->total_quantity
+        ];
+    });
+
+    $chartTitle = 'Total Quantity Per Product Year (L)';
+
 
    return view('Dashboard.index', array_merge(
     compact(
@@ -351,7 +372,8 @@ foreach($products as $product){
         'month',
         'clients', 'datasets',
          'clientNames',
-        'highchartSeries'
+        'highchartSeries',
+        'pieSeriesData','chartTitle'
         
        
 

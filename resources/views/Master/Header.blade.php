@@ -84,28 +84,14 @@
 }
 .select2-selection__arrow { height: 36px; }
 .select2-search__field { font-size: 14px; }
-</style>
+ .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
 
-<script>
-$(document).ready(function(){
-    // All single Select2
-    $('#product_select, #client_select, #driver_select').select2({
-        placeholder: 'Select an option...',
-        allowClear: true,
-        theme: 'bootstrap4',
-        width: '100%'
-    });
 
-    // Click anywhere to focus
-    $(document).on('click', '.select2-selection', function(){
-        $(this).closest('.select2-container').prev('select').select2('open');
-    });
 
-    // Auto-focus search field
-    $(document).on('select2:open', function(){
-        document.querySelector('.select2-search__field')?.focus();
-    });
-});
+
 
 
 
