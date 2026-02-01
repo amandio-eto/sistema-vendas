@@ -35,14 +35,18 @@
     <!--[if lt IE 9]>
 			<script src="https:oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 			<script src="https:oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+            
         
 		<![endif]-->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css" rel="stylesheet" />
            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
            <script src="https://code.highcharts.com/highcharts.js"></script>
             <script src="https://code.highcharts.com/modules/series-label.js"></script>
             <script src="https://code.highcharts.com/modules/exporting.js"></script>
             <script src="https://code.highcharts.com/modules/export-data.js"></script>
             <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <style>
     .table-hover tbody tr:hover {
@@ -64,21 +68,56 @@
     max-width: 100%;
 }
 
+
+.select2-container--default .select2-selection--single {
+    min-height: 42px;
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+    padding: 4px 10px;
+    font-size: 14px;
+    background-color: #fff;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.select2-container--default .select2-selection--single:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+}
+.select2-selection__arrow { height: 36px; }
+.select2-search__field { font-size: 14px; }
+</style>
+
+<script>
+$(document).ready(function(){
+    // All single Select2
+    $('#product_select, #client_select, #driver_select').select2({
+        placeholder: 'Select an option...',
+        allowClear: true,
+        theme: 'bootstrap4',
+        width: '100%'
+    });
+
+    // Click anywhere to focus
+    $(document).on('click', '.select2-selection', function(){
+        $(this).closest('.select2-container').prev('select').select2('open');
+    });
+
+    // Auto-focus search field
+    $(document).on('select2:open', function(){
+        document.querySelector('.select2-search__field')?.focus();
+    });
+});
+
+
+
 /* Mobile / tablet */
 @media (max-width: 767.98px) {
     #piechart {
         height: 300px; /* height lebih kecil di mobile */
     }
 
-    .select2-container--default .select2-selection--single {
-    height: 31px;
-    padding: 2px 8px;
-    border-radius: .5rem;
-    border: 1px solid #dee2e6;
-    font-size: 12px;
-}
-.select2-selection__rendered { line-height: 24px !important; }
-.select2-selection__arrow { height: 28px !important; }
+
+
+    
 }
 </style>
 </head>

@@ -275,6 +275,64 @@ for ($i = 0; $i < 5; $i++) {
 
     $month = now()->translatedFormat('F Y');
 
+    #Chart Line Total
+    $transactions = DB::table('transaction as t')
+    ->join('clients as c', 'c.id', '=', 't.id_client')
+    ->join('products as p', 'p.id', '=', 't.id_product')
+    ->select('c.client_name', 'p.product_name', DB::raw('SUM(t.quantity) as total_quantity'))
+    ->whereYear('t.created_at', now()->year)
+    ->groupBy('c.client_name', 'p.product_name')
+    ->orderBy('c.client_name')
+    ->get();
+
+// Convert ke format chart
+$clients = $transactions->pluck('client_name')->unique();
+$products = $transactions->pluck('product_name')->unique();
+
+$datasets = [];
+foreach($products as $product){
+    $data = [];
+    foreach($clients as $client){
+        $match = $transactions->first(fn($t) => $t->client_name == $client && $t->product_name == $product);
+        $data[] = $match ? $match->total_quantity : 0;
+    }
+    $datasets[] = [
+        'label' => $product,
+        'data' => $data,
+        'backgroundColor' => '#' . substr(md5($product), 0, 6) // warna unik per product
+    ];
+
+    #Total Client Chart
+  // Ambil semua transaksi tahun ini
+    $rows = DB::table('transaction as t')
+        ->join('products as p', 'p.id', '=', 't.id_product')
+        ->select('t.client_name','p.product_name', DB::raw('SUM(t.quantity) as total_quantity'))
+        ->whereYear('t.created_at', date('Y'))
+        ->groupBy('t.client_name','p.product_name')
+        ->orderBy('t.client_name')
+        ->get();
+
+    // Daftar client unik
+    $clientNames = $rows->pluck('client_name')->unique()->values();
+
+    // Daftar product unik
+    $productNames = $rows->pluck('product_name')->unique()->values();
+
+    // Siapkan series untuk Highcharts
+    $highchartSeries = [];
+    foreach($productNames as $product){
+        $data = [];
+        foreach($clientNames as $client){
+            $item = $rows->first(fn($r) => $r->client_name == $client && $r->product_name == $product);
+            $data[] = $item ? (float)$item->total_quantity : 0;
+        }
+        $highchartSeries[] = [
+            'name' => $product,
+            'data' => $data
+        ];
+    }
+
+
    return view('Dashboard.index', array_merge(
     compact(
         'prod',
@@ -291,7 +349,11 @@ for ($i = 0; $i < 5; $i++) {
         'clients',
         'series',
         'month',
-
+        'clients', 'datasets',
+         'clientNames',
+        'highchartSeries'
+        
+       
 
     ),
     [
@@ -303,5 +365,9 @@ for ($i = 0; $i < 5; $i++) {
 
 
     }
+    
+}
+
+
 }
                                                                                                                                                            

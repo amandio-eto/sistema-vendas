@@ -14,7 +14,10 @@
     <!-- ===================== -->
     @if(Auth::user()->roles==='manager')
     @else
-   <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
     <div class="card-body p-4 mt-3">
 
         <!-- Header -->
@@ -42,6 +45,7 @@
                     <label class="form-label small text-muted">LO Number</label>
                     <input type="number" name="lo_number" value="{{ old('lo_number') }}"
                            class="form-control form-control-sm">
+                    @error('lo_number') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
                 <!-- SO -->
@@ -49,22 +53,22 @@
                     <label class="form-label small text-muted">SO Number</label>
                     <input type="text" name="so_number" value="{{ old('so_number') }}"
                            class="form-control form-control-sm">
+                    @error('so_number') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
-                <!-- PAYMENT -->
+                <!-- Payment References -->
                 <div class="col-md-3">
                     <label class="form-label small text-muted">Payment References</label>
-                    <input type="text" name="payment_references"
-                           value="{{ old('payment_references') }}"
+                    <input type="text" name="payment_references" value="{{ old('payment_references') }}"
                            class="form-control form-control-sm">
+                    @error('payment_references') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
-                <!-- PRODUCT (SEARCH SELECT) -->
+                <!-- Product (Single Select2) -->
                 <div class="col-md-3">
-                    <label class="form-label small text-muted">Product</label>
-                    <select name="id_product"
-                            class="form-select form-select-sm select-search">
-                        <option value=""></option>
+                    <label class="form-label small text-muted fw-semibold">Product</label>
+                    <select name="id_product" class="form-select select2-single">
+                        <option value="">--Select Product--</option>
                         @foreach($products as $product)
                             <option value="{{ $product->id }}"
                                 {{ old('id_product') == $product->id ? 'selected' : '' }}>
@@ -72,13 +76,13 @@
                             </option>
                         @endforeach
                     </select>
+                    @error('id_product') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
-                <!-- CLIENT (SEARCH SELECT) -->
+                <!-- Client (Single Select2) -->
                 <div class="col-md-3">
-                    <label class="form-label small text-muted">Client</label>
-                    <select name="id_client"
-                            class="form-select form-select-sm select-search">
+                    <label class="form-label small text-muted fw-semibold">Client</label>
+                    <select name="id_client" id="client_select" class="form-select select2-single">
                         <option value=""></option>
                         @foreach($clients as $client)
                             <option value="{{ $client->id }}"
@@ -87,13 +91,13 @@
                             </option>
                         @endforeach
                     </select>
+                    @error('id_client') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
-                <!-- DRIVER (SEARCH SELECT) -->
-                <div class="col-md-3">
-                    <label class="form-label small text-muted">Driver</label>
-                    <select name="id_driver"
-                            class="form-select form-select-sm select-search">
+                <!-- Driver (Single Select2) -->
+                {{-- <div class="col-md-3">
+                    <label class="form-label small text-muted fw-semibold">Driver</label>
+                    <select name="id_driver" id="driver_select" class="form-select select2-single">
                         <option value=""></option>
                         @foreach($drivers as $driver)
                             <option value="{{ $driver->id }}"
@@ -102,45 +106,59 @@
                             </option>
                         @endforeach
                     </select>
-                </div>
+                    @error('id_driver') <small class="text-danger">{{ $message }}</small> @enderror
+                </div> --}}
 
-                <!-- QUANTITY -->
+
+                    <div class="col-md-3">
+                        <label class="form-label small text-muted fw-semibold">Driver</label>
+                        <select name="id_driver" id="driver_select" class="form-select select2-single">
+                            <option value=""></option>
+                            @foreach($drivers as $driver)
+                                <option value="{{ $driver->id }}"
+                                    {{ old('id_driver') == $driver->id ? 'selected' : '' }}>
+                                    {{ $driver->driver_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('id_driver') <small class="text-danger">{{ $message }}</small> @enderror
+                    </div>
+
+                <!-- Quantity -->
                 <div class="col-md-2">
                     <label class="form-label small text-muted">Quantity (Liter)</label>
-                    <input type="number" step="0.01" name="quantity"
-                           value="{{ old('quantity') }}"
+                    <input type="number" step="0.01" name="quantity" value="{{ old('quantity') }}"
                            class="form-control form-control-sm">
+                    @error('quantity') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
-                <!-- PLATE -->
+                <!-- Plate Number -->
                 <div class="col-md-2">
                     <label class="form-label small text-muted">Plate Number</label>
-                    <input type="text" name="plat_number"
-                           value="{{ old('plat_number') }}"
+                    <input type="text" name="plat_number" value="{{ old('plat_number') }}"
                            class="form-control form-control-sm">
+                    @error('plat_number') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
-                <!-- DATE -->
+                <!-- Date -->
                 <div class="col-md-2">
                     <label class="form-label small text-muted">Date</label>
-                    <input type="date" name="created_at"
-                           value="{{ old('created_at') }}"
+                    <input type="date" name="created_at" value="{{ old('created_at') }}"
                            class="form-control form-control-sm">
                 </div>
 
-                <!-- DESCRIPTION -->
+                <!-- Description -->
                 <div class="col-md-6">
                     <label class="form-label small text-muted">Description</label>
-                    <input type="text" name="description"
-                           value="{{ old('description') }}"
+                    <input type="text" name="description" value="{{ old('description') }}"
                            class="form-control form-control-sm">
+                    @error('description') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
-                <!-- ATTACHMENT -->
+                <!-- Attachment -->
                 <div class="col-md-2">
                     <label class="form-label small text-muted">Attachment</label>
-                    <input type="file" name="attached"
-                           class="form-control form-control-sm">
+                    <input type="file" name="attached" class="form-control form-control-sm">
                 </div>
             </div>
 
@@ -151,12 +169,11 @@
                     Save <i class="bi bi-check-circle ms-1"></i>
                 </button>
             </div>
-
         </form>
     </div>
 </div>
 
-    
+
     @endif
 
     <!-- ===================== -->
@@ -336,24 +353,69 @@
         </div>
     </div>
 
-</div>
-@endsection
+    </div>
+    @endsection
 
 @section('footer')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+
+
+
+
+
+
+
+
+<!-- Select2 CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-$(function () {
-    $('.select-search').select2({
-        placeholder: 'Search...',
+
+$(document).ready(function(){
+    // All single Select2
+    $('#product_select, #client_select, #driver_select').select2({
+        placeholder: 'Select an option...',
         allowClear: true,
+        theme: 'bootstrap4',
         width: '100%'
     });
-});
 
+    // Click anywhere to focus
+    $(document).on('click', '.select2-selection', function(){
+        $(this).closest('.select2-container').prev('select').select2('open');
+    });
+
+    // Auto-focus search field
+    $(document).on('select2:open', function(){
+        document.querySelector('.select2-search__field')?.focus();
+    });
+});
 </script>
+
+
+<script>
+$(document).ready(function(){
+    // Driver single-select
+    $('#driver_select').select2({
+        placeholder: 'Select a driver...',
+        allowClear: true,
+        theme: 'bootstrap4',
+        width: '100%'
+    });
+
+    // Auto-focus search field on open
+    $(document).on('select2:open', function(){
+        document.querySelector('.select2-search__field')?.focus();
+    });
+});
+</script>
+
+
+
+
+
 
     
 @endsection
+

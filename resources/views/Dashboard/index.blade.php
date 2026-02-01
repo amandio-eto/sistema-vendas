@@ -68,6 +68,7 @@
     </div>
 </div>
 
+
 {{-- =======================
    CLIENT x PRODUCT CHART
 ======================= --}}
@@ -81,6 +82,17 @@
     </div>
 </div>
 
+<div class="row  g-3 m-3">
+    <div class="card shadow-sm">
+    <div class="card-body">
+    <div class="col-md">
+        <div id="containe" style="width:100%; height:500px;"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
 {{-- =======================
    LINE CHART
 ======================= --}}
@@ -93,6 +105,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 @endsection
 
@@ -155,4 +170,44 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
+
+
+
+<script>
+Highcharts.chart('containe', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Total Quantity per Client per Product Tahun Ini'
+    },
+    xAxis: {
+        categories: @json($clientNames),
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Total Quantity'
+        }
+    },
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                     '<td style="padding:0"><b>{point.y:.2f}</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.1,
+            borderWidth: 0
+        }
+    },
+    series: @json($highchartSeries)
+});
+</script>
+
+
 @endsection
