@@ -14,155 +14,148 @@
     <!-- ===================== -->
     @if(Auth::user()->roles==='manager')
     @else
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
-        <div class="card-body p-4 mt-3">
+   <div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-4 mt-3">
 
-            <!-- Header -->
-            <div class="text-center mb-4">
-                <h5 class="fw-bold text-uppercase mb-0">New Delivery Order</h5>
-                <small class="text-muted">Create a new transaction record</small>
-                <hr class="w-25 mx-auto mt-3">
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h5 class="fw-bold text-uppercase mb-0">New Delivery Order</h5>
+            <small class="text-muted">Create a new transaction record</small>
+            <hr class="w-25 mx-auto mt-3">
+        </div>
+
+        <form action="{{ route('transaction.create') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <div class="row g-4 align-items-end">
+
+                <!-- DO NUMBER -->
+                <div class="col-md-3">
+                    <div class="border rounded-3 p-3 text-center bg-light h-100">
+                        <small class="text-muted d-block">DO Number</small>
+                        <span class="fs-4 fw-bold text-success">#{{ $ndo }}</span>
+                    </div>
+                </div>
+
+                <!-- LO -->
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">LO Number</label>
+                    <input type="number" name="lo_number" value="{{ old('lo_number') }}"
+                           class="form-control form-control-sm">
+                </div>
+
+                <!-- SO -->
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">SO Number</label>
+                    <input type="text" name="so_number" value="{{ old('so_number') }}"
+                           class="form-control form-control-sm">
+                </div>
+
+                <!-- PAYMENT -->
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Payment References</label>
+                    <input type="text" name="payment_references"
+                           value="{{ old('payment_references') }}"
+                           class="form-control form-control-sm">
+                </div>
+
+                <!-- PRODUCT (SEARCH SELECT) -->
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Product</label>
+                    <select name="id_product"
+                            class="form-select form-select-sm select-search">
+                        <option value=""></option>
+                        @foreach($products as $product)
+                            <option value="{{ $product->id }}"
+                                {{ old('id_product') == $product->id ? 'selected' : '' }}>
+                                {{ $product->product_name }} — {{ $product->quality }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- CLIENT (SEARCH SELECT) -->
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Client</label>
+                    <select name="id_client"
+                            class="form-select form-select-sm select-search">
+                        <option value=""></option>
+                        @foreach($clients as $client)
+                            <option value="{{ $client->id }}"
+                                {{ old('id_client') == $client->id ? 'selected' : '' }}>
+                                {{ $client->client_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- DRIVER (SEARCH SELECT) -->
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Driver</label>
+                    <select name="id_driver"
+                            class="form-select form-select-sm select-search">
+                        <option value=""></option>
+                        @foreach($drivers as $driver)
+                            <option value="{{ $driver->id }}"
+                                {{ old('id_driver') == $driver->id ? 'selected' : '' }}>
+                                {{ $driver->driver_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- QUANTITY -->
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Quantity (Liter)</label>
+                    <input type="number" step="0.01" name="quantity"
+                           value="{{ old('quantity') }}"
+                           class="form-control form-control-sm">
+                </div>
+
+                <!-- PLATE -->
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Plate Number</label>
+                    <input type="text" name="plat_number"
+                           value="{{ old('plat_number') }}"
+                           class="form-control form-control-sm">
+                </div>
+
+                <!-- DATE -->
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Date</label>
+                    <input type="date" name="created_at"
+                           value="{{ old('created_at') }}"
+                           class="form-control form-control-sm">
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="col-md-6">
+                    <label class="form-label small text-muted">Description</label>
+                    <input type="text" name="description"
+                           value="{{ old('description') }}"
+                           class="form-control form-control-sm">
+                </div>
+
+                <!-- ATTACHMENT -->
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Attachment</label>
+                    <input type="file" name="attached"
+                           class="form-control form-control-sm">
+                </div>
             </div>
 
-            <form action="{{ route('transaction.create') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+            <!-- ACTION -->
+            <div class="d-flex justify-content-end mt-5 gap-2">
+                <button type="reset" class="btn btn-outline-danger btn-sm">Reset</button>
+                <button type="submit" class="btn btn-success btn-sm px-4">
+                    Save <i class="bi bi-check-circle ms-1"></i>
+                </button>
+            </div>
 
-                <div class="row g-4 align-items-end">
-
-                    <!-- DO NUMBER -->
-                    <div class="col-md-3">
-                        <div class="border rounded-3 p-3 text-center bg-light h-100">
-                            <small class="text-muted d-block">DO Number</small>
-                            <span class="fs-4 fw-bold text-success">#{{ $ndo }}</span>
-                        </div>
-                    </div>
-
-                    <!-- LO -->
-                    <div class="col-md-3">
-                        <label class="form-label small text-muted">LO Number</label>
-                        <input type="number" name="lo_number" value="{{ old('lo_number') }}"
-                               class="form-control form-control-sm">
-                        @error('lo_number') <small class="text-danger">{{ $message }}</small> @enderror
-                    </div>
-
-                    <!-- SO -->
-                    <div class="col-md-3">
-                        <label class="form-label small text-muted">SO Number</label>
-                        <input type="text" name="so_number" value="{{ old('so_number') }}"
-                               class="form-control form-control-sm">
-                        @error('so_number') <small class="text-danger">{{ $message }}</small> @enderror
-                    </div>
-
-                     <div class="col-md-3">
-                        <label class="form-label small text-muted">Payment References </label>
-                        <input type="text" name="payment_references" value="{{ old('payment_references') }}"
-                               class="form-control form-control-sm">
-                        @error('payment_references') <small class="text-danger">{{ $message }}</small> @enderror
-                    </div>
-
-                    <!-- PRODUCT -->
-                    <div class="col-md-3">
-                        <label class="form-label small text-muted">Product</label>
-                        <select name="id_product" class="form-select form-select-sm">
-                            <option value="">Select Product</option>
-                            @foreach($products as $product)
-                                <option value="{{ $product->id }}"
-                                    {{ old('id_product') == $product->id ? 'selected' : '' }}>
-                                    {{ $product->product_name }} • {{ $product->quality }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('id_product') <small class="text-danger">{{ $message }}</small> @enderror
-                    </div>
-
-                    <!-- CLIENT -->
-                    <div class="col-md-3">
-                        <label class="form-label small text-muted">Client</label>
-                        <select name="id_client" class="form-select form-select-sm">
-                            <option value="">Select Client</option>
-                            @foreach($clients as $client)
-                                <option value="{{ $client->id }}"
-                                    {{ old('id_client') == $client->id ? 'selected' : '' }}>
-                                    {{ $client->client_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('id_client') <small class="text-danger">{{ $message }}</small> @enderror
-                    </div>
-
-                    <!-- DRIVER -->
-                    <div class="col-md-3">
-                        <label class="form-label small text-muted">Driver</label>
-                        <select name="id_driver" class="form-select form-select-sm">
-                            <option value="">Select Driver</option>
-                            @foreach($drivers as $driver)
-                                <option value="{{ $driver->id }}"
-                                    {{ old('id_driver') == $driver->id ? 'selected' : '' }}>
-                                    {{ $driver->driver_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('id_driver') <small class="text-danger">{{ $message }}</small> @enderror
-                    </div>
-
-                    <!-- QUANTITY -->
-                    <div class="col-md-2">
-                        <label class="form-label small text-muted">Quantity (Liter)</label>
-                        <input type="number" step="0.01" name="quantity"
-                               value="{{ old('quantity') }}"
-                               class="form-control form-control-sm">
-                        @error('quantity') <small class="text-danger">{{ $message }}</small> @enderror
-                    </div>
-
-                    <!-- PLATE -->
-                    <div class="col-md-2">
-                        <label class="form-label small text-muted">Plate Number</label>
-                        <input type="text" name="plat_number"
-                               value="{{ old('plat_number') }}"
-                               class="form-control form-control-sm">
-                        @error('plat_number') <small class="text-danger">{{ $message }}</small> @enderror
-                    </div>
-
-                    <!-- DATE -->
-                    <div class="col-md-2">
-                        <label class="form-label small text-muted">Date</label>
-                        <input type="date" name="created_at"
-                               value="{{ old('created_at') }}"
-                               class="form-control form-control-sm">
-                    </div>
-
-
-                    <div class="col-md-6">
-                            <label class="form-label small text-muted">Description</label>
-                            <input type="text" name="description"
-                                value="{{ old('description') }}"
-                                class="form-control form-control-sm">
-                            @error('description')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                    </div>
-
-                    <!-- ATTACHMENT -->
-                    <div class="col-md-2">
-                        <label class="form-label small text-muted">Attachment</label>
-                        <input type="file" name="attached"
-                               class="form-control form-control-sm">
-                    </div>
-                </div>
-
-                <!-- ACTION -->
-                <div class="d-flex justify-content-end mt-5 gap-2">
-                    <button type="reset" class="btn btn-outline-danger btn-sm">
-                        Reset
-                    </button>
-                    <button type="submit" class="btn btn-success btn-sm px-4">
-                        Save <i class="bi bi-check-circle ms-1"></i>
-                    </button>
-                </div>
-
-            </form>
-        </div>
+        </form>
     </div>
+</div>
+
     
     @endif
 
@@ -344,4 +337,23 @@
     </div>
 
 </div>
+@endsection
+
+@section('footer')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$(function () {
+    $('.select-search').select2({
+        placeholder: 'Search...',
+        allowClear: true,
+        width: '100%'
+    });
+});
+
+</script>
+
+    
 @endsection

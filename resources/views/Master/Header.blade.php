@@ -69,6 +69,16 @@
     #piechart {
         height: 300px; /* height lebih kecil di mobile */
     }
+
+    .select2-container--default .select2-selection--single {
+    height: 31px;
+    padding: 2px 8px;
+    border-radius: .5rem;
+    border: 1px solid #dee2e6;
+    font-size: 12px;
+}
+.select2-selection__rendered { line-height: 24px !important; }
+.select2-selection__arrow { height: 28px !important; }
 }
 </style>
 </head>
