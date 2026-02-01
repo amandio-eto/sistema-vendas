@@ -11,10 +11,13 @@
         ->orWhere('statusedit', true);
          $hour = now()->hour;
 
-         $greeting=null;
-   $now  = now();
+
+    use Carbon\Carbon;
+
+    $now = now(); // Waktu sekarang sesuai timezone Laravel
     $hour = $now->hour;
 
+    // Greeting
     if ($hour < 12) {
         $greeting = '🌅 Good Morning';
     } elseif ($hour < 18) {
@@ -22,7 +25,15 @@
     } else {
         $greeting = '🌙 Good Evening';
     }
-     $time = $now->format('H:i:s');
+
+    // Nama user & title
+    $title = Auth::user()->gender === 'female' ? 'Mis.' : 'Mr.';
+    $name = Auth::user()->name;
+
+    // Format tanggal hari ini
+    $date = $now->format('l, d-F-Y : h:i:s A'); 
+
+   
                                                   
     @endphp
 
@@ -405,17 +416,15 @@
                     </div>
                     <ul class="breadcrumb">
 
-                        <li>
-                            {{ $greeting }},
-                            {{ Auth::user()->gender === 'female' ? 'Mis.' : 'Mr.' }}
-                            {{ Auth::user()->name }}
+                                            <li>
+                            {{ $greeting }}, {{ $title }} {{ $name }}
                             <br>
-                            <span style="font-size: 9px;">{{ \Carbon\Carbon::now()->format('l, m-F-Y : H:i:s A')  }} </span>
+                            <small>{{ $date }}</small>
                         </li>
                         <br>
                         
                        
-                        {{-- <li class="breadcrumb-item">{{}}</li> --}}
+                  
                        
                     </ul>
                 </div>

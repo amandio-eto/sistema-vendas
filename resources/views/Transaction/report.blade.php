@@ -2,7 +2,7 @@
 @section('title','Report')
 
 @section('content')
-<div class="container">
+<div aria-rowcount="" class="m-3">
 
 
     <!-- FILTER FORM -->
