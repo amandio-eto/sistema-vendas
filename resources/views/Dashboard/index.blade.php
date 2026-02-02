@@ -18,32 +18,35 @@
         $cardColor = $qualityColors[strtoupper(trim($p->quality))] ?? '#6c757d';
     @endphp
 
-    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-        <div class="card border-0 shadow-sm h-100" style="border-radius: 12px; transition: transform 0.2s;">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                
-                {{-- Icon & Product Info --}}
-                <div class="d-flex align-items-center">
-                    <div class="me-3 rounded-circle d-flex align-items-center justify-content-center"
-                         style="width:40px; height:40px; background-color: {{ $cardColor }};">
-                        <i class="bi bi-fuel-pump-fill text-white"></i>
-                    </div>
-                    <div>
-                        <div class="fw-semibold text-truncate" style="font-size:14px">{{ $p->product_name }}</div>
-                        <div class="text-muted" style="font-size:12px">{{ $p->quality }}</div>
-                    </div>
-                </div>
 
-                {{-- Total Quantity --}}
-                <div class="text-end">
-                    <div class="fw-bold text-primary" style="font-size:14px">
-                        {{ format_liter($p->total_quantity,2) }}
+            <div class="col-md-3" style="font-size:10px;">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex justify-content-between align-items-center p-2">
+
+                        {{-- Icon & Product Info --}}
+                        <div class="d-flex align-items-center ">
+                            <div class="me-3 rounded-circle d-flex align-items-center justify-content-center"
+                                style="width:50px; height:50px; background-color: {{ $cardColor }};">
+                                <i class="bi bi-fuel-pump-fill text-white fs-5"></i>
+                            </div>
+                            <div>
+                                <div class="fw-semibold text-truncate" style="font-size:12px">{{ $p->product_name }}</div>
+                                <div class="text-muted" style="font-size:10px;">{{ $p->quality }}</div>
+                            </div>
+                        </div>
+
+                        {{-- Total Quantity --}}
+                        <div class="text-end">
+                            <div class="fw-bold text-primary ml-2" style="font-size:12px; line-height:1">
+                                {{ format_liter($p->total_quantity,2) }}
+                            </div>
+                            <div class="text-muted" style="font-size:12px">Total</div>
+                        </div>
+
                     </div>
-                    <div class="text-muted" style="font-size:12px">Total</div>
                 </div>
             </div>
-        </div>
-    </div>
+
 
 @empty
     <div class="col-12">

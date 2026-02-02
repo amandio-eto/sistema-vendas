@@ -103,6 +103,20 @@
                                  
                             </ul>
                         </li>
+
+
+                        {{-- <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-dollar-sign"></i></span>
+                            <span class="nxl-mtext">Sales Order</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu" style="display: none;">
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('sale-orders.index') }}">Sales Order</a></li>
+                            
+                        </ul>
+                    </li> --}}
+
+
                             <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="bi bi-journal-text text-success"></i></span>

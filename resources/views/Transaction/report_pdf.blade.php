@@ -11,34 +11,66 @@
         .status { padding:2px 6px; border-radius:4px; color:#fff; font-weight:bold; }
         .status.completed { background:#4caf50; }
         .status.pending { background:#ff9800; }
+        h4 { margin-bottom:6px; }
+        .summary-table { width:45%; font-size:9px; border-collapse:collapse; margin-bottom:15px; }
+        .summary-table th, .summary-table td { border:none; padding:4px 2px; }
+        .summary-table th { border-bottom:1px solid #000; }
+        .summary-table tr.total td, .summary-table tr.total th { border-top:1px solid #000; font-weight:bold; }
+        .right { text-align:right; }
     </style>
 </head>
 <body>
 
-<div class="row">
-    <div class="col">
-        <h2 style="text-align:center;">Daily Sales Report <br>
-            <span>Parque de Armazenamento de Combustíveis Hera (PAC-Hera)</span>
-        </h2>
-       
-
-
-    </div>
+<div style="text-align:center; margin-bottom:10px;">
+    <h2>Daily Sales Report<br>
+        <span>Parque de Armazenamento de Combustíveis Hera (PAC-Hera)</span>
+    </h2>
 </div>
 
+@php
+    // Hitung total per product & grand total
+    $totalPerProduct = [];
+    $grandTotal = 0;
+    foreach($transactions as $t){
+        $totalPerProduct[$t->product_name] = ($totalPerProduct[$t->product_name] ?? 0) + $t->quantity;
+        $grandTotal += $t->quantity;
+    }
+@endphp
 
+<!-- SUMMARY PRODUCT -->
+<h4>SUMMARY PRODUCT</h4>
+<table class="summary-table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th class="right">Total (L)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($totalPerProduct as $product => $total)
+        <tr>
+            <td>{{ $product }}</td>
+            <td class="right">{{ number_format($total,0,',','.') }} L</td>
+        </tr>
+        @endforeach
+        <tr class="total">
+            <th class="right">TOTAL PRODUCT</th>
+            <th class="right">{{ number_format($grandTotal,0,',','.') }} L</th>
+        </tr>
+    </tbody>
+</table>
 
+<!-- TRANSACTIONS TABLE -->
 <table style="font-size: 8px;">
     <thead>
         <tr>
-            <th>N <sup> <u>0</u> </sup></sub></th>
+            <th>N<sup>0</sup></th>
             <th>LO</th>
             <th>DO</th>
             <th>SO</th>
             <th>Client</th>
             <th>Product</th>
             <th>Code Product</th>
-            
             <th>Qty (L)</th>
             <th>Driver</th>
             <th>Plat</th>
@@ -51,17 +83,13 @@
         @foreach($transactions as $index => $t)
         <tr>
             <td>{{ $index + 1 }}</td>
-            <th>{{ $t->lo_number }}</th>
+            <td>{{ $t->lo_number }}</td>
             <td>{{ $t->do_number }}</td>
             <td>{{ $t->so_number }}</td>
             <td>{{ $t->client_name }}</td>
-            <td>{{$t->product_name }}</td>
-            <td>
-                {{  "#".$t->cp }}
-                
-            </td>
+            <td>{{ $t->product_name }}</td>
+            <td>#{{ $t->cp }}</td>
             <td>{{ number_format($t->quantity) }}</td>
-
             <td>{{ $t->driver_name }}</td>
             <td>{{ $t->plat_number }}</td>
             <td style="font-size: 8px;">{{ $t->payment_references }}</td>
@@ -72,6 +100,7 @@
     </tbody>
 </table>
 
+<!-- FOOTER -->
 <p style="text-align:center; margin-top:20px;">
     e-ETO | Developed by IT Esperanca Timor Oan, lda | {{ \Carbon\Carbon::now()->format('Y') }}
 </p>

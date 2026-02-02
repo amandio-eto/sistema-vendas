@@ -81,32 +81,33 @@ class DashboardController extends Controller
     // ==============================
     // Highcharts data
     // ==============================
-    $test = DB::table('transaction as t')
-        ->join('products as p', 'p.id', '=', 't.id_product')
-        ->select('p.product_name', DB::raw('SUM(t.quantity) as total_quantity'), DB::raw('MONTH(t.created_at) as month'))
-        ->whereYear('t.created_at', $year)
-        ->groupBy('p.product_name', DB::raw('MONTH(t.created_at)'))
-        ->orderBy('month')
-        ->get();
 
-    $monthNames = [1=>'Januari',2=>'Februari',3=>'Maret',4=>'April',5=>'Mei',6=>'Juni',7=>'Juli',8=>'Agustus',9=>'September',10=>'Oktober',11=>'November',12=>'Desember'];
+    $years = now()->year;
 
-    $categories = [];
-    foreach ($test as $t) {
-        $t->nBulan = $monthNames[$t->month];
-        if (!in_array($t->nBulan, $categories)) $categories[] = $t->nBulan;
-    }
+$rows = DB::table('transaction as t')
+    ->select(
+        DB::raw('MONTH(t.created_at) as month'),
+        DB::raw('SUM(t.quantity) as total_quantity')
+    )
+    ->whereYear('t.created_at', $years)
+    ->groupBy(DB::raw('MONTH(t.created_at)'))
+    ->orderBy('month')
+    ->get();
 
-    $products = $test->pluck('product_name')->unique();
-    $series = [];
-    foreach ($products as $prodName) {
-        $dataSeries = [];
-        foreach ($categories as $monthName) {
-            $item = $test->first(fn($t) => $t->product_name === $prodName && $t->nBulan === $monthName);
-            $dataSeries[] = $item ? (float)$item->total_quantity : 0;
-        }
-        $series[] = ['name'=>$prodName, 'data'=>$dataSeries];
-    }
+
+    $monthNames = [
+    1=>'Januari',2=>'Februari',3=>'Maret',4=>'April',
+    5=>'Mei',6=>'Juni',7=>'Juli',8=>'Agustus',
+    9=>'September',10=>'Oktober',11=>'November',12=>'Desember'
+];
+
+$categories = array_values($monthNames);
+$data = array_fill(0, 12, 0);
+
+foreach ($rows as $r) {
+    $data[$r->month - 1] = (int) $r->total_quantity;
+}
+
 
     // ==============================
     // Safety fallback

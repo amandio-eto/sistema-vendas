@@ -234,81 +234,68 @@ public function printPdf($id)
     // =======================
     public function store(Request $request)
     {
-        $request->validate([
-            'id_product' => 'required|integer',
-            'id_client' => 'required|integer',
-            'id_driver' => 'required|integer',
-            'quantity' => 'required|numeric|min:0',
-            'plat_number'=> 'nullable|string|max:50',
-            'lo_number'  => 'nullable|numeric',
-            'so_number'  => 'nullable|string|max:255',
+
+         $request->validate([
+            'so_number'   => 'required|integer',
+            'id_product'  => 'required|integer|exists:products,id',
+            'id_client'   => 'required|integer|exists:clients,id',
+            'id_driver'   => 'required|integer|exists:drivers,id',
+            'quantity'    => 'required|numeric|min:0.01',
+            'plat_number' => 'nullable|string|max:50',
+            'lo_number'   => 'nullable|numeric',
+            'created_at'  => 'required|date',
+            'attached'    => 'nullable|file|max:2048',
         ]);
 
 
-        $do = DB::table('transaction')->max('do_number');
-        if($do==null){
-            $ndo = 100;
-        }else{
-           $ndo =  $do+1;
-        }
-       
+        
+        
+        // Generate DO number
+        $maxDO = DB::table('transaction')->max('do_number');
+        $ndo = $maxDO ? $maxDO + 1 : 100;
 
-                $driver = DB::table('drivers')->find($request->id_driver);
-                $client = DB::table('clients')->find($request->id_client);
-                $prod = DB::table('products')->where('id',$request->id_product)->first();
+        // Ambil driver, client, product
+        $driver = DB::table('drivers')->find($request->id_driver);
+        $client = DB::table('clients')->find($request->id_client);
+        $product = DB::table('products')->find($request->id_product);
 
-                if (!$driver || !$client) {
-                    return back()->withErrors('Driver or Client not found');
-                } 
-
-        $attachedPath = null;
-        if ($request->hasFile('attached')) {
-            $attachedPath = $request->file('attached')
-                ->store('transaction_files', 'public');
-        }
+        // Handle attachment
+        $attachedPath = $request->hasFile('attached') ? $request->file('attached')->store('transaction_files', 'public') : null;
+        // Insert DO
         DB::table('transaction')->insert([
             'do_number'      => $ndo,
-            'lo_number'      => $request->lo_number,
             'so_number'      => $request->so_number,
-            'product_type'   => $request->product_type ?? null,
+            'lo_number'      => $request->lo_number,
             'id_product'     => $request->id_product,
             'id_user'        => auth()->id(),
-            'status'         => false,
-            "attached"         => $attachedPath,
-            'product_type' => $prod->code_product."-".$prod->quality,
-            'button' => false,
-            'description' => $request->input('description'),
-            'payment_references' => $request->input('payment_references'),
-            'quantity'       => $request->quantity,
             'id_client'      => $request->id_client,
+            'status'         => false,
+            'product_type'   => $product->code_product.'-'.$product->quality,
             'client_name'    => $client->client_name,
-            'id_driver'      => $request->id_driver,
             'driver_name'    => $driver->driver_name,
+            'id_driver'      => $request->id_driver,
             'plat_number'    => $request->plat_number,
-            'created_at' => Carbon::parse($request->created_at),
+            'quantity'       => $request->quantity,
+            'attached'       => $attachedPath,
+            'created_at'     => Carbon::parse($request->created_at),
             'updated_at'     => Carbon::now(),
         ]);
 
-
-         $agent = new Agent();
-        $browser = $agent->browser();    
-        $version = $agent->version($browser); 
-        $os = $agent->platform();        
-        $device = $agent->device();
-        $hostname = gethostname();
-
+        // Log user activity
+        $agent = new Agent();
         DB::table('user_logs')->insert([
-        "hostname" => $hostname,
-        "ip" => $request->ip(),
-        "browser" => $browser,
-        "version" => $version,
-        "os" => $os,
-        "device" => $device,
-        "method" => request()->method(),
-        "description" => "User Add New ".$request->so_number,
-        "user_id" => Auth::user()->id
+            'hostname'    => gethostname(),
+            'ip'          => $request->ip(),
+            'browser'     => $agent->browser(),
+            'version'     => $agent->version($agent->browser()),
+            'os'          => $agent->platform(),
+            'device'      => $agent->device(),
+            'method'      => $request->method(),
+            'description' => "User added DO for SO: ".$request->so_number,
+            'user_id'     => Auth::id(),
         ]);
-        toastr()->success('success', 'Transaction created successfully.');
+
+        toastr()->success('Success', 'Delivery Order created successfully.');
         return back();
     }
 

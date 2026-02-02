@@ -85,6 +85,63 @@
 .select2-selection__arrow { height: 36px; }
 .select2-search__field { font-size: 14px; }
 
+/* ====== Elegant Card Styling ====== */
+.card {
+    border-radius: 15px;           /* Membuat sudut lebih lembut */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12); /* Shadow lebih elegan */
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);   /* Hover effect */
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+
+.card .card-body {
+    padding: 2rem 1.5rem;          /* Lebih spacious */
+}
+
+.card h5, .card h6 {
+    color: #333;
+    font-weight: 600;
+}
+
+.card small.text-muted {
+    color: #6c757d !important;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    border-bottom: 2px solid #dee2e6;
+    color: #495057;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+    transition: 0.3s;
+}
+
+.btn-warning, .btn-danger, .btn-success {
+    border-radius: 8px;   /* Membulatkan tombol */
+}
+
+.badge {
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+/* Optional: Gradient header untuk card-body section */
+.card-body h5 {
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
 
 
 

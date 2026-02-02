@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SaleOrderController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,17 @@ use Nette\Utils\Json;
 #GROUP MIDDLEWARE STAFF
 Route::middleware(['auth', 'role:administrator,manager,staff'])
     ->group(function () {
+    #SalesController
+    Route::prefix('sale-orders')->group(function () {
+    Route::get('/sales', [SaleOrderController::class, 'index'])->name('sale-orders.index');
+    Route::post('/store', [SaleOrderController::class, 'store'])->name('sale-orders.store');
+
+    // PDF report
+    Route::get('/report/pdf', [SaleOrderController::class, 'pdfReport'])->name('sale-orders.pdf');
+});
+    #End SalesController
+
+
     #1)Dashboard
     Route::get('dashboard',[\App\Http\Controllers\DashboardController::class,'index'])->name('dashboard.index');
     #EndDashboard

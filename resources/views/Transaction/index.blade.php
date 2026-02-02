@@ -19,6 +19,15 @@
 
 <div class="card border-0 shadow-sm rounded-4 mb-4">
     <div class="card-body p-4 mt-3">
+        @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
         <!-- Header -->
         <div class="text-center mb-4">
