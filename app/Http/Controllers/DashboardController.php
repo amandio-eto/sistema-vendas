@@ -12,20 +12,24 @@ class DashboardController extends Controller
         $currentYear = Carbon::now()->year;
         $currentMonth = Carbon::now()->month;
         $month = now()->translatedFormat('F Y');
+        $currentDate = Carbon::today();
 
         // ===================== PRODUCT SUMMARY =====================
-        $prod = DB::table('products as p')
-            ->leftJoin('transaction as t', function ($join) use ($currentYear) {
-                $join->on('p.id', '=', 't.id_product')
-                     ->whereYear('t.created_at', $currentYear);
-            })
-            ->select(
-                'p.id', 'p.product_name', 'p.quality',
-                DB::raw('COALESCE(SUM(t.quantity),0) as total_quantity')
-            )
-            ->groupBy('p.id','p.product_name','p.quality')
-            ->orderByDesc('total_quantity')
-            ->get();
+       
+            $prod = DB::table('products as p')
+                ->leftJoin('transaction as t', function ($join) use ($currentDate) {
+                    $join->on('p.id', '=', 't.id_product')
+                        ->whereDate('t.created_at', $currentDate); // <-- filter hari ini
+                })
+                ->select(
+                    'p.id',
+                    'p.product_name',
+                    'p.quality',
+                    DB::raw('COALESCE(SUM(t.quantity),0) as total_quantity')
+                )
+                ->groupBy('p.id','p.product_name','p.quality')
+                ->orderByDesc('total_quantity')
+                ->get();
 
         // ===================== MONTHLY COLUMN =====================
         $monthlyData = DB::table('transaction as t')

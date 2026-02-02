@@ -32,7 +32,7 @@
                 </div>
                 <div class="text-end">
                     <div class="fw-bold text-primary ml-2" style="font-size:12px; line-height:1">
-                        {{ number_format($p->total_quantity,2) }}
+                        {{ format_liter($p->total_quantity) }}
                     </div>
                     <div class="text-muted" style="font-size:12px">Total</div>
                 </div>
