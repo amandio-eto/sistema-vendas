@@ -153,6 +153,7 @@ class ReportController extends Controller
                 'u.name as user_name',
                 'c.client_name',
                 'p.product_name',
+                'p.code_product as cp',
                 'p.quality',
                 'p.code_product',
                 'd.driver_name'
