@@ -243,7 +243,6 @@ public function printPdf($id)
             'quantity'    => 'required|numeric|min:0.01',
             'plat_number' => 'nullable|string|max:50',
             'lo_number'   => 'nullable|numeric',
-            'created_at'  => 'required|date',
             'attached'    => 'nullable|file|max:2048',
         ]);
 
