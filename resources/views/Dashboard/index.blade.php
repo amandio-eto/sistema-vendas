@@ -76,7 +76,12 @@
 </div>
 
 {{-- =======================
-   OTHER CHART
+   TOTAL CLIENT × PRODUCT (Tahun Ini) – BARU
+======================= --}}
+
+
+{{-- =======================
+   OTHER CHARTS
 ======================= --}}
 <div class="row g-3 m-3">
     <div class="col-md-12">
@@ -87,15 +92,15 @@
 </div>
 
 {{-- =======================
-   LINE CHART
+   LINE CHART & PIE QUALITY
 ======================= --}}
 <div class="row g-3 m-3">
-    <div class="col-md-6">
+    <div class="col-md-7">
         <div class="card shadow-sm" style="border-radius:12px;">
             <div class="card-body"><div id="lineMonthly" style="height:420px"></div></div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-5">
         <div class="card shadow-sm" style="border-radius:12px;">
             <div class="card-body"><div id="pieContainerLiters" style="width:100%;"></div></div>
         </div>
@@ -129,22 +134,25 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ===================== CLIENT × PRODUCT (Bulan Saat Ini) =====================
-    Highcharts.chart('clientProductChart', {
-        chart: { type: 'column' },
-        title: { text: 'Transaction Client Per Product ({{ $month }})' },
-        xAxis: { categories: @json($clientNames), title: { text: 'Client' } },
-        yAxis: { min: 0, title: { text: 'Total Quantity (L)' } },
-        tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                         '<td style="padding:0"><b>{point.y:.2f} L</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-        },
-        plotOptions: { column: { pointPadding: 0.1, borderWidth: 0, dataLabels: { enabled: true } } },
-        series: @json($highchartSeries)
-    });
+   Highcharts.chart('clientProductChart', {
+    chart: { type: 'column' },
+    title: { text: 'Transaction Client Per Product ({{ $month }})' },
+    xAxis: { categories: @json($clientMonthNames), title: { text: 'Client' } },
+    yAxis: { min: 0, title: { text: 'Total Quantity (L)' } },
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                     '<td style="padding:0"><b>{point.y:.2f} L</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: { column: { pointPadding: 0.1, borderWidth: 0, dataLabels: { enabled: true } } },
+    series: @json($clientMonthSeries)
+});
+
+    // ===================== TOTAL CLIENT × PRODUCT (Tahun Ini) =====================
+    
 
     // ===================== LINE MONTHLY =====================
     Highcharts.chart('lineMonthly', {
@@ -156,15 +164,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ===================== COLUMN PER CLIENT =====================
-    Highcharts.chart('containe', {
-        chart: { type: 'column' },
-        title: { text: 'Total Quantity Per Client Year' },
-        xAxis: { categories: @json($clientNames), crosshair: true },
-        yAxis: { min: 0, title: { text: 'Total Quantity (L)' } },
-        tooltip: { shared: true, useHTML: true },
-        plotOptions: { column: { pointPadding: 0.1, borderWidth: 0, dataLabels: { enabled: true } } },
-        series: @json($highchartSeries)
-    });
+        Highcharts.chart('containe', {
+            chart: { type: 'column' },
+            title: { text: 'Total Quantity Per Client Year' },
+            xAxis: { categories: @json($clientYearNames), crosshair: true },
+            yAxis: { min: 0, title: { text: 'Total Quantity (L)' } },
+            tooltip: { shared: true, useHTML: true },
+            plotOptions: { column: { pointPadding: 0.1, borderWidth: 0, dataLabels: { enabled: true } } },
+            series: @json($clientYearSeries)
+        });
+
 
     // ===================== PIE PER QUALITY =====================
     Highcharts.chart('pieContainerLiters', {

@@ -83,27 +83,53 @@ class DashboardController extends Controller
         }
 
         // ===================== CLIENT × PRODUCT (Bulan Saat Ini) =====================
-        $clientRows = DB::table('transaction as t')
+        $clientMonthRows = DB::table('transaction as t')
             ->join('products as p', 'p.id', '=', 't.id_product')
             ->select('t.client_name', 'p.product_name', DB::raw('SUM(t.quantity) as total_quantity'))
             ->whereYear('t.created_at', $currentYear)
-            ->whereMonth('t.created_at', $currentMonth) // Hanya bulan saat ini
+            ->whereMonth('t.created_at', $currentMonth) // Filter bulan ini
             ->groupBy('t.client_name', 'p.product_name')
             ->orderBy('t.client_name')
             ->orderBy('p.product_name')
             ->get();
 
-        $clientNames = $clientRows->pluck('client_name')->unique()->values()->toArray();
-        $clientProducts = $clientRows->pluck('product_name')->unique()->values()->toArray();
+        $clientMonthNames = $clientMonthRows->pluck('client_name')->unique()->values()->toArray();
+        $clientMonthProducts = $clientMonthRows->pluck('product_name')->unique()->values()->toArray();
 
-        $highchartSeries = [];
-        foreach($clientProducts as $product){
+        $clientMonthSeries = [];
+        foreach($clientMonthProducts as $product){
             $data = [];
-            foreach($clientNames as $client){
-                $item = $clientRows->first(fn($r) => $r->client_name == $client && $r->product_name == $product);
+            foreach($clientMonthNames as $client){
+                $item = $clientMonthRows->first(fn($r) => $r->client_name == $client && $r->product_name == $product);
                 $data[] = $item ? (float)$item->total_quantity : 0;
             }
-            $highchartSeries[] = [
+            $clientMonthSeries[] = [
+                'name' => $product,
+                'data' => $data
+            ];
+        }
+
+        // ===================== TOTAL CLIENT × PRODUCT (Tahun Ini) =====================
+        $clientYearRows = DB::table('transaction as t')
+            ->join('products as p', 'p.id', '=', 't.id_product')
+            ->select('t.client_name', 'p.product_name', DB::raw('SUM(t.quantity) as total_quantity'))
+            ->whereYear('t.created_at', $currentYear)
+            ->groupBy('t.client_name', 'p.product_name')
+            ->orderBy('t.client_name')
+            ->orderBy('p.product_name')
+            ->get();
+
+        $clientYearNames = $clientYearRows->pluck('client_name')->unique()->values()->toArray();
+        $clientYearProducts = $clientYearRows->pluck('product_name')->unique()->values()->toArray();
+
+        $clientYearSeries = [];
+        foreach($clientYearProducts as $product){
+            $data = [];
+            foreach($clientYearNames as $client){
+                $item = $clientYearRows->first(fn($r) => $r->client_name == $client && $r->product_name == $product);
+                $data[] = $item ? (float)$item->total_quantity : 0;
+            }
+            $clientYearSeries[] = [
                 'name' => $product,
                 'data' => $data
             ];
@@ -123,7 +149,8 @@ class DashboardController extends Controller
 
         return view('Dashboard.index', compact(
             'prod','categories','series','pieSeries','lineCategories','seriesData','currentYear',
-            'clientNames','highchartSeries','pieSeriesData','chartTitle','month'
+            'clientMonthNames','clientMonthSeries','clientYearNames','clientYearSeries',
+            'pieSeriesData','chartTitle','month'
         ));
     }
 }
