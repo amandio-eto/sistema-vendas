@@ -10,6 +10,7 @@ class DashboardController extends Controller
     public function index()
     {
         $currentYear = Carbon::now()->year;
+        $currentMonth = Carbon::now()->month;
         $month = now()->translatedFormat('F Y');
 
         // ===================== PRODUCT SUMMARY =====================
@@ -40,13 +41,9 @@ class DashboardController extends Controller
             ->orderBy('p.product_name')
             ->get();
 
-        // Bulan (1-12)
         $categories = array_map(fn($m) => date('F', mktime(0,0,0,$m,1)), range(1,12));
-
-        // Produk unik
         $products = $monthlyData->pluck('product_name')->unique()->toArray();
 
-        // Series untuk Highcharts
         $series = [];
         foreach($products as $product) {
             $data = [];
@@ -85,12 +82,13 @@ class DashboardController extends Controller
             $seriesData[] = isset($monthly[$m]) ? (float)$monthly[$m]->total_liter : 0;
         }
 
-        // ===================== CLIENT × PRODUCT =====================
+        // ===================== CLIENT × PRODUCT (Bulan Saat Ini) =====================
         $clientRows = DB::table('transaction as t')
-            ->join('products as p','p.id','=','t.id_product')
-            ->select('t.client_name','p.product_name', DB::raw('SUM(t.quantity) as total_quantity'))
+            ->join('products as p', 'p.id', '=', 't.id_product')
+            ->select('t.client_name', 'p.product_name', DB::raw('SUM(t.quantity) as total_quantity'))
             ->whereYear('t.created_at', $currentYear)
-            ->groupBy('t.client_name','p.product_name')
+            ->whereMonth('t.created_at', $currentMonth) // Hanya bulan saat ini
+            ->groupBy('t.client_name', 'p.product_name')
             ->orderBy('t.client_name')
             ->orderBy('p.product_name')
             ->get();
@@ -102,12 +100,12 @@ class DashboardController extends Controller
         foreach($clientProducts as $product){
             $data = [];
             foreach($clientNames as $client){
-                $item = $clientRows->first(fn($r)=>$r->client_name==$client && $r->product_name==$product);
+                $item = $clientRows->first(fn($r) => $r->client_name == $client && $r->product_name == $product);
                 $data[] = $item ? (float)$item->total_quantity : 0;
             }
             $highchartSeries[] = [
-                'name'=>$product,
-                'data'=>$data
+                'name' => $product,
+                'data' => $data
             ];
         }
 
