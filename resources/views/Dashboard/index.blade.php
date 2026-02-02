@@ -53,7 +53,20 @@
         <div class="alert alert-light text-center border">Data is Empty</div>
     </div>
 @endforelse
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 {{-- =======================
    CHARTS ROW 1

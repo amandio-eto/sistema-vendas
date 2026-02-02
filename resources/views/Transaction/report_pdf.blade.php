@@ -89,7 +89,7 @@
             <td>{{ $t->client_name }}</td>
             <td>{{ $t->product_name }}</td>
             <td>#{{ $t->cp }}</td>
-            <td>{{ number_format($t->quantity) }}</td>
+            <td>{{ format_liter($t->quantity) }}</td>
             <td>{{ $t->driver_name }}</td>
             <td>{{ $t->plat_number }}</td>
             <td style="font-size: 8px;">{{ $t->payment_references }}</td>

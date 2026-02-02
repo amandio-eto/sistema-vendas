@@ -55,54 +55,67 @@
                     <li class="nxl-item nxl-caption">
                         <label>Navigation</label>
                     </li>
-                    <li class="nxl-item nxl-hasmenu">
+                    <li class="nxl-item nxl-hasmenu {{ request()->routeIs('dashboard.*') ? 'active' : '' }}">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-airplay text-primary"></i></span>
-                            <span class="nxl-mtext">Dashboards</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">Dashboards</span>
+                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('dashboard.index') }}"><i class="bi bi-speedometer"></i> Daily</a></li>
-                          
+
+                        <ul class="nxl-submenu {{ request()->routeIs('dashboard.*') ? 'show' : '' }}">
+                            <li class="nxl-item {{ request()->routeIs('dashboard.index') ? 'active' : '' }}">
+                                <a class="nxl-link" href="{{ route('dashboard.index') }}">
+                                    <i class="bi bi-speedometer"></i> Daily
+                                </a>
+                            </li>
+
+                            {{-- <li class="nxl-item  ? 'active' : '' }}">
+                                <a class="nxl-link" href="">
+                                    <i class="bi bi-calendar-week"></i> Weekly
+                                </a>
+                            </li> --}}
                         </ul>
                     </li>
+
                    
 
 
-                            <li class="nxl-item nxl-hasmenu">
-                            <a href="javascript:void(0);" class="nxl-link">
-                                <span class="nxl-micon"><i class="bi bi-fuel-pump-diesel-fill text-info"></i></span>
-                                <span class="nxl-mtext">Delivery Order</span>
-                                <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                            </a>
+                                                    <li class="nxl-item nxl-hasmenu {{ request()->routeIs('transaction.*') ? 'active' : '' }}">
+                                <a href="javascript:void(0);" class="nxl-link">
+                                    <span class="nxl-micon"><i class="bi bi-fuel-pump-diesel-fill text-info"></i></span>
+                                    <span class="nxl-mtext">Delivery Order</span>
+                                    <span class="nxl-arrow">
+                                        <i class="feather-chevron-right {{ request()->routeIs('transaction.*') ? 'rotate-90' : '' }}"></i>
+                                    </span>
+                                </a>
 
-                            <ul class="nxl-submenu">
-                                <li class="nxl-item">
-                                    <a class="nxl-link" href="{{ route('transaction.index') }}">
-                                        <i class="bi bi-truck-flatbed"></i> Delivery Order
-                                    </a>
-                                </li>
+                                <ul class="nxl-submenu {{ request()->routeIs('transaction.*') ? 'show' : '' }}">
+                                    {{-- Delivery Order --}}
+                                    <li class="nxl-item {{ request()->routeIs('transaction.index') ? 'active' : '' }}">
+                                        <a class="nxl-link" href="{{ route('transaction.index') }}">
+                                            <i class="bi bi-truck-flatbed"></i> Delivery Order
+                                        </a>
+                                    </li>
 
-                               @auth
-                                    @if(!in_array(Auth::user()->roles, ['manager', 'administrator']))
-                                    @else
-                                     <li class="nxl-item">
-                                            <a class="nxl-link position-relative" href="{{ route('transaction.approve') }}">
-                                                <i class="bi bi-bell"></i> Approve DO
+                                    {{-- Approve DO (only for authorized roles) --}}
+                                    @auth
+                                        @if(in_array(Auth::user()->roles, ['manager', 'administrator']))
+                                            <li class="nxl-item {{ request()->routeIs('transaction.approve') ? 'active' : '' }}">
+                                                <a class="nxl-link position-relative" href="{{ route('transaction.approve') }}">
+                                                    <i class="bi bi-bell"></i> Approve DO
 
-                                                @if($tx->count() > 0)
-                                                    <sup class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm">
-                                                        {{ $tx->count() }}
-                                                    </sup>
-                                                @endif
-                                            </a>
-                                        </li>
-                                    @endif
-                                @endauth
+                                                    @if(isset($tx) && $tx->count() > 0)
+                                                        <sup class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm">
+                                                            {{ $tx->count() }}
+                                                        </sup>
+                                                    @endif
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endauth
+                                </ul>
+                            </li>
 
-
-                                 
-                            </ul>
-                        </li>
 
 
                         {{-- <li class="nxl-item nxl-hasmenu">
@@ -117,78 +130,105 @@
                     </li> --}}
 
 
-                            <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="bi bi-journal-text text-success"></i></span>
-                            <span class="nxl-mtext">Report</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                        </a>
-                        <ul class="nxl-submenu" style="display: none;">
-                            {{-- <li class="nxl-item"><a class="nxl-link" href="leads.html">Leads</a></li> --}}
-                             <li class="nxl-item"><a class="nxl-link" href="{{ route('transactions.report') }}">
-                                      <i class="bi bi-journal"></i> Report</a></li>
-                            {{-- <li class="nxl-item"><a class="nxl-link" href="leads-view.html">Leads View</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="leads-create.html">Leads Create</a></li> --}}
-                        </ul>
-                    </li>
+                    <li class="nxl-item nxl-hasmenu {{ request()->routeIs('transactions.report') ? 'active' : '' }}">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon"><i class="bi bi-journal-text text-success"></i></span>
+                        <span class="nxl-mtext">Report</span>
+                        <span class="nxl-arrow">
+                            <i class="feather-chevron-right {{ request()->routeIs('transactions.report') ? 'rotate-90' : '' }}"></i>
+                        </span>
+                    </a>
 
-                    <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="bi bi-truck text-warning"></i></span>
-                            <span class="nxl-mtext">Drivers</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                        </a>
-                        <ul class="nxl-submenu" style="display: none;">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('drivers.index') }}">
-                                <i class="bi bi-person-badge"></i> List Driver</a></li>
-                            
-                        </ul>
-                    </li>
+                    <ul class="nxl-submenu {{ request()->routeIs('transactions.report') ? 'show' : '' }}">
+                        <li class="nxl-item {{ request()->routeIs('transactions.report') ? 'active' : '' }}">
+                            <a class="nxl-link" href="{{ route('transactions.report') }}">
+                                <i class="bi bi-journal"></i> Report
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
 
-                    <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-users text-dark"></i></span>
-                            <span class="nxl-mtext">Clients</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                        </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('client.index')}}"><i class="bi bi-file-earmark-person-fill"></i> List Client</a></li>
-                          
-                        </ul>
-                    </li>
+                    {{-- Drivers Menu --}}
+<li class="nxl-item nxl-hasmenu {{ request()->routeIs('drivers.*') ? 'active' : '' }}">
+    <a href="javascript:void(0);" class="nxl-link">
+        <span class="nxl-micon"><i class="bi bi-truck text-warning"></i></span>
+        <span class="nxl-mtext">Drivers</span>
+        <span class="nxl-arrow">
+            <i class="feather-chevron-right {{ request()->routeIs('drivers.*') ? 'rotate-90' : '' }}"></i>
+        </span>
+    </a>
+
+    <ul class="nxl-submenu {{ request()->routeIs('drivers.*') ? 'show' : '' }}">
+        <li class="nxl-item {{ request()->routeIs('drivers.index') ? 'active' : '' }}">
+            <a class="nxl-link" href="{{ route('drivers.index') }}">
+                <i class="bi bi-person-badge"></i> List Driver
+            </a>
+        </li>
+    </ul>
+</li>
+
+                {{-- Clients Menu --}}
+                <li class="nxl-item nxl-hasmenu {{ request()->routeIs('client.*') ? 'active' : '' }}">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon"><i class="feather-users text-dark"></i></span>
+                        <span class="nxl-mtext">Clients</span>
+                        <span class="nxl-arrow">
+                            <i class="feather-chevron-right {{ request()->routeIs('client.*') ? 'rotate-90' : '' }}"></i>
+                        </span>
+                    </a>
+
+                    <ul class="nxl-submenu {{ request()->routeIs('client.*') ? 'show' : '' }}">
+                        <li class="nxl-item {{ request()->routeIs('client.index') ? 'active' : '' }}">
+                            <a class="nxl-link" href="{{ route('client.index') }}">
+                                <i class="bi bi-file-earmark-person-fill"></i> List Client
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
 
                 
 
 
                    @if(Auth::user()->roles=='administrator')
-                    <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-send text-info"></i></span>
-                            <span class="nxl-mtext">Products</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                        </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('product.index') }}"> <i class="bi bi-fuel-pump-fill text-success"></i> My Products</a></li>
-                           
+                    {{-- Products Menu --}}
+            <li class="nxl-item nxl-hasmenu {{ request()->routeIs('product.*') ? 'active' : '' }}">
+   
+
+                        <ul class="nxl-submenu {{ request()->routeIs('product.*') ? 'show' : '' }}">
+                            <li class="nxl-item {{ request()->routeIs('product.index') ? 'active' : '' }}">
+                                <a class="nxl-link" href="{{ route('product.index') }}">
+                                    <i class="bi bi-fuel-pump-fill text-success"></i> My Products
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
-                    <li class="nxl-item nxl-hasmenu">
+                    {{-- Authentication Menu --}}
+                    <li class="nxl-item nxl-hasmenu {{ request()->routeIs('users.*') || request()->routeIs('logs.*') ? 'active' : '' }}">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-power text-danger"></i></span>
-                            <span class="nxl-mtext">Authentication</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">Authentication</span>
+                            <span class="nxl-arrow">
+                                <i class="feather-chevron-right {{ request()->routeIs('users.*') || request()->routeIs('logs.*') ? 'rotate-90' : '' }}"></i>
+                            </span>
                         </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item nxl-hasmenu">
-                               
-                                
-                                    <li class="nxl-item"><a class="nxl-link" href="{{ route('users.list') }}"><i class="bi bi-person-fill-lock"></i> User</a></li>
-                                    <li class="nxl-item"><a class="nxl-link" href="{{ route('logs.index') }}"><i class="bi bi-funnel-fill"></i> User Logs</a></li>
-                    </li>
-                          
-                          
-                         
-                         
-                          
+
+                        <ul class="nxl-submenu {{ request()->routeIs('users.*') || request()->routeIs('logs.*') ? 'show' : '' }}">
+                            <li class="nxl-item {{ request()->routeIs('users.list') ? 'active' : '' }}">
+                                <a class="nxl-link" href="{{ route('users.list') }}">
+                                    <i class="bi bi-person-fill-lock"></i> User
+                                </a>
+                            </li>
+                            <li class="nxl-item {{ request()->routeIs('logs.index') ? 'active' : '' }}">
+                                <a class="nxl-link" href="{{ route('logs.index') }}">
+                                    <i class="bi bi-funnel-fill"></i> User Logs
+                                </a>
+                            </li>
                         </ul>
                     </li>
+
 
                    @else
 
