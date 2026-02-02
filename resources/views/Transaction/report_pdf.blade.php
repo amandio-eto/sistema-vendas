@@ -28,7 +28,7 @@
 </div>
 
 @php
-    // Hitung total per product & grand total
+
     $totalPerProduct = [];
     $grandTotal = 0;
     foreach($transactions as $t){
@@ -37,8 +37,8 @@
     }
 @endphp
 
-<!-- SUMMARY PRODUCT -->
-<h4>SUMMARY PRODUCT</h4>
+
+<h4>SUMMARY  TOTAL PRODUCT</h4>
 <table class="summary-table">
     <thead>
         <tr>
