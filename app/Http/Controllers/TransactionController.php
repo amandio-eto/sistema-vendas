@@ -236,7 +236,7 @@ public function printPdf($id)
     {
 
          $request->validate([
-            'so_number'   => 'required|integer',
+            'so_number'   => 'required',
             'id_product'  => 'required|integer|exists:products,id',
             'id_client'   => 'required|integer|exists:clients,id',
             'id_driver'   => 'required|integer|exists:drivers,id',
