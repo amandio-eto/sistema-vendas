@@ -1,396 +1,131 @@
 <?php
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Nette\Utils\Json;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    
-
-    public function index(Request $request)
+    public function index()
     {
+        $currentYear = Carbon::now()->year;
+        $month = now()->translatedFormat('F Y');
 
+        // ===================== PRODUCT SUMMARY =====================
+        $prod = DB::table('products as p')
+            ->leftJoin('transaction as t', function ($join) use ($currentYear) {
+                $join->on('p.id', '=', 't.id_product')
+                     ->whereYear('t.created_at', $currentYear);
+            })
+            ->select(
+                'p.id', 'p.product_name', 'p.quality',
+                DB::raw('COALESCE(SUM(t.quantity),0) as total_quantity')
+            )
+            ->groupBy('p.id','p.product_name','p.quality')
+            ->orderByDesc('total_quantity')
+            ->get();
 
-        $year = Carbon::now()->year;
+        // ===================== MONTHLY COLUMN =====================
+        $monthlyData = DB::table('transaction as t')
+            ->join('products as p', 't.id_product', '=', 'p.id')
+            ->select(
+                DB::raw('MONTH(t.created_at) as month'),
+                'p.product_name',
+                DB::raw('SUM(t.quantity) as total_quantity')
+            )
+            ->whereYear('t.created_at', $currentYear)
+            ->groupBy('month', 'p.product_name')
+            ->orderBy('month')
+            ->orderBy('p.product_name')
+            ->get();
 
-    // ==============================
-    // Chart height (desktop/mobile)
-    // ==============================
-    $userAgent = $request->header('User-Agent');
-    $isMobile = preg_match('/Mobile|Android|iPhone|iPad|Tablet/i', $userAgent);
-    $defaultHeight = $isMobile ? null : 600;
+        // Bulan (1-12)
+        $categories = array_map(fn($m) => date('F', mktime(0,0,0,$m,1)), range(1,12));
 
-    // ==============================
-    // Monthly transactions (1-12)
-    // ==============================
-    $monthlyTransactions = DB::table('transaction')
-        ->select(DB::raw('MONTH(created_at) as month'), DB::raw('SUM(quantity) as total_quantity'))
-        ->whereYear('created_at', $year)
-        ->groupBy(DB::raw('MONTH(created_at)'))
-        ->orderBy('month')
-        ->get()
-        ->keyBy('month');
+        // Produk unik
+        $products = $monthlyData->pluck('product_name')->unique()->toArray();
 
-    $allMonths = [];
-    for ($m = 1; $m <= 12; $m++) {
-        $allMonths[$m] = [
-            'month' => $m,
-            'month_name' => date('F', mktime(0,0,0,$m,1)),
-            'total_quantity' => isset($monthlyTransactions[$m]) ? $monthlyTransactions[$m]->total_quantity : 0
-        ];
-    }
-    $allMonths = collect($allMonths);
-
-    // ==============================
-    // Transactions per product
-    // ==============================
-    $transactions = DB::table('transaction as t')
-        ->join('products as p', 'p.id', '=', 't.id_product')
-        ->select('p.product_name','p.quality', DB::raw('SUM(t.quantity) as total_quantity'))
-        ->whereYear('t.created_at', $year)
-        ->groupBy('p.product_name','p.quality')
-        ->get();
-
-    // ==============================
-    // Transactions per client
-    // ==============================
-    $clientsMonths = DB::table('transaction as t')
-        ->join('clients as c', 'c.id', '=', 't.id_client')
-        ->select('c.client_name', DB::raw('SUM(t.quantity) as total_quantity'))
-        ->whereYear('t.created_at', $year)
-        ->groupBy('c.client_name')
-        ->get();
-
-    // ==============================
-    // Filter per product today
-    // ==============================
-    $filterDate = $request->date ?? Carbon::today()->toDateString();
-    $prod = DB::table('products as p')
-        ->leftJoin('transaction as t', function ($join) use ($filterDate) {
-            $join->on('p.id', '=', 't.id_product')
-                 ->whereDate('t.created_at', $filterDate);
-        })
-        ->select('p.id','p.product_name','p.quality', DB::raw('COALESCE(SUM(t.quantity), 0) as total_quantity'))
-        ->groupBy('p.id','p.product_name','p.quality')
-        ->orderByDesc('total_quantity')
-        ->get();
-
-    // ==============================
-    // Highcharts data
-    // ==============================
-
-    $years = now()->year;
-
-$rows = DB::table('transaction as t')
-    ->select(
-        DB::raw('MONTH(t.created_at) as month'),
-        DB::raw('SUM(t.quantity) as total_quantity')
-    )
-    ->whereYear('t.created_at', $years)
-    ->groupBy(DB::raw('MONTH(t.created_at)'))
-    ->orderBy('month')
-    ->get();
-
-
-    $monthNames = [
-    1=>'Januari',2=>'Februari',3=>'Maret',4=>'April',
-    5=>'Mei',6=>'Juni',7=>'Juli',8=>'Agustus',
-    9=>'September',10=>'Oktober',11=>'November',12=>'Desember'
-];
-
-$categories = array_values($monthNames);
-$data = array_fill(0, 12, 0);
-
-foreach ($rows as $r) {
-    $data[$r->month - 1] = (int) $r->total_quantity;
-}
-
-
-    // ==============================
-    // Safety fallback
-    // ==============================
-    $prod = $prod ?? collect([]);
-    $allMonths = $allMonths ?? collect([]);
-    $transactions = $transactions ?? collect([]);
-    $clientsMonths = $clientsMonths ?? collect([]);
-    $categories = $categories ?? [];
-    $series = $series ?? [];
-
-
-
-    ############### Pie Chart 
-
-    $year = Carbon::now()->year;
-
-// Mapping warna berdasarkan quality
-$qualityColors = [
-    'RON92'  => '#2787F5',
-    'RON98'  => '#CA02F2',
-    '10PPM'  => '#F5B727',
-    'JET-A1' => '#02F226',
-];
-
-$year = date('Y');
-
-$pieSeries = DB::table('transaction as t')
-    ->join('products as p', 'p.id', '=', 't.id_product')
-    ->select(
-        'p.product_name',
-        DB::raw('SUM(t.quantity) as total_quantity')
-    )
-    ->whereYear('t.created_at', $year)
-    ->groupBy('p.product_name')
-    ->orderByDesc('total_quantity')
-    ->get()
-    ->map(function ($row) {
-        return [
-            'name' => $row->product_name,
-            'y'    => (float) $row->total_quantity // WAJIB numeric
-        ];
-    });
-
-
-    #LineChart 
-    $monthly = DB::table('transaction')
-    ->select(
-        DB::raw('MONTH(created_at) as month'),
-        DB::raw('SUM(quantity) as total_liter')
-    )
-    ->whereYear('created_at', $year)
-    ->groupBy(DB::raw('MONTH(created_at)'))
-    ->orderBy('month')
-    ->get()
-    ->keyBy('month');
-
-// Siapkan 12 bulan (biar bulan kosong tetap muncul)
-$categories = [];
-$seriesData = [];
-
-for ($m = 1; $m <= 12; $m++) {
-    $categories[] = Carbon::create()->month($m)->translatedFormat('F');
-    $seriesData[] = isset($monthly[$m])
-        ? (float) $monthly[$m]->total_liter
-        : 0;
-}
-
-
-#Chart forecast 
-
-$hourlyTransactions = DB::table('transaction as t')
-    ->select(
-        DB::raw('HOUR(t.created_at) as hour'),
-        DB::raw('SUM(t.quantity) as total_quantity')
-    )
-    ->whereDate('t.created_at', now()->toDateString())
-    ->groupBy(DB::raw('HOUR(t.created_at)'))
-    ->orderBy('hour')
-    ->get();
-
-// Lengkapi 24 jam (00–23)
-$hours = array_fill(0, 24, 0);
-
-foreach ($hourlyTransactions as $row) {
-    $hours[(int)$row->hour] = (float)$row->total_quantity;
-}
-
-$actualData = array_values($hours);
-
-// Forecast sederhana (rata-rata transaksi berjalan)
-$nonZero = array_filter($actualData);
-$avg = count($nonZero) ? array_sum($nonZero) / count($nonZero) : 0;
-
-// Forecast 5 jam ke depan
-$forecastData = [];
-for ($i = 0; $i < 5; $i++) {
-    $forecastData[] = round($avg, 2);
-}
-
-
-#Client Chart Per Month
-
-
-  $clientMonthProduct = DB::table('transaction as t')
-    ->join('clients as c', 'c.id', '=', 't.id_client')
-    ->join('products as p', 'p.id', '=', 't.id_product')
-    ->select(
-        'c.client_name',
-        DB::raw('MONTH(t.created_at) as month'),
-        'p.product_name',
-        DB::raw('SUM(t.quantity) as total_quantity')
-    )
-    ->whereYear('t.created_at', now()->year)
-    ->whereMonth('t.created_at', now()->month)
-    ->groupBy(
-        'c.client_name',
-        DB::raw('MONTH(t.created_at)'),
-        'p.product_name'
-    )
-    ->orderBy('c.client_name')
-    ->orderBy('p.product_name')
-    ->get();
-
-
-     $rows = DB::table('transaction as t')
-        ->join('clients as c', 'c.id', '=', 't.id_client')
-        ->join('products as p', 'p.id', '=', 't.id_product')
-        ->select(
-            'c.client_name',
-            'p.product_name',
-            DB::raw('SUM(t.quantity) as total_quantity')
-        )
-        ->whereYear('t.created_at', now()->year)
-        ->whereMonth('t.created_at', now()->month)
-        ->groupBy('c.client_name', 'p.product_name')
-        ->orderBy('c.client_name')
-        ->get();
-
-    // ==============================
-    // Siapkan data Highcharts
-    // ==============================
-    $clients = $rows->pluck('client_name')->unique()->values();
-
-    $products = $rows->pluck('product_name')->unique();
-
-    $series = [];
-    foreach ($products as $product) {
-        $data = [];
-        foreach ($clients as $client) {
-            $item = $rows->first(fn ($r) =>
-                $r->product_name === $product &&
-                $r->client_name === $client
-            );
-
-            $data[] = $item ? (float) $item->total_quantity : 0;
+        // Series untuk Highcharts
+        $series = [];
+        foreach($products as $product) {
+            $data = [];
+            foreach(range(1,12) as $m) {
+                $row = $monthlyData->first(fn($r) => $r->product_name === $product && $r->month == $m);
+                $data[] = $row ? (float)$row->total_quantity : 0;
+            }
+            $series[] = [
+                'name' => $product,
+                'data' => $data
+            ];
         }
 
-        $series[] = [
-            'name' => $product,
-            'data' => $data
-        ];
-    }
+        // ===================== PIE PRODUCT =====================
+        $pieSeries = DB::table('transaction as t')
+            ->join('products as p','p.id','=','t.id_product')
+            ->select('p.product_name', DB::raw('SUM(t.quantity) as total_quantity'))
+            ->whereYear('t.created_at', $currentYear)
+            ->groupBy('p.product_name')
+            ->get()
+            ->map(fn($r)=>['name'=>$r->product_name,'y'=>(float)$r->total_quantity]);
 
+        // ===================== LINE MONTHLY =====================
+        $monthly = DB::table('transaction')
+            ->select(DB::raw('MONTH(created_at) as month'), DB::raw('SUM(quantity) as total_liter'))
+            ->whereYear('created_at', $currentYear)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy('month')
+            ->get()
+            ->keyBy('month');
 
-
-    $month = now()->translatedFormat('F Y');
-
-    #Chart Line Total
-    $transactions = DB::table('transaction as t')
-    ->join('clients as c', 'c.id', '=', 't.id_client')
-    ->join('products as p', 'p.id', '=', 't.id_product')
-    ->select('c.client_name', 'p.product_name', DB::raw('SUM(t.quantity) as total_quantity'))
-    ->whereYear('t.created_at', now()->year)
-    ->groupBy('c.client_name', 'p.product_name')
-    ->orderBy('c.client_name')
-    ->get();
-
-// Convert ke format chart
-$clients = $transactions->pluck('client_name')->unique();
-$products = $transactions->pluck('product_name')->unique();
-
-$datasets = [];
-foreach($products as $product){
-    $data = [];
-    foreach($clients as $client){
-        $match = $transactions->first(fn($t) => $t->client_name == $client && $t->product_name == $product);
-        $data[] = $match ? $match->total_quantity : 0;
-    }
-    $datasets[] = [
-        'label' => $product,
-        'data' => $data,
-        'backgroundColor' => '#' . substr(md5($product), 0, 6) // warna unik per product
-    ];
-
-    #Total Client Chart
-  // Ambil semua transaksi tahun ini
-    $rows = DB::table('transaction as t')
-        ->join('products as p', 'p.id', '=', 't.id_product')
-        ->select('t.client_name','p.product_name', DB::raw('SUM(t.quantity) as total_quantity'))
-        ->whereYear('t.created_at', date('Y'))
-        ->groupBy('t.client_name','p.product_name')
-        ->orderBy('t.client_name')
-        ->get();
-
-    // Daftar client unik
-    $clientNames = $rows->pluck('client_name')->unique()->values();
-
-    // Daftar product unik
-    $productNames = $rows->pluck('product_name')->unique()->values();
-
-    // Siapkan series untuk Highcharts
-    $highchartSeries = [];
-    foreach($productNames as $product){
-        $data = [];
-        foreach($clientNames as $client){
-            $item = $rows->first(fn($r) => $r->client_name == $client && $r->product_name == $product);
-            $data[] = $item ? (float)$item->total_quantity : 0;
+        $lineCategories = [];
+        $seriesData = [];
+        for ($m=1;$m<=12;$m++){
+            $lineCategories[] = Carbon::create()->month($m)->translatedFormat('F');
+            $seriesData[] = isset($monthly[$m]) ? (float)$monthly[$m]->total_liter : 0;
         }
-        $highchartSeries[] = [
-            'name' => $product,
-            'data' => $data
-        ];
+
+        // ===================== CLIENT × PRODUCT =====================
+        $clientRows = DB::table('transaction as t')
+            ->join('products as p','p.id','=','t.id_product')
+            ->select('t.client_name','p.product_name', DB::raw('SUM(t.quantity) as total_quantity'))
+            ->whereYear('t.created_at', $currentYear)
+            ->groupBy('t.client_name','p.product_name')
+            ->orderBy('t.client_name')
+            ->orderBy('p.product_name')
+            ->get();
+
+        $clientNames = $clientRows->pluck('client_name')->unique()->values()->toArray();
+        $clientProducts = $clientRows->pluck('product_name')->unique()->values()->toArray();
+
+        $highchartSeries = [];
+        foreach($clientProducts as $product){
+            $data = [];
+            foreach($clientNames as $client){
+                $item = $clientRows->first(fn($r)=>$r->client_name==$client && $r->product_name==$product);
+                $data[] = $item ? (float)$item->total_quantity : 0;
+            }
+            $highchartSeries[] = [
+                'name'=>$product,
+                'data'=>$data
+            ];
+        }
+
+        // ===================== PIE PER QUALITY =====================
+        $productQuantitySummary = DB::table('transaction as t')
+            ->join('products as p','p.id','=','t.id_product')
+            ->select('p.quality', DB::raw('SUM(t.quantity) as total_quantity'))
+            ->whereYear('t.created_at', $currentYear)
+            ->groupBy('p.quality')
+            ->orderByDesc('total_quantity')
+            ->get();
+
+        $pieSeriesData = $productQuantitySummary->map(fn($p)=>['name'=>$p->quality,'y'=>(float)$p->total_quantity]);
+        $chartTitle = 'Total Quantity Per Product Year (L)';
+
+        return view('Dashboard.index', compact(
+            'prod','categories','series','pieSeries','lineCategories','seriesData','currentYear',
+            'clientNames','highchartSeries','pieSeriesData','chartTitle','month'
+        ));
     }
-
-    #PieChart Animation
-$productQuantitySummary = DB::table('transaction as t')
-        ->join('products as p', 'p.id', '=', 't.id_product')
-        ->select(
-            'p.quality',
-            DB::raw('SUM(t.quantity) as total_quantity')
-        )
-        ->whereYear('t.created_at', date('Y'))
-        ->groupBy('p.quality')
-        ->orderByDesc('total_quantity')
-        ->get();
-
-    $pieSeriesData = $productQuantitySummary->map(function($product){
-        return [
-            'name' => $product->quality,
-            'y'    => (float)$product->total_quantity
-        ];
-    });
-
-    $chartTitle = 'Total Quantity Per Product Year (L)';
-
-
-   return view('Dashboard.index', array_merge(
-    compact(
-        'prod',
-        'allMonths',
-        'transactions',
-        'year',
-        'clientsMonths',
-        'defaultHeight',
-        'isMobile',
-        'categories',
-        'series',
-        'pieSeries',
-        'seriesData',
-        'clients',
-        'series',
-        'month',
-        'clients', 'datasets',
-         'clientNames',
-        'highchartSeries',
-        'pieSeriesData','chartTitle'
-        
-       
-
-    ),
-    [
-        'actualData'   => json_encode($actualData),
-        'forecastData' => json_encode($forecastData),
-    ]
-));
-
-
-
-    }
-    
 }
-
-
-}
-                                                                                                                                                           
