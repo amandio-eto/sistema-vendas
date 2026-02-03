@@ -59,7 +59,7 @@ class ClientSummaryReportController extends Controller
     // Query summary data
     $summaryData = DB::table('transaction as t')
         ->leftJoin('products as p', 'p.id', '=', 't.id_product')
-        ->leftJoinjoin('clients as c','c.id','=','.tid_client')
+        ->leftJoinjoin('clients as c','c.id','=','t.id_client')
         
         ->select(
             't.client_name',
@@ -139,7 +139,7 @@ class ClientSummaryReportController extends Controller
     {
         return DB::table('transaction as t')
             ->leftJoin('products as p', 'p.id', '=', 't.id_product')
-             ->leftJoinjoin('clients as c','c.id','=','.tid_client')
+               ->leftJoinjoin('clients as c','c.id','=','t.id_client')
             ->select(
                 't.client_name',
                 DB::raw("SUM(CASE WHEN p.quality = 'RON98' THEN t.quantity ELSE 0 END) AS ron98"),
