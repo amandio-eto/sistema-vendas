@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClientSummaryReportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleOrderController;
@@ -49,6 +50,20 @@ Route::middleware(['auth', 'role:administrator,manager,staff'])
     // PDF report
     Route::get('/report/pdf', [SaleOrderController::class, 'pdfReport'])->name('sale-orders.pdf');
 });
+
+
+
+
+
+    Route::get('/client-summary', [ClientSummaryReportController::class, 'clientSummaryView'])->name('clientSummaryView.index');
+    Route::get('/client-summary/pdf', [ClientSummaryReportController::class, 'exportClientSummaryPdf'])
+        ->name('reports.client-summary.pdf');
+    Route::get('/client-summary/excel', [ClientSummaryReportController::class, 'exportClientSummaryExcel'])
+        ->name('reports.client-summary.excel');
+
+
+
+
     #End SalesController
 
 

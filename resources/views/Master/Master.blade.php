@@ -145,6 +145,12 @@
                                 <i class="bi bi-journal"></i> Report
                             </a>
                         </li>
+
+                          <li class="nxl-item {{ request()->routeIs('clientSummaryView.index') ? 'active' : '' }}">
+                            <a class="nxl-link" href="{{ route('clientSummaryView.index') }}">
+                                <i class="bi bi-journal-bookmark text-info"></i>  Summary Report
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
