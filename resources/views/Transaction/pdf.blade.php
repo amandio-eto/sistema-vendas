@@ -210,29 +210,29 @@
 
 
     <!-- PRODUCT DETAIL TABLE -->
-    <table border="1">
-        <thead >
-            <tr>
-                <th>Produto</th>
-                <th>Número Codigo</th>
-                <th>Número LO</th>
-                <th>Quantidade (L)</th>
-                <th>Motorista</th>
-                <th>Número de Matrícula</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ $transaction->product_name  }}</td>
-                <td>#{{ $transaction->cp }}</td>
-                 <th>{{ $transaction->lo_number }}</th>
-                <td>{{ number_format($transaction->quantity) }} L</td>
-               
-                <td>{{ Str::upper("$transaction->driver_name") }}</td>
-                <td>{{ $transaction->plat_number }}</td>
-            </tr>
-        </tbody>
-    </table>
+   <table style="width:100%; border-collapse:collapse; border:1px dotted #000; margin-top:10px;">
+    <thead>
+        <tr>
+            <th style="border:1px dotted #000; padding:6px;">Produto</th>
+            <th style="border:1px dotted #000; padding:6px;">Número Codigo</th>
+            <th style="border:1px dotted #000; padding:6px;">Número LO</th>
+            <th style="border:1px dotted #000; padding:6px;">Quantidade (L)</th>
+            <th style="border:1px dotted #000; padding:6px;">Motorista</th>
+            <th style="border:1px dotted #000; padding:6px;">Número de Matrícula</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="border:1px dotted #000; padding:6px;">{{ $transaction->product_name }}</td>
+            <td style="border:1px dotted #000; padding:6px;">#{{ $transaction->cp }}</td>
+            <td style="border:1px dotted #000; padding:6px;">{{ $transaction->lo_number }}</td>
+            <td style="border:1px dotted #000; padding:6px;">{{ number_format($transaction->quantity) }} L</td>
+            <td style="border:1px dotted #000; padding:6px;">{{ Str::upper($transaction->driver_name) }}</td>
+            <td style="border:1px dotted #000; padding:6px;">{{ $transaction->plat_number }}</td>
+        </tr>
+    </tbody>
+</table>
+
 
     <!-- ADDITIONAL INFO -->
     <table style="margin-top: 30px;">
@@ -277,13 +277,40 @@
                 <div class="signature-box"></div>
                 (Nome Completo)
             </td>
-            <td>
-                <div class="signature-box"></div>
-                 {{ $transaction->approved }} <br>
+          <td style="text-align:center;">
+    <!-- Box tanda tangan / stamp -->
+
+                @if ($transaction->status)
+                <div class="signature-box">
+                    <img src="{{ public_path('status.png') }}" 
+                        alt="Approved" 
+                        style="width:100px; height:auto; margin-top:5px;">
+                </div>
+                    
+                @endif
+                
+                <!-- Nama & authorized_by tetap ada -->
+                {{ $transaction->approved }} <br>
+                
                 ({{ $transaction->authorized_by }})
             </td>
+
         </tr>
+        
     </table>
+
+    <table style="margin-top:20px; width:100%; border-collapse:collapse;">
+    <tr>
+        <th class="text-center;" style="width:30%; text-align:center; font-size:12px; padding:6px;">
+            Resebido Por :
+        </th>
+        <td style="height:60px; border-bottom:1px solid #000;">
+         ........................................................
+        </td>
+    </tr>
+</table>
+
+
 
     <!-- FOOTER -->
     <footer>

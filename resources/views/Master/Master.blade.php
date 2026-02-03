@@ -324,7 +324,7 @@
                         </a>
                     </div>
 
-                    @if(Auth::user()->roles==='administrator')
+                    @if(Auth::user()->roles==='administrator' || Auth::user()->roles==='manager')
                     <div class="dropdown nxl-h-item">
                         <a class="nxl-head-link me-3" data-bs-toggle="dropdown" href="#" role="button" data-bs-auto-close="outside">
                             <i class="feather-bell"></i>
