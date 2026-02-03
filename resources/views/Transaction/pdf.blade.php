@@ -267,7 +267,7 @@
     </table>
 
     <!-- SIGNATURE -->
-    <table class="signature-table" style="margin-top:50px; width:100%;" border="1">
+    <table class="signature-table" style="margin-top:20px; width:100%;" border="1">
         <tr>
             <th>Operador :</th>
             <th>Despacho Por :</th>
