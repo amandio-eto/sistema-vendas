@@ -21,7 +21,7 @@ class ClientSummaryReportController extends Controller
         ->whereNull('deleted_at')
         ->distinct()
         ->orderBy('client_name')
-        ->simplePaginate(10);
+        ->get();
 
     // Ambil summary data sesuai filter
     $summaryData = $this->buildClientSummaryQuery($request);
@@ -59,7 +59,8 @@ class ClientSummaryReportController extends Controller
     // Query summary data
     $summaryData = DB::table('transaction as t')
         ->leftJoin('products as p', 'p.id', '=', 't.id_product')
-        ->leftJoinjoin('clients as c','c.id','=','id_client')
+        ->leftJoinjoin('clients as c','c.id','=','.tid_client')
+        
         ->select(
             't.client_name',
             DB::raw("SUM(CASE WHEN p.quality = 'RON98' THEN t.quantity ELSE 0 END) AS RON98"),
@@ -138,6 +139,7 @@ class ClientSummaryReportController extends Controller
     {
         return DB::table('transaction as t')
             ->leftJoin('products as p', 'p.id', '=', 't.id_product')
+             ->leftJoinjoin('clients as c','c.id','=','.tid_client')
             ->select(
                 't.client_name',
                 DB::raw("SUM(CASE WHEN p.quality = 'RON98' THEN t.quantity ELSE 0 END) AS ron98"),
@@ -145,7 +147,7 @@ class ClientSummaryReportController extends Controller
                 DB::raw("SUM(CASE WHEN p.quality = '10PPM' THEN t.quantity ELSE 0 END) AS ppm10"),
                 DB::raw("SUM(CASE WHEN p.quality = 'JET-A1' THEN t.quantity ELSE 0 END) AS jeta1")
             )
-            ->whereNull('t.deleted_at')
+            ->whereNull('c.tin')
             ->when($request->start_date && $request->end_date, function ($q) use ($request) {
                 $q->whereBetween(DB::raw('DATE(t.created_at)'), [
                     $request->start_date,
