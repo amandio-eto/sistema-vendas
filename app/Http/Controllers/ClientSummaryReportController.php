@@ -16,22 +16,23 @@ class ClientSummaryReportController extends Controller
     // 1️⃣ VIEW SUMMARY
     public function clientSummaryView(Request $request)
     {
-        $summaryData = $this->buildClientSummaryQuery($request);
+       $clients = DB::table('transaction')
+        ->select('client_name')
+        ->whereNull('deleted_at')
+        ->distinct()
+        ->orderBy('client_name')
+        ->simplePaginate(10);
 
-        $clients = DB::table('transaction')
-            ->select('client_name')
-            ->whereNull('deleted_at')
-            ->distinct()
-            ->orderBy('client_name')
-            ->get();
+    // Ambil summary data sesuai filter
+    $summaryData = $this->buildClientSummaryQuery($request);
 
-        return view('Report.client-summary', [
-            'summaryData' => $summaryData,
-            'clients'     => $clients,
-            'startDate'   => $request->start_date,
-            'endDate'     => $request->end_date,
-            'clientName'  => $request->client_name,
-        ]);
+    return view('Report.client-summary', [
+        'summaryData' => $summaryData,
+        'clients'     => $clients,
+        'startDate'   => $request->start_date,
+        'endDate'     => $request->end_date,
+        'clientName'  => $request->client_name,
+    ]);
     }
 
     // 2️⃣ EXPORT PDF
@@ -58,6 +59,7 @@ class ClientSummaryReportController extends Controller
     // Query summary data
     $summaryData = DB::table('transaction as t')
         ->leftJoin('products as p', 'p.id', '=', 't.id_product')
+        ->leftJoinjoin('clients as c','c.id','=','id_client')
         ->select(
             't.client_name',
             DB::raw("SUM(CASE WHEN p.quality = 'RON98' THEN t.quantity ELSE 0 END) AS RON98"),
@@ -65,6 +67,7 @@ class ClientSummaryReportController extends Controller
             DB::raw("SUM(CASE WHEN p.quality = '10PPM' THEN t.quantity ELSE 0 END) AS '10PPM'"),
             DB::raw("SUM(CASE WHEN p.quality = 'JET-A1' THEN t.quantity ELSE 0 END) AS 'JET-A1'")
         )
+        ->whereNull('c.tin')
         ->whereNull('t.deleted_at')
         ->when($request->start_date && $request->end_date, function ($q) use ($request) {
             $q->whereBetween(DB::raw('DATE(t.created_at)'), [$request->start_date, $request->end_date]);
