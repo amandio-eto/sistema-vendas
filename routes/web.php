@@ -5,6 +5,7 @@ use App\Http\Controllers\ClientSummaryReportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleOrderController;
+use App\Http\Controllers\summaryexelController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,20 @@ use Nette\Utils\Json;
 #GROUP MIDDLEWARE STAFF
 Route::middleware(['auth', 'role:administrator,manager,staff'])
     ->group(function () {
+    #Summary EXEL 
+    
+
+    // LIST + FILTER (DATE RANGE)
+    Route::get('/summary', [summaryexelController::class, 'index'])
+        ->name('summaryexel.index');
+
+    // EXPORT EXCEL (FOLLOW FILTER)
+    Route::get('/summary/export/excel', [summaryexelController::class, 'excel'])
+        ->name('summary.excel');
+
+
+
+
     #SalesController
     Route::prefix('sale-orders')->group(function () {
     Route::get('/sales', [SaleOrderController::class, 'index'])->name('sale-orders.index');

@@ -136,19 +136,27 @@
                         <span class="nxl-mtext">Report</span>
                         <span class="nxl-arrow">
                             <i class="feather-chevron-right {{ request()->routeIs('transactions.report') ? 'rotate-90' : '' }}"></i>
+                         
                         </span>
                     </a>
 
                     <ul class="nxl-submenu {{ request()->routeIs('transactions.report') ? 'show' : '' }}">
                         <li class="nxl-item {{ request()->routeIs('transactions.report') ? 'active' : '' }}">
                             <a class="nxl-link" href="{{ route('transactions.report') }}">
-                                <i class="bi bi-journal"></i> Report
+                                <i class="bi bi-journal"></i> Detail Report
                             </a>
+                            
                         </li>
 
                           <li class="nxl-item {{ request()->routeIs('clientSummaryView.index') ? 'active' : '' }}">
                             <a class="nxl-link" href="{{ route('clientSummaryView.index') }}">
-                                <i class="bi bi-journal-bookmark text-info"></i>  Summary Report
+                                <i class="bi bi-journal-bookmark text-warning"></i>  Summary Client Report
+                            </a>
+                        </li>
+
+                         <li class="nxl-item {{ request()->routeIs('summaryexel.index') ? 'active' : '' }}">
+                            <a class="nxl-link" href="{{ route('summaryexel.index') }}">
+                                <i class="bi bi-filetype-exe text-success"></i>  Summary Daily Exel
                             </a>
                         </li>
                     </ul>
