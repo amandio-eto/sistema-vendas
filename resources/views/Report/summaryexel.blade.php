@@ -86,15 +86,15 @@
                                 <td>{{ $t->lo_number }}</td>
 
                                 <td class="text-end">
-                                    {{ $t->product_name === 'Gasolina' ? number_format($t->quantity,2) : '-' }}
+                                    {{ $t->product_name === 'GASOLINA' ? format_liter($t->quantity,2) : '-' }}
                                 </td>
 
                                 <td class="text-end">
-                                    {{ $t->product_name === 'Gasole' ? number_format($t->quantity,2) : '-' }}
+                                    {{ $t->product_name === 'GASOLEO' ? format_liter($t->quantity,2) : '-' }}
                                 </td>
 
                                 <td class="text-end">
-                                    {{ $t->product_name === 'Jet-A1' ? number_format($t->quantity,2) : '-' }}
+                                    {{ $t->product_name === 'JET-A1' ? format_liter($t->quantity,2) : '-' }}
                                 </td>
 
                                 <td>{{ $t->payment_reference ?? '-' }}</td>
@@ -118,13 +118,13 @@
                         <tr>
                             <td colspan="4" class="text-end">TOTAL</td>
                             <td class="text-end">
-                                {{ number_format($transactions->where('product_name','Gasolina')->sum('quantity'),2) }}
+                                {{ number_format($transactions->where('product_name','GASOLINA ')->sum('quantity'),2)."L" }}
                             </td>
                             <td class="text-end">
-                                {{ number_format($transactions->where('product_name','Gasole')->sum('quantity'),2) }}
+                                {{ number_format($transactions->where('product_name','GASOLEO')->sum('quantity'),2)."L" }}
                             </td>
                             <td class="text-end">
-                                {{ number_format($transactions->where('product_name','Jet-A1')->sum('quantity'),2) }}
+                                {{ number_format($transactions->where('product_name','JET-A1')->sum('quantity'),2)."L"}}
                             </td>
                             <td colspan="3"></td>
                         </tr>
