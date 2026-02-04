@@ -61,6 +61,15 @@
                         @enderror
                     </div>
 
+
+                     <div class="col-md-3">
+                    <label class="form-label small text-muted">Payment References</label>
+                    <input type="text" name="payment_references" value="{{ $transaction->payment_references }}"
+                           class="form-control form-control-sm">
+                    @error('payment_references') <small class="text-danger">{{ $message }}</small> @enderror
+                </div>
+
+
                     <!-- Product -->
                     <div class="col-md-3">
                         <label class="form-label small text-muted">Product</label>
@@ -141,6 +150,14 @@
                                value="{{ old('created_at', optional($transaction->created_at)->format('Y-m-d')) }}"
                                class="form-control form-control-sm">
                     </div>
+
+
+                    <div class="col-md-6">
+                    <label class="form-label small text-muted">Description</label>
+                    <input type="text" name="description" value="{{ old('description') }}"
+                           class="form-control form-control-sm">
+                    @error('description') <small class="text-danger">{{ $message }}</small> @enderror
+                </div>
 
                     <!-- Attachment -->
                     <div class="col-md-3">

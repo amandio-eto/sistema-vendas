@@ -16,6 +16,9 @@ class TransactionController extends Controller
 {
 
 
+
+
+
 public function printPdf($id)
 {
     // Ambil transaksi berdasarkan ID
@@ -275,8 +278,10 @@ public function printPdf($id)
             'id_driver'      => $request->id_driver,
             'plat_number'    => $request->plat_number,
             'quantity'       => $request->quantity,
+            'payment_references' =>  $request->input('payment_references'),
+            'description' => $request->input('description'),
             'attached'       => $attachedPath,
-            'created_at'     => Carbon::parse($request->created_at),
+            'created_at'     =>  Carbon::now(),
             'updated_at'     => Carbon::now(),
         ]);
 
@@ -364,8 +369,12 @@ public function printPdf($id)
         'client_name'    => $client->client_name,
         'id_driver'      => $request->id_driver,
         'driver_name'    => $driver->driver_name,
+        'payment_references' =>  $request->input('payment_references'),
+        'description' => $request->input('description'),
         'plat_number'    => $request->plat_number,
-        'created_at' => Carbon::parse($request->created_at),
+        'created_at' => Carbon::parse($request->created_at)->setTimeFrom(Carbon::now()),
+        'updated_at' => Carbon::parse($request->created_at)->setTimeFrom(Carbon::now()),
+    
     ]);
 
        $agent = new Agent();

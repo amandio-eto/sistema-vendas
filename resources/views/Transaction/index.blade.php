@@ -68,7 +68,7 @@
                 <!-- Payment References -->
                 <div class="col-md-3">
                     <label class="form-label small text-muted">Payment References</label>
-                    <input type="text" name="payment_references" value="{{ old('payment_references') }}"
+                    <input type="text" name="payment_references"
                            class="form-control form-control-sm">
                     @error('payment_references') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
@@ -149,12 +149,12 @@
                     @error('plat_number') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
-                <!-- Date -->
+                {{-- <!-- Date -->
                 <div class="col-md-2">
                     <label class="form-label small text-muted">Date</label>
                     <input type="date" name="created_at" value="{{ old('created_at') }}"
                            class="form-control form-control-sm">
-                </div>
+                </div> --}}
 
                 <!-- Description -->
                 <div class="col-md-6">
@@ -222,6 +222,8 @@
                             <th>Request</th>
                             <th>Status</th>
                             <th>Plat</th>
+                            <th>Description</th>
+                            <th>Payment References</th>
                             <th>Attachment</th>
                             <th>Created</th>
                             <th class="text-end">Action</th>
@@ -281,6 +283,12 @@
                                 </span>
                             </td>
                             <td>{{ $tx->plat_number }}</td>
+                            <td>
+                                {{ $tx->payment_references }}
+                            </td>
+                            <td>
+                                {{ $tx->description }}
+                            </td>
 
                             <!-- ATTACHMENT -->
                             <td class="text-center">

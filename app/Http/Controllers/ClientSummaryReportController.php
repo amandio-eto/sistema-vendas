@@ -16,12 +16,14 @@ class ClientSummaryReportController extends Controller
     // 1️⃣ VIEW SUMMARY
     public function clientSummaryView(Request $request)
     {
-       $clients = DB::table('transaction')
-        ->select('client_name')
-        ->whereNull('deleted_at')
-        ->distinct()
-        ->orderBy('client_name')
-        ->get();
+       $clients = DB::table('transaction as t')
+            ->leftJoin('clients as c', 'c.id', '=', 't.id_client')
+            ->select(DB::raw('COALESCE(c.client_name, t.client_name) AS client_name'))
+            ->whereNull('c.tin')
+            ->whereNull('t.deleted_at')
+            ->distinct()
+            ->orderBy('client_name')
+            ->get();
 
     // Ambil summary data sesuai filter
     $summaryData = $this->buildClientSummaryQuery($request);
