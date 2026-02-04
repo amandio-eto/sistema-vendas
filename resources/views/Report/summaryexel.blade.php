@@ -90,7 +90,7 @@
                                 </td>
 
                                 <td class="text-end">
-                                    {{ $t->product_name === 'GASOLEO' ? format_liter($t->quantity,2) : '-' }}
+                                    {{ $t->product_name === 'GASÓLEO' ? format_liter($t->quantity,2) : '-' }}
                                 </td>
 
                                 <td class="text-end">
@@ -115,21 +115,25 @@
                     {{-- TOTAL --}}
                     @if($transactions->count())
                     <tfoot class="table-light fw-semibold">
-                        <tr>
-                            <td colspan="4" class="text-end">TOTAL</td>
-                            <td class="text-end">
-                                {{ number_format($transactions->filter(fn($t) => strtoupper($t->product_name) === 'GASOLINA')->sum('quantity'),2) }}
-                            </td>
-                            <td class="text-end">
-                                {{ number_format($transactions->filter(fn($t) => strtoupper($t->product_name) === 'GASÓLEO')->sum('quantity'),2) }}
-                            </td>
-                            <td class="text-end">
-                                {{ number_format($transactions->filter(fn($t) => strtoupper($t->product_name) === 'JET-A1')->sum('quantity'),2) }}
-                            </td>
-                            <td colspan="3"></td>
-                        </tr>
-                   
-                    </tfoot>
+                            <tr>
+                                <td colspan="4" class="text-end">TOTAL</td>
+
+                                <td class="text-end">
+                                    {{ number_format($transactions->filter(fn($t) => strtoupper($t->product_name) === 'GASOLINA')->sum('quantity'),2) }}
+                                </td>
+
+                                <td class="text-end">
+                                    {{ number_format($transactions->filter(fn($t) => strtoupper($t->product_name) === 'GASÓLEO')->sum('quantity'),2) }}
+                                </td>
+
+                                <td class="text-end">
+                                    {{ number_format($transactions->filter(fn($t) => strtoupper($t->product_name) === 'JET-A1')->sum('quantity'),2) }}
+                                </td>
+
+                                <td colspan="3"></td>
+                            </tr>
+                        </tfoot>
+
                     @endif
                 </table>
             </div>
