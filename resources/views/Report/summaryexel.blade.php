@@ -48,7 +48,7 @@
     </div>
 
     {{-- TABLE --}}
-    <div class="card border-0 shadow-sm rounded-4">
+    <div class="card border-0 shadow-sm rounded-4" style="font-size: 10px;">
         <div class="card-header bg-white border-0">
             <h6 class="mb-0 fw-semibold">Delivery Order Report</h6>
             <small class="text-muted">
@@ -66,9 +66,9 @@
                     <thead class="table-light text-center">
                         <tr>
                             <th>No</th>
-                            <th>DO Number</th>
+                            <th>DO Nu.</th>
                             <th>Client Name</th>
-                            <th>LO Number</th>
+                            <th>LO Nu.</th>
                             <th>Gasolina (L)</th>
                             <th>Gasole (L)</th>
                             <th>Jet-A1 (L)</th>
@@ -79,7 +79,7 @@
                     </thead>
                     <tbody>
                         @forelse ($transactions as $i => $t)
-                            <tr>
+                            <tr style="font-size: 10px;">
                                 <td class="text-center">{{ $i + 1 }}</td>
                                 <td>{{ $t->do_number }}</td>
                                 <td>{{ $t->client_name }}</td>

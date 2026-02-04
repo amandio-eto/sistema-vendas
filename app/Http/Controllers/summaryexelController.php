@@ -15,7 +15,7 @@ class summaryexelController extends Controller
 
         $transactions = $this->getFilteredTransactions($request)
         ->orderBy('transaction.created_at', 'desc')
-        ->get();
+        ->simplePaginate(10);
 
 
         return view('Report.summaryexel',compact('transactions'));
