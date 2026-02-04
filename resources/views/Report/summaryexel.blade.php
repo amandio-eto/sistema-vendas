@@ -118,16 +118,17 @@
                         <tr>
                             <td colspan="4" class="text-end">TOTAL</td>
                             <td class="text-end">
-                                {{ number_format($transactions->where('product_name','GASOLINA ')->sum('quantity'),2)."L" }}
+                                {{ number_format($transactions->filter(fn($t) => strtoupper($t->product_name) === 'GASOLINA')->sum('quantity'),2) }}
                             </td>
                             <td class="text-end">
-                                {{ number_format($transactions->where('product_name','GASOLEO')->sum('quantity'),2)."L" }}
+                                {{ number_format($transactions->filter(fn($t) => strtoupper($t->product_name) === 'GASÓLEO')->sum('quantity'),2) }}
                             </td>
                             <td class="text-end">
-                                {{ number_format($transactions->where('product_name','JET-A1')->sum('quantity'),2)."L"}}
+                                {{ number_format($transactions->filter(fn($t) => strtoupper($t->product_name) === 'JET-A1')->sum('quantity'),2) }}
                             </td>
                             <td colspan="3"></td>
                         </tr>
+                   
                     </tfoot>
                     @endif
                 </table>

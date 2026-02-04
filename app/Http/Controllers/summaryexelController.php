@@ -1,48 +1,39 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Style\Border;
 
 class summaryexelController extends Controller
 {
-    
-
-    public function index(Request $request){
-
+    /**
+     * Show summary view with filter
+     */
+    public function index(Request $request)
+    {
         $transactions = $this->getFilteredTransactions($request)
-        ->orderBy('transaction.created_at', 'desc')
-        ->get();
+                             ->orderBy('transaction.created_at', 'desc')
+                             ->get();
 
-
-        return view('Report.summaryexel',compact('transactions'));
+        return view('Report.summaryexel', compact('transactions'));
     }
 
-
+    /**
+     * Export summary to Excel
+     */
     public function excel(Request $request)
-{
-
-             $transactions = $this->getFilteredTransactions($request)->get();
+    {
+        $transactions = $this->getFilteredTransactions($request)->get();
 
         // Hitung TOTAL per produk
-        $totalGasolina = 0;
-        $totalGasole   = 0;
-        $totalJetA1    = 0;
+        $totalGasolina = $transactions->filter(fn($t) => strtoupper($t->product_name) === 'GASOLINA')->sum('quantity');
+        $totalGasole   = $transactions->filter(fn($t) => strtoupper($t->product_name) === 'GASÓLEO')->sum('quantity');
+        $totalJetA1    = $transactions->filter(fn($t) => strtoupper($t->product_name) === 'JET-A1')->sum('quantity');
 
-        foreach ($transactions as $t) {
-            if ($t->product_name === 'Gasolina') {
-                $totalGasolina += $t->quantity;
-            } elseif ($t->product_name === 'Gasole') {
-                $totalGasole += $t->quantity;
-            } elseif ($t->product_name === 'Jet-A1') {
-                $totalJetA1 += $t->quantity;
-            }
-        }
-
-        // Spreadsheet
+        // Buat Spreadsheet
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Summary Report');
@@ -56,7 +47,7 @@ class summaryexelController extends Controller
             'Gasolina (L)',
             'Gasole (L)',
             'Jet-A1 (L)',
-            'Payment References',
+            'Payment Reference',
             'Description',
             'Date'
         ];
@@ -71,10 +62,10 @@ class summaryexelController extends Controller
                 $t->do_number,
                 $t->client_name,
                 $t->lo_number,
-                $t->product_name === 'Gasolina' ? $t->quantity : 0,
-                $t->product_name === 'Gasole'   ? $t->quantity : 0,
-                $t->product_name === 'Jet-A1'   ? $t->quantity : 0,
-                $t->payment_references ?? '-',
+                strtoupper($t->product_name) === 'GASOLINA' ? $t->quantity : 0,
+                strtoupper($t->product_name) === 'GASÓLEO' ? $t->quantity : 0,
+                strtoupper($t->product_name) === 'JET-A1' ? $t->quantity : 0,
+                $t->payment_reference ?? '-',
                 $t->description ?? '-',
                 date('d-m-Y', strtotime($t->created_at))
             ], null, 'A'.$row);
@@ -100,7 +91,7 @@ class summaryexelController extends Controller
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
-        // Save & download
+        // Download Excel
         $writer = new Xlsx($spreadsheet);
         $filename = 'summary_report_'.date('Ymd_His').'.xlsx';
 
@@ -109,12 +100,10 @@ class summaryexelController extends Controller
         }, $filename, [
             "Content-Type" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         ]);
-
-
-}
+    }
 
     /**
-     * FILTER QUERY (WAJIB ADA)
+     * FILTER TRANSACTIONS (date optional)
      */
     private function getFilteredTransactions(Request $request)
     {
@@ -138,4 +127,3 @@ class summaryexelController extends Controller
         return $query;
     }
 }
-
