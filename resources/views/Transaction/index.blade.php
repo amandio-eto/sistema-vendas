@@ -222,8 +222,8 @@
                             <th>Request</th>
                             <th>Status</th>
                             <th>Plat</th>
-                            <th>Description</th>
                             <th>Payment References</th>
+                            <th>Description</th>
                             <th>Attachment</th>
                             <th>Created</th>
                             <th class="text-end">Action</th>

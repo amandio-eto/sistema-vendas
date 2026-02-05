@@ -95,8 +95,8 @@ class ReportController extends Controller
             $sheet->fromArray([
                 $i + 1,
                 $t->do_number,
-                "#".$t->so_number,
-                "#".$t->lo_number,
+                $t->so_number,
+                $t->lo_number,
                 date('d-m-Y', strtotime($t->created_at)),
                 $t->client_name,
                 $t->product_type,

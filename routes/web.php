@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientSummaryReportController;
+use App\Http\Controllers\loController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleOrderController;
@@ -54,6 +55,10 @@ Route::middleware(['auth', 'role:administrator,manager,staff'])
     Route::get('/summary/export/excel', [summaryexelController::class, 'excel'])
         ->name('summary.excel');
 
+    #LO Controller
+    Route::get('/lo-report', [loController::class, 'index'])->name('lo.report');
+   
+    #End LoCOntroller
 
 
 

@@ -163,6 +163,18 @@
                 </li>
 
 
+
+                {{-- <li class="nxl-item nxl-hasmenu nxl-trigger">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                            <span class="nxl-mtext">Projects</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu" style="">
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('lo.report') }}">Controls LO</a></li>
+                        </ul>
+                    </li> --}}
+
+
                     {{-- Drivers Menu --}}
 <li class="nxl-item nxl-hasmenu {{ request()->routeIs('drivers.*') ? 'active' : '' }}">
     <a href="javascript:void(0);" class="nxl-link">
@@ -242,6 +254,9 @@
                             </li>
                         </ul>
                     </li>
+
+
+
 
 
                    @else
