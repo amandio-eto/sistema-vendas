@@ -165,8 +165,10 @@
                         <thead class="bg-light text-uppercase small text-muted">
                             <tr>
                                 <th>#</th>
+                                <th>Status</th>
                                 <th>Photo</th>
                                 <th>Email</th>
+                                
                                 <th>Gender</th>
                                 <th>Position</th>
                                 <th>Role</th>
@@ -178,6 +180,18 @@
                         @foreach($users as $key => $user)
                             <tr class="small">
                                 <td>{{ $users->firstItem() + $key }}</td>
+                                                                <th>
+                                    @if($user->active)
+                                        <span class="badge rounded-pill bg-success">
+                                            <i class="fa fa-check-circle me-1"></i> Active
+                                        </span>
+                                    @else
+                                        <span class="badge rounded-pill bg-danger">
+                                            <i class="fa fa-times-circle me-1"></i> Inactive
+                                        </span>
+                                    @endif
+                                </th>
+
                                 <td>
                                     @if($user->photo)
                                         <img src="{{ asset('storage/' . $user->photo) }}" class="rounded-circle" width="36" height="36">

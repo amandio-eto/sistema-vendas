@@ -71,17 +71,27 @@ class AuthController extends Controller
     public function dologin(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+    'email' => 'required|email',
+    'password' => 'required'
+]);
 
         if (Auth::attempt($credentials)) {
+            // Get the authenticated user
+            $user = Auth::user()->id;
+
+            // Update active status
+            DB::table('users')->whereId($user)->update([
+                'active' => 1
+            ]);
+
+            // Regenerate session
             $request->session()->regenerate();
+
             toastr()->success('Successfully','Message');
             return redirect()->intended('/dashboard');
         }
 
-
+        // Login failed
         toastr()->error('Error','Login Failed');
         return back();
     }
@@ -89,10 +99,16 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        $status = Auth::user()->id;
+        DB::table('users')->where('id', $status)->update([
+                'active' => 0
+            ]);
         Auth::logout();
+     
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         toastr()->success('Sucessfully Logout','Message');
+        
         return redirect('/login');
     }
     
@@ -258,7 +274,7 @@ class AuthController extends Controller
         if($del){
 
 
-            $agent = new Agent();
+        $agent = new Agent();
         $browser = $agent->browser();    
         $version = $agent->version($browser); 
         $os = $agent->platform();        
