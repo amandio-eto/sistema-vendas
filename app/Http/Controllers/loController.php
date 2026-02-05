@@ -129,7 +129,8 @@ class LoController extends Controller
             ->when($request->product && $request->product !== 'all', fn($q) =>
                 $q->where('t.id_product', $request->product)
             )
-            ->orderBy('t.so_number','ASC')
+            ->orderBy('t.id','ASC')
+            ->orderBy('t.created_at','ASC')
             ->orderBy('t.lo_number','ASC'); // lebih aman untuk audit LO
     }
 
