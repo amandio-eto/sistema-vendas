@@ -6,22 +6,9 @@
 
     {{-- ================= HEADER ================= --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="fw-bold mb-0">LO Report</h4>
-            <small class="text-muted">Monitoring LO Jump & Unregistered</small>
-        </div>
+        
 
-        <div class="d-flex gap-2">
-            <a href="{{ route('lo.pdf', request()->query()) }}"
-               class="btn btn-danger btn-sm">
-                <i class="bi bi-file-earmark-pdf"></i> PDF
-            </a>
-
-            <a href="{{ route('lo.excel', request()->query()) }}"
-               class="btn btn-success btn-sm">
-                <i class="bi bi-file-earmark-excel"></i> Excel
-            </a>
-        </div>
+        
     </div>
 
     {{-- ================= FILTER ================= --}}
@@ -45,7 +32,7 @@
                            value="{{ request('to') }}">
                 </div>
 
-                <div class="col-md-3 d-flex gap-2">
+                <div class="col-md-4 d-flex gap-2">
                     <button class="btn btn-primary btn-sm">
                         <i class="bi bi-funnel"></i> Filter
                     </button>
@@ -54,14 +41,28 @@
                        class="btn btn-outline-secondary btn-sm">
                         Reset
                     </a>
+
+                     <a href="{{ route('lo.pdf', request()->query()) }}"
+                        class="btn btn-danger btn-sm">
+                            <i class="bi bi-file-earmark-pdf"></i> PDF
+                        </a>
+                         <a href="{{ route('lo.excel', request()->query()) }}"
+                        class="btn btn-success btn-sm">
+                            <i class="bi bi-file-earmark-excel"></i> Excel
+                        </a>
+
+
                 </div>
 
             </form>
+        
+
+            
         </div>
     </div>
 
     {{-- ================= TABLE ================= --}}
-    <div class="card shadow-sm border-0">
+    <div class="card shadow-sm border-0" style="font-size: 12px;">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-sm table-striped table-hover align-middle mb-0">

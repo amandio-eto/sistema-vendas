@@ -11,27 +11,20 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class LoController extends Controller
 {
-    /* =========================
-     | INDEX (WEB VIEW)
-     ========================= */
+      
     public function index(Request $request)
     {
         $los = $this->baseQuery($request)
-            ->paginate(20);
+            ->simplePaginate(20);
 
-
-        // hitung LO jump & missing sekali saja
+        // hitung LO jump & missing
         $los->getCollection()->transform(function ($t) {
             [$jump, $missing] = $this->calculateLoIssue($t);
-            $t->lo_jump = $jump;
+            $t->lo_jump    = $jump;
             $t->lo_missing = $missing;
             return $t;
         });
 
-
-
-
-        
         return view('Lo.index', compact('los'));
     }
 
@@ -44,7 +37,7 @@ class LoController extends Controller
 
         foreach ($transactions as $t) {
             [$jump, $missing] = $this->calculateLoIssue($t);
-            $t->lo_jump = $jump;
+            $t->lo_jump    = $jump;
             $t->lo_missing = $missing;
         }
 
@@ -67,15 +60,14 @@ class LoController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         $headers = [
-            'No','SO','LO','LO Jump','LO Unregister',
-            'Client','Quantity','Product','Date'
+            'No', 'SO', 'LO', 'LO Jump', 'LO Unregister',
+            'Client', 'Quantity', 'Product', 'Date'
         ];
         $sheet->fromArray($headers, null, 'A1');
         $sheet->getStyle('A1:I1')->getFont()->setBold(true);
 
         $row = 2;
         foreach ($transactions as $i => $t) {
-
             [$jump, $missing] = $this->calculateLoIssue($t);
 
             $sheet->fromArray([
@@ -83,7 +75,7 @@ class LoController extends Controller
                 $t->so_number,
                 $t->lo_number,
                 $jump ?? 'OK',
-                count($missing) ? implode(',', $missing) : '-',
+                count($missing) ? implode(', ', $missing) : '-',
                 $t->client_name,
                 $t->quantity,
                 $t->product_name,
@@ -111,8 +103,8 @@ class LoController extends Controller
     private function baseQuery(Request $request)
     {
         return DB::table('transaction as t')
-            ->leftJoin('clients as c', 'c.id', '=', 't.id_client')
-            ->leftJoin('products as p', 'p.id', '=', 't.id_product')
+            ->leftJoin('clients as c','c.id','=','t.id_client')
+            ->leftJoin('products as p','p.id','=','t.id_product')
             ->select(
                 't.id',
                 't.so_number',
@@ -125,42 +117,40 @@ class LoController extends Controller
                     'LAG(t.lo_number) OVER (PARTITION BY t.so_number ORDER BY t.lo_number) as lo_previous'
                 )
             )
-            ->when($request->from && $request->to, fn ($q) =>
+            ->when($request->from && $request->to, fn($q) =>
                 $q->whereBetween('t.created_at', [
                     Carbon::parse($request->from)->startOfDay(),
                     Carbon::parse($request->to)->endOfDay()
                 ])
             )
-            ->when($request->client && $request->client !== 'all', fn ($q) =>
+            ->when($request->client && $request->client !== 'all', fn($q) =>
                 $q->where('t.id_client', $request->client)
             )
-            ->when($request->product && $request->product !== 'all', fn ($q) =>
+            ->when($request->product && $request->product !== 'all', fn($q) =>
                 $q->where('t.id_product', $request->product)
             )
-            ->orderBy('t.so_number')
-            ->orderBy('t.lo_number');
+            ->orderBy('t.so_number','ASC')
+            ->orderBy('t.lo_number','ASC'); // lebih aman untuk audit LO
     }
 
     /* =========================
      | LO CHECK LOGIC
      ========================= */
-    private function calculateLoIssue($t)
+    private function calculateLoIssue($t): array
     {
-        $jump = null;
+        $jump    = null;
         $missing = [];
 
-        if (!is_null($t->lo_previous)) {
-            $diff = $t->lo_number - $t->lo_previous;
+        if ($t->lo_previous !== null) {
+            $diff = (int)$t->lo_number - (int)$t->lo_previous;
 
             if ($diff > 1) {
                 $jump = $diff - 1;
-
-                for ($i = $t->lo_previous + 1; $i < $t->lo_number; $i++) {
-                    $missing[] = $i;
-                }
+                $missing = range($t->lo_previous + 1, $t->lo_number - 1);
             }
         }
 
         return [$jump, $missing];
     }
+
 }
