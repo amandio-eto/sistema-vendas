@@ -67,7 +67,6 @@
             <tr>
                 <th>N<sup>0</sup></th>
                 <th>LO</th>
-                <th>LO Jump</th>
                 <th>DO</th>
                 <th>SO</th>
                 <th>Client</th>
