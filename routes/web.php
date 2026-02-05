@@ -56,8 +56,16 @@ Route::middleware(['auth', 'role:administrator,manager,staff'])
         ->name('summary.excel');
 
     #LO Controller
-    Route::get('/lo-report', [loController::class, 'index'])->name('lo.report');
-   
+    
+    // Web view
+    Route::get('lo/report', [loController::class, 'index'])
+        ->name('lo.index');
+    // PDF export
+    Route::get('lo/pdf', [loController::class, 'pdf'])
+        ->name('lo.pdf');
+    // Excel export
+    Route::get('lo/excel', [loController::class, 'excel'])
+        ->name('lo.excel');
     #End LoCOntroller
 
 

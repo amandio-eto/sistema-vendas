@@ -164,15 +164,16 @@
 
 
 
-                {{-- <li class="nxl-item nxl-hasmenu nxl-trigger">
+                <li class="nxl-item nxl-hasmenu nxl-trigger">
                         <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
-                            <span class="nxl-mtext">Projects</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-micon"><i class="bi bi-journal-bookmark-fill text-info"></i></span>
+                            <span class="nxl-mtext">Lo Controls</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
-                        <ul class="nxl-submenu" style="">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('lo.report') }}">Controls LO</a></li>
+                        <ul class="nxl-submenu  {{ request()->routeIs('lo.index') ? 'active' : '' }}" style="">
+                            <li class="nxl-item">
+                              <a class="nxl-link" href="{{ route('lo.index') }}">  <i class="bi bi-journal-check text-warning"></i> Controls LO</a></li>
                         </ul>
-                    </li> --}}
+                </li>
 
 
                     {{-- Drivers Menu --}}

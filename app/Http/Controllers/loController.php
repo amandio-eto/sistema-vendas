@@ -2,33 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-class loController extends Controller
+class LoController extends Controller
 {
+    /* =========================
+     | INDEX (WEB VIEW)
+     ========================= */
     public function index(Request $request)
     {
-        
-        $los = DB::table('transaction')
-            ->select(
-                'so_number',
-                'lo_number',
-                'client_name',
-                'product_name',
-                'quantity',
-                'created_at'
-            )
-            ->when($request->from && $request->to, function ($q) use ($request) {
-                $q->whereBetween('created_at', [
-                    $request->from.' 00:00:00',
-                    $request->to.' 23:59:59'
-                ]);
-            })
-            ->orderBy('lo_number')
-            ->get();
+        $los = $this->baseQuery($request)
+            ->paginate(20);
 
+
+        // hitung LO jump & missing sekali saja
+        $los->getCollection()->transform(function ($t) {
+            [$jump, $missing] = $this->calculateLoIssue($t);
+            $t->lo_jump = $jump;
+            $t->lo_missing = $missing;
+            return $t;
+        });
+
+
+
+
+        
         return view('Lo.index', compact('los'));
     }
 
@@ -39,12 +42,18 @@ class loController extends Controller
     {
         $transactions = $this->baseQuery($request)->get();
 
+        foreach ($transactions as $t) {
+            [$jump, $missing] = $this->calculateLoIssue($t);
+            $t->lo_jump = $jump;
+            $t->lo_missing = $missing;
+        }
+
         $pdf = Pdf::loadView(
-            'Transaction.report_pdf',
+            'Lo.report_pdf',
             compact('transactions')
         )->setPaper('a4', 'landscape');
 
-        return $pdf->stream('transaction_report.pdf');
+        return $pdf->stream('lo_report.pdf');
     }
 
     /* =========================
@@ -58,7 +67,7 @@ class loController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         $headers = [
-            'Nu','SO','LO','LO Jump','LO Unregister',
+            'No','SO','LO','LO Jump','LO Unregister',
             'Client','Quantity','Product','Date'
         ];
         $sheet->fromArray($headers, null, 'A1');
@@ -73,13 +82,13 @@ class loController extends Controller
                 $i + 1,
                 $t->so_number,
                 $t->lo_number,
-                $jump ?: 'OK',
+                $jump ?? 'OK',
                 count($missing) ? implode(',', $missing) : '-',
                 $t->client_name,
                 $t->quantity,
                 $t->product_name,
-                date('d-m-Y', strtotime($t->created_at)),
-            ], null, 'A'.$row);
+                Carbon::parse($t->created_at)->format('d-m-Y'),
+            ], null, 'A' . $row);
 
             $row++;
         }
@@ -92,7 +101,7 @@ class loController extends Controller
 
         return response()->streamDownload(
             fn() => $writer->save('php://output'),
-            'transaction_report.xlsx'
+            'lo_report.xlsx'
         );
     }
 
@@ -102,8 +111,8 @@ class loController extends Controller
     private function baseQuery(Request $request)
     {
         return DB::table('transaction as t')
-            ->leftJoin('clients as c','c.id','=','t.id_client')
-            ->leftJoin('products as p','p.id','=','t.id_product')
+            ->leftJoin('clients as c', 'c.id', '=', 't.id_client')
+            ->leftJoin('products as p', 'p.id', '=', 't.id_product')
             ->select(
                 't.id',
                 't.so_number',
@@ -112,18 +121,20 @@ class loController extends Controller
                 't.created_at',
                 'c.client_name',
                 'p.product_name',
-                DB::raw('LAG(t.lo_number) OVER (PARTITION BY t.so_number ORDER BY t.lo_number) as lo_previous')
+                DB::raw(
+                    'LAG(t.lo_number) OVER (PARTITION BY t.so_number ORDER BY t.lo_number) as lo_previous'
+                )
             )
-            ->when($request->from && $request->to, fn($q) =>
+            ->when($request->from && $request->to, fn ($q) =>
                 $q->whereBetween('t.created_at', [
-                    $request->from.' 00:00:00',
-                    $request->to.' 23:59:59'
+                    Carbon::parse($request->from)->startOfDay(),
+                    Carbon::parse($request->to)->endOfDay()
                 ])
             )
-            ->when($request->client && $request->client !== 'all', fn($q) =>
+            ->when($request->client && $request->client !== 'all', fn ($q) =>
                 $q->where('t.id_client', $request->client)
             )
-            ->when($request->product && $request->product !== 'all', fn($q) =>
+            ->when($request->product && $request->product !== 'all', fn ($q) =>
                 $q->where('t.id_product', $request->product)
             )
             ->orderBy('t.so_number')
@@ -140,8 +151,10 @@ class loController extends Controller
 
         if (!is_null($t->lo_previous)) {
             $diff = $t->lo_number - $t->lo_previous;
+
             if ($diff > 1) {
                 $jump = $diff - 1;
+
                 for ($i = $t->lo_previous + 1; $i < $t->lo_number; $i++) {
                     $missing[] = $i;
                 }
