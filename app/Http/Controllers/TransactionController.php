@@ -373,41 +373,10 @@ public function printPdf($id)
 
 
 
-         // 5️⃣ Ambil tank aktif untuk produk ini
-    $tank = DB::table('tanks')
-        ->where('product_id', $request->id_product)
-        ->where('status', 1) // status aktif
-        ->first();
-
-    if (!$tank) {
-        throw new \Exception('No active tank found for this product.');
-    }
-
-    // 6️⃣ Kurangi stock tank sesuai quantity
-            $stockBefore = $tank->current_stock;
-            $stockAfter  = $stockBefore - $request->quantity;
-
-            if ($stockAfter < 0) {
-                throw new \Exception('Stock in tank is not enough.');
-            }
-
-            DB::table('tanks')->where('id', $tank->id)->update([
-                'current_stock' => $stockAfter
-            ]);
-
-            // 7️⃣ Simpan history stock
-            DB::table('tank_stock_records')->insert([
-                'tank_id' => $tank->id,
-                'type' => 'OUT',
-                'quantity' => $request->quantity,
-                'stock_before' => $stockBefore,
-                'stock_after' => $stockAfter,
-                'note' => 'Stock used for DO #' . $ndo,
-                'created_at' => Carbon::now()
-            ]);
+         
         
 
-        ###########################
+       
 
         // Greeting
       $hour = now()->hour;
