@@ -18,7 +18,7 @@
                     <select name="receiver_id" class="form-select" required>
                         <option value="">-- Select User --</option>
                         @foreach($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            <option value="{{ $user->id }}">{{ Str::upper($user->name) }}</option>
                         @endforeach
                     </select>
                 </div>
