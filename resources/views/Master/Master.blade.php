@@ -189,9 +189,7 @@ $date = now()->format('l, d-F-Y : h:i:s A');
                 <a href="javascript:void(0);" id="menu-expend-button" style="display:none;"><i class="feather-arrow-right"></i></a>
             </div>
             <div class="row" style="color: black;">
-            <div class="col">
-                <p>{{ $greeting }}, {{ $title }} {{ $name }} <br><small>{{ $date }}</small></p>
-            </div>
+           
         </div>
 
             
@@ -264,9 +262,16 @@ $date = now()->format('l, d-F-Y : h:i:s A');
         <div class="page-header">
             
             <div class="page-header-left">
-                <h5>{{ Str::upper(request()->path()) }}</h5>
+                <h5>{{ Str::upper(request()->path()) }}
                 
+
+                    
+               
+
+
+
             </div>
+             <p style='font-size:12px;'>{{ $greeting }}, {{ $title }} {{ $name }} <br><small>{{ $date }}</small></p>
         </div>
         @yield('content')
     </div>
