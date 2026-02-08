@@ -150,6 +150,53 @@ $date = now()->format('l, d-F-Y : h:i:s A');
                     </ul>
                 </li>
 
+                @if (Auth::user()->roles=='administrator' || Auth::user()->roles=='manager')
+                    
+             
+
+            <li class="nxl-item nxl-hasmenu {{ request()->routeIs('tank.*') ? 'active' : '' }}">
+            <a href="javascript:void(0);" class="nxl-link">
+                <span class="nxl-micon">
+                    <i class="bi bi-droplet-fill text-info"></i>
+                </span>
+                <span class="nxl-mtext">
+                    Tank Management
+                </span>
+                <span class="nxl-arrow">
+                    <i class="feather-chevron-right"></i>
+                </span>
+            </a>
+
+            <ul class="nxl-submenu {{ request()->routeIs('tank.*') ? 'show' : '' }}">
+                <li class="nxl-item">
+                    <a class="nxl-link {{ request()->routeIs('tank.index') ? 'active' : '' }}"
+                    href="{{ route('tank.index') }}">
+                        <i class="bi bi-list-ul text-primary"></i> Tank List
+                    </a>
+                </li>
+
+                <li class="nxl-item">
+                    <a class="nxl-link {{ request()->routeIs('tank.create') ? 'active' : '' }}"
+                    href="{{ route('tank.create') }}">
+                        <i class="bi bi-plus-circle text-info"></i> Add Tank
+                    </a>
+                </li>
+                 <li class="nxl-item">
+            <a class="nxl-link {{ request()->routeIs('tank.stock.history') ? 'active' : '' }}"
+               href="{{ route('tank.stock.history') }}">
+                <i class="bi bi-clock-history text-success"></i> Stock History
+            </a>
+        </li>
+            @endif
+
+                
+
+       
+    </ul>
+</li>
+
+
+
                 <!-- Products + Auth (Admin only) -->
                 @if(Auth::user()->roles==='administrator')
                 <li class="nxl-item nxl-hasmenu {{ request()->routeIs('product.*') ? 'active' : '' }}">
@@ -263,13 +310,6 @@ $date = now()->format('l, d-F-Y : h:i:s A');
             
             <div class="page-header-left">
                 <h5>{{ Str::upper(request()->path()) }}
-                
-
-                    
-               
-
-
-
             </div>
              <p style='font-size:12px;'>{{ $greeting }}, {{ $title }} {{ $name }} <br><small>{{ $date }}</small></p>
         </div>

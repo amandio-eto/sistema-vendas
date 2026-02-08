@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleOrderController;
 use App\Http\Controllers\summaryexelController;
+use App\Http\Controllers\TankController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -50,9 +51,18 @@ use Nette\Utils\Json;
 #GROUP MIDDLEWARE STAFF
 Route::middleware(['auth', 'role:administrator,manager,staff'])
     ->group(function () {
+
+
+     
+});
+
+        #EndTankController
+
+    
     #Summary EXEL 
     
 
+    Route::get('dashboard',[\App\Http\Controllers\DashboardController::class,'index'])->name('dashboard.index');
     // LIST + FILTER (DATE RANGE)
     Route::get('/summary', [summaryexelController::class, 'index'])
         ->name('summaryexel.index');
@@ -101,7 +111,7 @@ Route::post('/inbox/mark-read', function () {
 
     // PDF report
     Route::get('/report/pdf', [SaleOrderController::class, 'pdfReport'])->name('sale-orders.pdf');
-});
+
 
 
 
@@ -120,7 +130,7 @@ Route::post('/inbox/mark-read', function () {
 
 
     #1)Dashboard
-    Route::get('dashboard',[\App\Http\Controllers\DashboardController::class,'index'])->name('dashboard.index');
+
     #EndDashboard
  
     #Report Controller
@@ -181,9 +191,29 @@ Route::middleware(['auth', 'role:administrator,manager'])
         #2.2 APROVED
         Route::get('/transactions/approve', [\App\Http\Controllers\TransactionController::class, 'approve'])->name('transaction.approve');
         Route::put('/transactions/status/update/{id}', [\App\Http\Controllers\TransactionController::class, 'approveupdate'])->name('approveupdate');
-        #END APRROVED
+
+      #Tanker
+         #Tank Controller 
+        Route::prefix('tank')->name('tank.')->group(function () {
+        Route::get('/', [TankController::class, 'index'])->name('index');
+        Route::get('/create', [TankController::class, 'create'])->name('create');
+        Route::post('/', [TankController::class, 'store'])->name('store');
+
+        Route::get('/{id}/edit', [TankController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [TankController::class, 'update'])->name('update');
+        Route::delete('/{id}', [TankController::class, 'destroy'])->name('destroy');
+
+      
+        Route::patch('/{id}/toggle', [TankController::class, 'toggleActive'])->name('toggle');
+
+         Route::get('/{id}/stock', [TankController::class, 'stockcreate'])->name('stock.create');
+         Route::post('/{id}/stock', [TankController::class, 'stockstore'])->name('stock.store');
+         Route::get('/stock/history', [TankController::class, 'history'])->name('stock.history');
+         Route::get('/tank/{id}/stock', [TankController::class, 'stockForm'])->name('tank.stock.create');
+     
       
     });
+});
 
 #END GROUP MIDDLEWARE HUSI STAFF
 
