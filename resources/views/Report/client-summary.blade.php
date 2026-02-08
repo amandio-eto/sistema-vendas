@@ -1,5 +1,7 @@
 @extends('Master.Master')
 
+@section('title','Client Summary')
+
 @section('content')
 <div class="card shadow-sm rounded-4">
     <div class="card-body">

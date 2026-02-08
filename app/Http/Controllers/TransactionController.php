@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use PDF; 
 use Jenssegers\Agent\Agent;
 
@@ -53,7 +54,6 @@ public function printPdf($id)
 }
 
 
-    ################### Ida neee mak usa ba iha Approva DO 
     Public function approve(Request $request){
         $search = $request->search;
 
@@ -82,7 +82,7 @@ public function printPdf($id)
                     });
                 })
                 ->orderByDesc('t.created_at')
-                ->paginate(10);
+                ->simplePaginate (10);
         return view('Transaction.approve',compact('transactions'));
     }
 
@@ -93,48 +93,140 @@ public function printPdf($id)
         $data->update([
             "statusedit" => 1
         ]);
+       $user =  Auth::user();
+
+
+
+
+
+        // Greeting
+      $hour = now()->hour;
+    $greeting = $hour < 12 ? '🌅 Good Morning' : ($hour < 18 ? '🌞 Good Afternoon' : '🌙 Good Evening');
+
+        // Today date
+        $date = now()->format('l, d-F-Y : h:i:s A');
+
+        // Fetch first approved user
+        $phoneData = DB::table('users')
+            ->where('approved', 1)
+            ->select('phone', 'name','gender')
+            ->first();
+
+        if (!$phoneData) {
+            return 'No approved users found!';
+        }
+          $gender = $phoneData->gender === 'female' ? 'Mis.' : 'Mr.';
+          $to = $phoneData->phone;
+
+  
+
+        $getdata = $data->first();
+        $message  = "Hello, {$greeting}\n";
+        $message .= "Please to: {$gender} {$phoneData->name}\n";
+        $message .= "User: {$user->name}\n";
+        $message .= "Request Edit Delivery Order \n";
+        $message .= "Do Number : {$getdata->do_number}\n";
+        $message .= "SO Number : {$getdata->so_number}\n";
+        $message .= "Waiting Approval, Thanks .....!";
+
+
+
+
+       
+
+
+       
+        // Kirim WhatsApp via WasenderAPI
+        $waResponse = Http::withHeaders([
+            'Authorization' => 'Bearer e43a62324de6a22dbea1badc06f6c10cccb75ef5391981761256f562b477ba41',
+            'Content-Type'  => 'application/json',
+        ])->post('https://wasenderapi.com/api/send-message', [
+            'to'   => $to,
+            'text' => $message,
+        ]);
+
+
+        
+
+
+
         toastr()->success('Message','Request Successfully');
         return back();
 
 
     }
 
-    public function approveupdate($id){
+    public function approveupdate(Request $request,$id){
 
-        $data = DB::table('transaction')->where('id',$id)->first();
-        $id_user = $data->id_user;
-         $data = DB::table('transaction')->where('id',$id)->update([
-            "statusedit" => false,
-            "button" => true,
-
-        ]);
-        $user = DB::table('users')->where('id',$id_user)
-        ->update([
-            "roleid" => 1
-        ]);
-         $agent = new Agent();
-        $browser = $agent->browser();    
-        $version = $agent->version($browser); 
-        $os = $agent->platform();        
-        $device = $agent->device();
-        $hostname = gethostname();
-
-      DB::table('user_logs')->insert([
-                "hostname"   => $hostname,
-                "ip"         => request()->ip(),
-                "browser"    => $browser,
-                "version"    => $version,
-                "os"         => $os,
-                "device"     => $device,
-                "method"     => request()->method(),
-                "description"=> "User Approved Edit",
-                "user_id"    => Auth::id(),
-                "created_at" => now(),
+         // Ambil data transaksi
+        $data = DB::table('transaction')->where('id', $id)->first();
+        if (!$data) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Transaction not found'
             ]);
+        }
 
-        toastr()->success('Successfuly','Message');
+        $id_user = $data->id_user;
+
+        // Update transaksi
+        DB::table('transaction')->where('id', $id)->update([
+            'statusedit' => false,
+            'button'     => true,
+        ]);
+
+        // Update user terkait
+        DB::table('users')->where('id', $id_user)->update([
+            'roleid' => 1
+        ]);
+
+        // Log user activity
+        $agent = new Agent();
+        DB::table('user_logs')->insert([
+            'hostname'    => gethostname(),
+            'ip'          => $request->ip(),
+            'browser'     => $agent->browser(),
+            'version'     => $agent->version($agent->browser()),
+            'os'          => $agent->platform(),
+            'device'      => $agent->device(),
+            'method'      => $request->method(),
+            'description' => "User Approved Edit for DO: " . $data->do_number,
+            'user_id'     => Auth::id(),
+            'created_at'  => now(),
+        ]);
+
+        // Format nomor telepon client
+        $phone = $data->client_phone;
+        if (substr($phone, 0, 1) != '+') {
+            $phone = '+670' . ltrim($phone, '0');
+        }
+
+        // Greeting sesuai jam
+        $hour = Carbon::now()->hour;
+        $greeting = $hour < 12 ? "🌅 Great Morning" : ($hour < 18 ? "🌞 Great Afternoon" : "🌙 Great Evening");
+
+        // Buat pesan WA
+        $message = $greeting . " " . $data->client_name . "!\n";
+        $message .= "Your edit for DO: " . $data->do_number . " has been approved.\n";
+        $message .= "Product: " . $data->product_type . "\n";
+        $message .= "Quantity: " . $data->quantity . "\n";
+
+        // Kirim WA
+        $waResponse = Http::withHeaders([
+            'Authorization' => 'Bearer e43a62324de6a22dbea1badc06f6c10cccb75ef5391981761256f562b477ba41',
+            'Content-Type'  => 'application/json',
+        ])->post('https://api.wasenderapi.com/send-message', [
+            'to'   => $phone,
+            'text' => $message,
+        ]);
+
+    
+
+        toastr()->success('message','Transaction approved successfully');
+                
         return back();
     }
+    
 
 
 
@@ -247,23 +339,23 @@ public function printPdf($id)
             'plat_number' => 'nullable|string|max:50',
             'lo_number'   => 'nullable|numeric',
             'attached'    => 'nullable|file|max:2048',
+            'payment_references' => 'nullable|string',
+            'description' => 'nullable|string',
         ]);
 
-
-        
-        
-        // Generate DO number
+        // 2️⃣ GENERATE DO NUMBER
         $maxDO = DB::table('transaction')->max('do_number');
         $ndo = $maxDO ? $maxDO + 1 : 100;
 
-        // Ambil driver, client, product
-        $driver = DB::table('drivers')->find($request->id_driver);
-        $client = DB::table('clients')->find($request->id_client);
+        // 3️⃣ AMBIL DATA DRIVER, CLIENT, PRODUCT
+        $driver  = DB::table('drivers')->find($request->id_driver);
+        $client  = DB::table('clients')->find($request->id_client);
         $product = DB::table('products')->find($request->id_product);
 
-        // Handle attachment
+        // 4️⃣ HANDLE ATTACHMENT
         $attachedPath = $request->hasFile('attached') ? $request->file('attached')->store('transaction_files', 'public') : null;
-        // Insert DO
+
+        // 5️⃣ INSERT DELIVERY ORDER
         DB::table('transaction')->insert([
             'do_number'      => $ndo,
             'so_number'      => $request->so_number,
@@ -278,14 +370,14 @@ public function printPdf($id)
             'id_driver'      => $request->id_driver,
             'plat_number'    => $request->plat_number,
             'quantity'       => $request->quantity,
-            'payment_references' =>  $request->input('payment_references'),
-            'description' => $request->input('description'),
+            'payment_references' => $request->input('payment_references'),
+            'description'    => $request->input('description'),
             'attached'       => $attachedPath,
-            'created_at'     =>  Carbon::now(),
+            'created_at'     => Carbon::now(),
             'updated_at'     => Carbon::now(),
         ]);
 
-        // Log user activity
+        // 6️⃣ LOG USER ACTIVITY
         $agent = new Agent();
         DB::table('user_logs')->insert([
             'hostname'    => gethostname(),
@@ -299,9 +391,63 @@ public function printPdf($id)
             'user_id'     => Auth::id(),
         ]);
 
-        toastr()->success('Success', 'Delivery Order created successfully.');
+
+        ###########################
+
+        // Greeting
+      $hour = now()->hour;
+    $greeting = $hour < 12 ? '🌅 Good Morning' : ($hour < 18 ? '🌞 Good Afternoon' : '🌙 Good Evening');
+
+        // Today date
+        $date = now()->format('l, d-F-Y : h:i:s A');
+
+        // Fetch first approved user
+        $phoneData = DB::table('users')
+            ->where('approved', 1)
+            ->select('phone', 'name','gender')
+            ->first();
+
+        if (!$phoneData) {
+            return 'No approved users found!';
+        }
+          $gender = $phoneData->gender === 'female' ? 'Mis.' : 'Mr.';
+          $to = $phoneData->phone;
+
+  
+
+        $message  = "Hello, {$greeting}\n";
+        $message .= "Please to: {$gender} {$phoneData->name}\n";
+        $message .= "Ship to: {$client->client_name}\n";
+        $message .= "SO Number: {$request->so_number}\n";
+        $message .= "Product: {$product->code_product}-{$product->quality}\n";
+        $message .= "Quantity: " . format_liter($request->quantity) . "\n";
+        $message .= "Driver: {$driver->driver_name}\n";
+        $message .= "Plat Number: {$request->plat_number}\n";
+        $message .= "Waiting Approval\n";
+
+
+       
+        // Kirim WhatsApp via WasenderAPI
+        $waResponse = Http::withHeaders([
+            'Authorization' => 'Bearer e43a62324de6a22dbea1badc06f6c10cccb75ef5391981761256f562b477ba41',
+            'Content-Type'  => 'application/json',
+        ])->post('https://wasenderapi.com/api/send-message', [
+            'to'   => $to,
+            'text' => $message,
+        ]);
+
+
+
+        // 8️⃣ TOASTR NOTIFIKASI
+        // if ($waResponse->successful()) {
+            toastr()->success('Success', 'Delivery Order Created ');
+        // } else {
+        //     toastr()->error('Warning', 'Delivery Order Failed');
+        // }
+
         return back();
     }
+    
 
     // =======================
     // EDIT TRANSACTION

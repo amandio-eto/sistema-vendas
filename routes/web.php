@@ -2,13 +2,16 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientSummaryReportController;
+use App\Http\Controllers\InboxController;
 use App\Http\Controllers\loController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleOrderController;
 use App\Http\Controllers\summaryexelController;
 use App\Http\Controllers\TransactionController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Nette\Utils\Json;
 
@@ -30,6 +33,9 @@ use Nette\Utils\Json;
 
 
     #
+
+
+  
 
 
 
@@ -67,6 +73,24 @@ Route::middleware(['auth', 'role:administrator,manager,staff'])
     Route::get('lo/excel', [loController::class, 'excel'])
         ->name('lo.excel');
     #End LoCOntroller
+
+    #InboxCOntroller
+    Route::get('/inbox', [InboxController::class, 'index'])->name('inbox.index');
+    Route::get('/inbox/create', [InboxController::class, 'create'])->name('inbox.create');
+    Route::post('/inbox/store', [InboxController::class, 'store'])->name('inbox.store');
+    Route::get('/inbox/{id}', [InboxController::class, 'show'])->name('inbox.show');
+    Route::delete('/inbox/{id}', [InboxController::class, 'destroy'])->name('inbox.destroy');
+    // routes/web.php
+Route::post('/inbox/mark-read', function () {
+    DB::table('inboxes')
+        ->where('receiver_id', Auth::id())
+        ->where('is_read', 0)
+        ->update(['is_read' => 1]);
+
+    return response()->json(['status' => 'ok']);
+})->name('inbox.markRead');
+
+    #End Inbox
 
 
 

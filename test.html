@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7 Fuel Tanks Animation - Large Design</title>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 100vh;
+    background: #222;
+    font-family: Arial, sans-serif;
+    gap: 30px; /* jarak antar tangki lebih besar */
+  }
+
+  .tank-container {
+    position: relative;
+    width: 150px; /* lebih lebar */
+    height: 400px; /* lebih tinggi */
+    border: 5px solid #333;
+    border-radius: 20px;
+    background: #444;
+    overflow: hidden;
+    box-shadow: inset 0 0 15px #000;
+  }
+
+  .tank-label {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: -40px;
+    font-weight: bold;
+    font-size: 18px; /* lebih besar */
+    color: #fff;
+  }
+
+  /* Fuel layer */
+  .fuel {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0%;
+    overflow: hidden;
+    border-radius: 0 0 20px 20px;
+  }
+
+  /* Gelombang di dalam fuel */
+  .wave {
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      -45deg,
+      rgba(255,255,255,0.2),
+      rgba(255,255,255,0.2) 10px,
+      rgba(0,0,0,0) 10px,
+      rgba(0,0,0,0) 20px
+    );
+    animation: waveMove 2s linear infinite;
+  }
+
+  @keyframes waveMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- 7 Tangki Besar -->
+<div class="tank-container">
+  <div class="tank-label" id="label1">Tank 1</div>
+  <div class="fuel" id="fuel1" style="background:#8EFAFA;"><div class="wave"></div></div>
+</div>
+
+<div class="tank-container">
+  <div class="tank-label" id="label2">Tank 2</div>
+  <div class="fuel" id="fuel2" style="background:#FA8EFA;"><div class="wave"></div></div>
+</div>
+
+<div class="tank-container">
+  <div class="tank-label" id="label3">Tank 3</div>
+  <div class="fuel" id="fuel3" style="background:#FAFA8E;"><div class="wave"></div></div>
+</div>
+
+<div class="tank-container">
+  <div class="tank-label" id="label4">Tank 4</div>
+  <div class="fuel" id="fuel4" style="background:#8EFA8E;"><div class="wave"></div></div>
+</div>
+
+<div class="tank-container">
+  <div class="tank-label" id="label5">Tank 5</div>
+  <div class="fuel" id="fuel5" style="background:#FA8E8E;"><div class="wave"></div></div>
+</div>
+
+<div class="tank-container">
+  <div class="tank-label" id="label6">Tank 6</div>
+  <div class="fuel" id="fuel6" style="background:#8E8EFA;"><div class="wave"></div></div>
+</div>
+
+<div class="tank-container">
+  <div class="tank-label" id="label7">Tank 7</div>
+  <div class="fuel" id="fuel7" style="background:#FFA500;"><div class="wave"></div></div>
+</div>
+
+<script>
+  // Array tangki dengan level min/max
+  const tanks = [
+    {id:'fuel1', min:20, max:80},
+    {id:'fuel2', min:10, max:90},
+    {id:'fuel3', min:30, max:70},
+    {id:'fuel4', min:25, max:85},
+    {id:'fuel5', min:15, max:75},
+    {id:'fuel6', min:20, max:60},
+    {id:'fuel7', min:10, max:50},
+  ];
+
+  tanks.forEach(tank => {
+    let level = tank.min;
+    let direction = 1; // naik/turun
+    const el = document.getElementById(tank.id);
+
+    setInterval(() => {
+      level += direction;
+      if(level >= tank.max) direction = -1;
+      if(level <= tank.min) direction = 1;
+      el.style.height = level + '%';
+    }, 50);
+  });
+</script>
+
+</body>
+</html>
