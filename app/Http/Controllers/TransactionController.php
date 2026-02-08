@@ -196,29 +196,7 @@ public function printPdf($id)
         ]);
 
         // Format nomor telepon client
-        $phone = $data->client_phone;
-        if (substr($phone, 0, 1) != '+') {
-            $phone = '+670' . ltrim($phone, '0');
-        }
-
-        // Greeting sesuai jam
-        $hour = Carbon::now()->hour;
-        $greeting = $hour < 12 ? "🌅 Great Morning" : ($hour < 18 ? "🌞 Great Afternoon" : "🌙 Great Evening");
-
-        // Buat pesan WA
-        $message = $greeting . " " . $data->client_name . "!\n";
-        $message .= "Your edit for DO: " . $data->do_number . " has been approved.\n";
-        $message .= "Product: " . $data->product_type . "\n";
-        $message .= "Quantity: " . $data->quantity . "\n";
-
-        // Kirim WA
-        $waResponse = Http::withHeaders([
-            'Authorization' => 'Bearer e43a62324de6a22dbea1badc06f6c10cccb75ef5391981761256f562b477ba41',
-            'Content-Type'  => 'application/json',
-        ])->post('https://api.wasenderapi.com/send-message', [
-            'to'   => $phone,
-            'text' => $message,
-        ]);
+       
 
     
 

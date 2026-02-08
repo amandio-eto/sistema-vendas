@@ -53,7 +53,7 @@
                                 <td>{{  format_liter($tx->quantity) }}</td>
                                 <td>
 
-                                    @if($tx->statusedit==true)
+                                    @if($tx->statusedit==true && Auth::user()->aproved===1)
 
                                    <form action="{{ route('approveupdate', ['id' => $tx->tdi]) }}" method="POST">
                                     @csrf
@@ -62,7 +62,7 @@
                                          <i class="bi bi-pen"></i> APPROVED EDIT
                                    </button>
                                    </form>
-                                    @else
+                                    @elseif(Auth::user()->aproved===1)
                                      <form action="{{ route('transaction.approvededit', ['id' => $tx->tdi]) }}" method="POST">
                                     @csrf
                                     @method('PUT')

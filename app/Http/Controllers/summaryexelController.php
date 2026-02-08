@@ -65,7 +65,7 @@ class summaryexelController extends Controller
                 strtoupper($t->product_name) === 'GASOLINA' ? $t->quantity : 0,
                 strtoupper($t->product_name) === 'GASÓLEO' ? $t->quantity : 0,
                 strtoupper($t->product_name) === 'JET-A1' ? $t->quantity : 0,
-                $t->payment_reference ?? '-',
+                $t->payment_reference ?? $t->so_number ?? '-',
                 $t->description ?? '-',
                 date('d-m-Y', strtotime($t->created_at))
             ], null, 'A'.$row);
