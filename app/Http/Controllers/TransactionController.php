@@ -383,19 +383,19 @@ public function printPdf($id)
     $greeting = $hour < 12 ? '🌅 Good Morning' : ($hour < 18 ? '🌞 Good Afternoon' : '🌙 Good Evening');
 
         // Today date
-        $date = now()->format('l, d-F-Y : h:i:s A');
+        // $date = now()->format('l, d-F-Y : h:i:s A');
 
-        // Fetch first approved user
-        $phoneData = DB::table('users')
-            ->where('approved', 1)
-            ->select('phone', 'name','gender')
-            ->first();
+        // // Fetch first approved user
+        // $phoneData = DB::table('users')
+        //     ->where('approved', 1)
+        //     ->select('phone', 'name','gender')
+        //     ->first();
 
-        if (!$phoneData) {
-            return 'No approved users found!';
-        }
-          $gender = $phoneData->gender === 'female' ? 'Mis.' : 'Mr.';
-          $to = $phoneData->phone;
+        // if (!$phoneData) {
+        //     return 'No approved users found!';
+        // }
+        //   $gender = $phoneData->gender === 'female' ? 'Mis.' : 'Mr.';
+        //   $to = $phoneData->phone;
 
   
 
@@ -416,7 +416,7 @@ public function printPdf($id)
             'Authorization' => 'Bearer e43a62324de6a22dbea1badc06f6c10cccb75ef5391981761256f562b477ba41',
             'Content-Type'  => 'application/json',
         ])->post('https://wasenderapi.com/api/send-message', [
-            'to'   => $to,
+            'to'   => '+67077231420',
             'text' => $message,
         ]);
 
