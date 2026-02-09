@@ -107,6 +107,29 @@ $date = now()->format('l, d-F-Y : h:i:s A');
                     </ul>
                 </li>
 
+
+                <li class="nxl-item nxl-hasmenu {{ request()->routeIs('drivers.*') ? 'active' : '' }}">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="bi bi-person-badge text-primary"></i></span>
+                            <span class="nxl-mtext">Drivers</span>
+                            <span class="nxl-arrow"><i class="feather-chevron-right {{ request()->routeIs('drivers.*') ? 'rotate-90' : '' }}"></i></span>
+                        </a>
+
+                        <ul class="nxl-submenu {{ request()->routeIs('drivers.*') ? 'show' : '' }}">
+                            <li class="nxl-item {{ request()->routeIs('drivers.index') ? 'active' : '' }}">
+                                <a class="nxl-link" href="{{ route('drivers.index') }}">
+                                    <i class="bi bi-list-ul"></i> Data Drivers
+                                </a>
+                            </li>
+                            
+                          
+                        </ul>
+                    </li>
+
+
+
+                   
+
                 <!-- LO Controls -->
                 <li class="nxl-item nxl-hasmenu">
                     <a href="javascript:void(0);" class="nxl-link">

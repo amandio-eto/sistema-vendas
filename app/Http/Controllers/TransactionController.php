@@ -96,14 +96,9 @@ public function printPdf($id)
        $user =  Auth::user();
 
 
-
-
-
-        // Greeting
-      $hour = now()->hour;
-    $greeting = $hour < 12 ? '🌅 Good Morning' : ($hour < 18 ? '🌞 Good Afternoon' : '🌙 Good Evening');
-
-        // Today date
+        
+        $hour = now()->hour;
+        $greeting = $hour < 12 ? '🌅 Good Morning' : ($hour < 18 ? '🌞 Good Afternoon' : '🌙 Good Evening');
         $date = now()->format('l, d-F-Y : h:i:s A');
 
         // Fetch first approved user
