@@ -400,7 +400,6 @@ public function printPdf($id)
   
 
         $message  = "Hello, {$greeting}\n";
-        $message .= "Please to: {$gender} {$phoneData->name}\n";
         $message .= "Ship to: {$client->client_name}\n";
         $message .= "SO Number: {$request->so_number}\n";
         $message .= "Product: {$product->code_product}-{$product->quality}\n";
