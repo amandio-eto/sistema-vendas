@@ -170,7 +170,8 @@ class ReportController extends Controller
             ->when($request->product && $request->product!=='all', fn($q) =>
                 $q->where('t.id_product',$request->product)
             )
-            ->orderByDesc('t.created_at');
+            ->orderBy('t.do_number','ASC')
+            ->order('t.created_at','ASC');
     }
 
 

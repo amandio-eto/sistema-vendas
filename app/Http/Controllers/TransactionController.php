@@ -410,7 +410,7 @@ public function printPdf($id)
             'Authorization' => 'Bearer e43a62324de6a22dbea1badc06f6c10cccb75ef5391981761256f562b477ba41',
             'Content-Type'  => 'application/json',
         ])->post('https://wasenderapi.com/api/send-message', [
-            'to'   => '+67077231420',
+            'to'   => '+67077027766',
             'text' => $message,
         ]);
 
