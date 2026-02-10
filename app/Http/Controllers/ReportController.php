@@ -171,7 +171,7 @@ class ReportController extends Controller
                 $q->where('t.id_product',$request->product)
             )
             ->orderBy('t.do_number','ASC')
-            ->order('t.created_at','ASC');
+            ->orderBy('t.created_at','ASC');
     }
 
 
