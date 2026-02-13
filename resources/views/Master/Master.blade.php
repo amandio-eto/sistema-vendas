@@ -25,7 +25,17 @@ $hour = now()->hour;
 $greeting = $hour < 12 ? '🌅 Good Morning' : ($hour < 18 ? '🌞 Good Afternoon' : '🌙 Good Evening');
 
 // User title
-$title = Auth::user()->gender === 'female' ? 'Mis.' : 'Mr.';
+
+
+
+$user = Auth::user();
+
+if ($user) {
+    $title = $user->gender === 'female' ? 'Ms.' : 'Mr.';
+} else {
+    $title = '';
+}
+
 $name = Auth::user()->name;
 
 // Today date
