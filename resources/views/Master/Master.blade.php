@@ -20,26 +20,26 @@ $notifications = DB::table('transaction')
     ->limit(3)
     ->get();
 
-// Greeting
-$hour = now()->hour;
-$greeting = $hour < 12 ? '🌅 Good Morning' : ($hour < 18 ? '🌞 Good Afternoon' : '🌙 Good Evening');
-
-// User title
+/
 
 
 
-$user = Auth::user();
 
-if ($user) {
-    $title = $user->gender === 'female' ? 'Ms.' : 'Mr.';
-} else {
-    $title = '';
-}
 
-$name = Auth::user()->name;
+ $hour = now()->hour;
+    $greeting = $hour < 12 ? '🌅 Good Morning' : ($hour < 18 ? '🌞 Good Afternoon' : '🌙 Good Evening');
 
-// Today date
-$date = now()->format('l, d-F-Y : h:i:s A');
+    $user = Auth::user();
+
+    if ($user) {
+        $title = $user->gender === 'female' ? 'Ms.' : 'Mr.';
+        $name = $user->name;
+    } else {
+        $title = '';
+        $name = 'Guest';
+    }
+
+    $date = now()->format('l, d-F-Y : h:i:s A');
 @endphp
 
 <!-- ========================= Sidebar ========================= -->
