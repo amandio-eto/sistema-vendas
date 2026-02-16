@@ -19,12 +19,7 @@ $notifications = DB::table('transaction')
     ->orderBy('created_at', 'desc')
     ->limit(3)
     ->get();
-
-/
-
-
-
-
+    
 
  $hour = now()->hour;
     $greeting = $hour < 12 ? '🌅 Good Morning' : ($hour < 18 ? '🌞 Good Afternoon' : '🌙 Good Evening');
