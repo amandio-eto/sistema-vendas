@@ -374,34 +374,40 @@ public function printPdf($id)
        
 
         // Greeting
-      $hour = now()->hour;
-    $greeting = $hour < 12 ? '🌅 Good Morning' : ($hour < 18 ? '🌞 Good Afternoon' : '🌙 Good Evening');
+        $hour = now()->hour;
+        $greeting = $hour < 12 ? '🌅 Good Morning' : ($hour < 18 ? '🌞 Good Afternoon' : '🌙 Good Evening');
+        $date = now()->format('l, d-F-Y : h:i:s A');
+        $phoneData = DB::table('users')
+            ->where('approved', 1)
+            ->select('phone', 'name','gender')
+            ->first();
 
-        // Today date
-        // $date = now()->format('l, d-F-Y : h:i:s A');
-
-        // // Fetch first approved user
-        // $phoneData = DB::table('users')
-        //     ->where('approved', 1)
-        //     ->select('phone', 'name','gender')
-        //     ->first();
-
-        // if (!$phoneData) {
-        //     return 'No approved users found!';
-        // }
-        //   $gender = $phoneData->gender === 'female' ? 'Mis.' : 'Mr.';
-        //   $to = $phoneData->phone;
+        if (!$phoneData) {
+            return 'No approved users found!';
+        }
+          $gender = $phoneData->gender === 'female' ? 'Mis.' : 'Mr.';
+          $to = $phoneData->phone;
 
   
+        $name    = $phoneData->name ?? '';
+        $title   = $gender ?? '';
+        $greet   = $greeting ?? '';
 
-        $message  = "Hello, {$greeting}\n";
-        $message .= "Ship to: {$client->client_name}\n";
-        $message .= "SO Number: {$request->so_number}\n";
-        $message .= "Product: {$product->code_product}-{$product->quality}\n";
-        $message .= "Quantity: " . format_liter($request->quantity) . "\n";
-        $message .= "Driver: {$driver->driver_name}\n";
-        $message .= "Plat Number: {$request->plat_number}\n";
+        $clientName  = $client->client_name ?? '-';
+        $productCode = $product->code_product ?? '-';
+        $productQlt  = $product->quality ?? '-';
+        $driverName  = $driver->driver_name ?? '-';
+
+        $message  = "{$greet}\n";
+        $message .= trim("{$title} {$name}") . "\n";
+        $message .= "Ship to: {$clientName}\n";
+        $message .= "SO Number: " . ($request->so_number ?? '-') . "\n";
+        $message .= "Product: {$productCode}-{$productQlt}\n";
+        $message .= "Quantity: " . format_liter($request->quantity ?? 0) . "\n";
+        $message .= "Driver: {$driverName}\n";
+        $message .= "Plat Number: " . ($request->plat_number ?? '-') . "\n";
         $message .= "Waiting Approval\n";
+
 
 
        
@@ -410,7 +416,7 @@ public function printPdf($id)
             'Authorization' => 'Bearer e43a62324de6a22dbea1badc06f6c10cccb75ef5391981761256f562b477ba41',
             'Content-Type'  => 'application/json',
         ])->post('https://wasenderapi.com/api/send-message', [
-            'to'   => '+67077027766',
+            'to'   => $to,
             'text' => $message,
         ]);
 
