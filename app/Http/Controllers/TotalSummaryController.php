@@ -120,14 +120,14 @@ class TotalSummaryController extends Controller
 
         return [
             'Client' => [
-                'Gasoline' => $client->where('product_name', 'Gasoline')->sum('quantity'),
-                'Gasoleo'  => $client->where('product_name', 'Gasoleo')->sum('quantity'),
-                'Jet'      => $client->where('product_name', 'Jet')->sum('quantity'),
+                'GASOLINA' => $client->where('product_name', 'GASOLINA')->sum('quantity'),
+                'GASÓLEO'  => $client->where('product_name', 'GASÓLEO')->sum('quantity'),
+                'JET-A1'      => $client->where('product_name', 'JET-A1')->sum('quantity'),
             ],
             'ETO' => [
-                'Gasoline' => $eto->where('product_name', 'Gasoline')->sum('quantity'),
-                'Gasoleo'  => $eto->where('product_name', 'Gasoleo')->sum('quantity'),
-                'Jet'      => $eto->where('product_name', 'Jet')->sum('quantity'),
+                'GASOLINA' => $eto->where('product_name', 'GASOLINA')->sum('quantity'),
+                'GASÓLEO'  => $eto->where('product_name', 'GASÓLEO')->sum('quantity'),
+                'JET-A1'      => $eto->where('product_name', 'JET-A1')->sum('quantity'),
             ]
         ];
     }
