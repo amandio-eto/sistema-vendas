@@ -69,9 +69,9 @@
     <table>
         <thead>
             <tr>
-                <th>Classification</th>
-                <th>Gasoline</th>
-                <th>Gasoleo</th>
+                <th>ClASSIFICAO</th>
+                <th>GASOLINE</th>
+                <th>GASÓLEO</th>
                 <th>Jet</th>
                 <th>Total</th>
             </tr>
@@ -85,25 +85,25 @@
 
             @foreach($data as $type => $row)
                 @php
-                    $total = $row['Gasoline'] + $row['Gasoleo'] + $row['Jet'];
-                    $grandGasoline += $row['Gasoline'];
-                    $grandGasoleo  += $row['Gasoleo'];
-                    $grandJet      += $row['Jet'];
+                    $total = $row['GASOLINA'] + $row['GASÓLEO'] + $row['JET-A1'];
+                    $grandGasoline += $row['GASOLINA'];
+                    $grandGasoleo  += $row['GASÓLEO'];
+                    $grandJet      += $row['JET-A1'];
                 @endphp
                 <tr>
                     <td>{{ $type }}</td>
-                    <td>{{ number_format($row['Gasoline'],2) }}</td>
-                    <td>{{ number_format($row['Gasoleo'],2) }}</td>
-                    <td>{{ number_format($row['Jet'],2) }}</td>
+                    <td>{{ number_format($row['GASOLINA'],2) }}</td>
+                    <td>{{ number_format($row['GASÓLEO'],2) }}</td>
+                    <td>{{ number_format($row['JET-A1'],2) }}</td>
                     <td>{{ number_format($total,2) }}</td>
                 </tr>
             @endforeach
 
             <tr style="background:#eaeaea;">
                 <td><strong>GRAND TOTAL</strong></td>
-                <td>{{ number_format($grandGasoline,2) }}</td>
-                <td>{{ number_format($grandGasoleo,2) }}</td>
-                <td>{{ number_format($grandJet,2) }}</td>
+                <td>{{ format_liter($grandGasoline,2) }}</td>
+                <td>{{ format_liter($grandGasoleo,2) }}</td>
+                <td>{{ format_liter($grandJet,2) }}</td>
                 <td>
                     {{ number_format($grandGasoline + $grandGasoleo + $grandJet,2) }}
                 </td>
