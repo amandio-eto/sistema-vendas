@@ -9,6 +9,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleOrderController;
 use App\Http\Controllers\summaryexelController;
 use App\Http\Controllers\TankController;
+use App\Http\Controllers\TotalSummaryController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -56,7 +57,13 @@ Route::middleware(['auth', 'role:administrator,manager,staff'])
      
 });
 
-        #EndTankController
+    
+    #Controller TotalSummary 
+    Route::get('/total-summary', [TotalSummaryController::class, 'index'])->name('totalsummary.index');
+    Route::get('/total-summary/pdf', [TotalSummaryController::class, 'pdf'])->name('totalsummary.pdf');
+    Route::get('/total-summary/excel', [TotalSummaryController::class, 'excel'])->name('totalsummary.excel');
+
+    #EndControllerSumarry 
 
     
     #Summary EXEL 

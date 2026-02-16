@@ -19,7 +19,7 @@ $notifications = DB::table('transaction')
     ->orderBy('created_at', 'desc')
     ->limit(3)
     ->get();
-    
+
 
  $hour = now()->hour;
     $greeting = $hour < 12 ? '🌅 Good Morning' : ($hour < 18 ? '🌞 Good Afternoon' : '🌙 Good Evening');
@@ -93,7 +93,7 @@ $notifications = DB::table('transaction')
                 </li>
 
                 <!-- Report -->
-                <li class="nxl-item nxl-hasmenu {{ request()->routeIs('transactions.report') ? 'active' : '' }}">
+                {{-- <li class="nxl-item nxl-hasmenu {{ request()->routeIs('transactions.report') ? 'active' : '' }}">
                     <a href="javascript:void(0);" class="nxl-link">
                         <span class="nxl-micon"><i class="bi bi-journal-text text-success"></i></span>
                         <span class="nxl-mtext">Report</span>
@@ -110,7 +110,65 @@ $notifications = DB::table('transaction')
                             <a class="nxl-link" href="{{ route('summaryexel.index') }}"><i class="bi bi-filetype-exe text-success"></i> Summary Daily Excel</a>
                         </li>
                     </ul>
+                </li> --}}
+
+
+
+                <li class="nxl-item nxl-hasmenu 
+{{ request()->routeIs('transactions.report') 
+   || request()->routeIs('clientSummaryView.index') 
+   || request()->routeIs('summaryexel.index') 
+   || request()->routeIs('totalsummary.index') ? 'active' : '' }}">
+
+    <a href="javascript:void(0);" class="nxl-link">
+        <span class="nxl-micon">
+            <i class="bi bi-journal-text text-success"></i>
+        </span>
+        <span class="nxl-mtext">Report</span>
+        <span class="nxl-arrow">
+            <i class="feather-chevron-right 
+            {{ request()->routeIs('transactions.report') 
+               || request()->routeIs('clientSummaryView.index') 
+               || request()->routeIs('summaryexel.index') 
+               || request()->routeIs('totalsummary.index') ? 'rotate-90' : '' }}">
+            </i>
+        </span>
+    </a>
+
+                    <ul class="nxl-submenu 
+                    {{ request()->routeIs('transactions.report') 
+                    || request()->routeIs('clientSummaryView.index') 
+                    || request()->routeIs('summaryexel.index') 
+                    || request()->routeIs('totalsummary.index') ? 'show' : '' }}">
+
+                        <li class="nxl-item {{ request()->routeIs('transactions.report') ? 'active' : '' }}">
+                            <a class="nxl-link" href="{{ route('transactions.report') }}">
+                                <i class="bi bi-journal"></i> Detail Report
+                            </a>
+                        </li>
+
+                        <li class="nxl-item {{ request()->routeIs('clientSummaryView.index') ? 'active' : '' }}">
+                            <a class="nxl-link" href="{{ route('clientSummaryView.index') }}">
+                                <i class="bi bi-journal-bookmark text-warning"></i> Summary Client Report
+                            </a>
+                        </li>
+
+                        <li class="nxl-item {{ request()->routeIs('summaryexel.index') ? 'active' : '' }}">
+                            <a class="nxl-link" href="{{ route('summaryexel.index') }}">
+                                <i class="bi bi-filetype-exe text-success"></i> Summary Daily Excel
+                            </a>
+                        </li>
+
+                        {{-- 🔥 TOTAL SUMMARY --}}
+                        <li class="nxl-item {{ request()->routeIs('totalsummary.index') ? 'active' : '' }}">
+                            <a class="nxl-link" href="{{ route('totalsummary.index') }}">
+                                <i class="bi bi-bar-chart-line text-danger"></i> Total Summary Report
+                            </a>
+                        </li>
+
+                    </ul>
                 </li>
+
 
 
                 <li class="nxl-item nxl-hasmenu {{ request()->routeIs('drivers.*') ? 'active' : '' }}">
