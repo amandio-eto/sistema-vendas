@@ -16,7 +16,7 @@ class ChecklistController extends Controller
         ->update([
             'status_check' => $request->status_check
         ]);
-     toastr()->success('Message','Successfully Filter data ETO Is ON');
+     toastr()->success('Message','Successfully');
      return back();
 
 }

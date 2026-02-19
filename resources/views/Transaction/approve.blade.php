@@ -61,7 +61,7 @@
                                          <i class="bi bi-pen"></i> APPROVED EDIT
                                    </button>
                                    </form>
-                                    @elseif(Auth::user()->approved===1)
+                                    @else
                                      <form action="{{ route('transaction.approvededit', ['id' => $tx->tdi]) }}" method="POST">
                                     @csrf
                                     @method('PUT')
