@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChecklistController;
 use App\Http\Controllers\ClientSummaryReportController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\loController;
@@ -57,6 +58,13 @@ Route::middleware(['auth', 'role:administrator,manager,staff'])
      
 });
 
+
+    #CheckListController
+    Route::post('/checklist/toggle/{id}', [ChecklistController::class, 'toggle'])
+    ->name('checklist.toggle');
+    Route::put('/checklist/toggle/{id}', [ChecklistController::class, 'offtoggle'])
+    ->name('checklist.toggleoff');
+    #EndCheckListController
     
     #Controller TotalSummary 
     Route::get('/total-summary', [TotalSummaryController::class, 'index'])->name('totalsummary.index');

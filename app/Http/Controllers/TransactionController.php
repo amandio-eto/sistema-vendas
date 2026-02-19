@@ -385,10 +385,8 @@ public function printPdf($id)
         if (!$phoneData) {
             return 'No approved users found!';
         }
-          $gender = $phoneData->gender === 'female' ? 'Mis.' : 'Mr.';
-          $to = $phoneData->phone;
-
-  
+        $gender = $phoneData->gender === 'female' ? 'Mis.' : 'Mr.';
+        $to = $phoneData->phone;
         $name    = $phoneData->name ?? '';
         $title   = $gender ?? '';
         $greet   = $greeting ?? '';
@@ -397,7 +395,6 @@ public function printPdf($id)
         $productCode = $product->code_product ?? '-';
         $productQlt  = $product->quality ?? '-';
         $driverName  = $driver->driver_name ?? '-';
-
         $message  = "{$greet}\n";
         $message .= trim("{$title} {$name}") . "\n";
         $message .= "Ship to: {$clientName}\n";
