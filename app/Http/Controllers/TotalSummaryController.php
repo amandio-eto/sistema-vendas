@@ -26,9 +26,9 @@ class TotalSummaryController extends Controller
     {
         $data = $this->getSummary($request);
 
-        $pdf = Pdf::loadView('totalsummary.totalpdf', compact('data'));
-        return $pdf->stream('total-summary.pdf'); // preview di browser
-        // Jika ingin download langsung: return $pdf->download('total-summary.pdf');
+        $pdf = Pdf::loadView('totalsummary.totalpdf', compact('data'))
+        ->setPaper('A4', 'landscape'); // <-- ini untuk landscape
+        return $pdf->stream('total-summary.pdf'); 
     }
 
     // ================= EXCEL =================
