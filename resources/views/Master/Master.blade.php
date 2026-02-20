@@ -90,7 +90,15 @@ $notifications = DB::table('transaction')
                             @endif
                         @endauth
                     </ul>
+                     <li class="nxl-item {{ request()->routeIs('reinput.index') ? 'active' : '' }}">
+                        <a class="nxl-link" href="{{ route('reinput.index') }}">
+                            <i class="bi bi-arrow-repeat text-primary me-2"></i>
+                            Re-Input Data
+                        </a>
+                 </li>
                 </li>
+
+                
 
                 <!-- Report -->
                 {{-- <li class="nxl-item nxl-hasmenu {{ request()->routeIs('transactions.report') ? 'active' : '' }}">
@@ -165,6 +173,8 @@ $notifications = DB::table('transaction')
                             <i class="bi bi-bar-chart-line text-danger"></i> Total Summary Report
                         </a>
                     </li>
+
+                   
 
                 </ul>
             </li>

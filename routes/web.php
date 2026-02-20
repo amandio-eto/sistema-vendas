@@ -6,6 +6,7 @@ use App\Http\Controllers\ClientSummaryReportController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\loController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\reinputController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleOrderController;
 use App\Http\Controllers\summaryexelController;
@@ -58,6 +59,11 @@ Route::middleware(['auth', 'role:administrator,manager,staff'])
      
 });
 
+
+    #Reinput
+    Route::get('reinput',[reinputController::class, 'index'])->name('reinput.index');
+    Route::post('reinput',[reinputController::class, 'store'])->name('reinput.post');
+    #EndReinput
 
     #CheckListController
     Route::post('/checklist/toggle/{id}', [ChecklistController::class, 'toggle'])
