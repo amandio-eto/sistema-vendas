@@ -295,7 +295,14 @@
         <tr >
             <td>
                 <div class="signature-box"></div>
-                (Nome Completo)
+                @if($transaction->product_name === "GASOLINA")
+                (SABINO BELO)
+                @elseif($transaction->product_name === "GASÓLEO")
+                (AMERICO DA SILVA)
+                @else
+                (AMERICO DA SILVA & SABINO BELO)
+
+                @endif
             </td>
           <td style="text-align:center;">
     <!-- Box tanda tangan / stamp -->
