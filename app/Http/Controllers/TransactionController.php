@@ -255,35 +255,33 @@ public function printPdf($id)
     {
         $search = $request->search;
 
-        $transactions = DB::table('transaction as t')
-            ->leftJoin('users as u', 'u.id', '=', 't.id_user')
-            ->leftJoin('clients as c', 'c.id', '=', 't.id_client')
-            ->leftJoin('products as p', 'p.id', '=', 't.id_product')
-            ->leftJoin('drivers as d', 'd.id', '=', 't.id_driver')
-            ->select(
-                't.*',
-                't.id',
-                'u.name as user_name',
-                'c.client_name',
-                't.lo_number',
-                'p.product_name',
-                'p.code_product',
-                'p.quality',
-                't.lo_number',
-                'd.driver_name'
-            )
-           ->when($search, function ($query) use ($search) {
-            return $query->where('t.do_number', 'like', "%$search%")
-                 ->orWhere('t.so_number', 'like', "%$search%")
-                 ->orWhere('c.client_name', 'like', "%$search%")
-                 ->orWhere('d.driver_name', 'like', "%$search%")
-                 ->orWhere('t.lo_number','like',"$search%")
-                 ->orWhere('p.product_name', 'like', "%$search%");
-            })
-
-            ->orderByDesc('t.id')
-            ->simplePaginate(10);
-
+     $transactions = DB::table('transaction as t')
+    ->leftJoin('users as u', 'u.id', '=', 't.id_user')
+    ->leftJoin('clients as c', 'c.id', '=', 't.id_client')
+    ->leftJoin('products as p', 'p.id', '=', 't.id_product')
+    ->leftJoin('drivers as d', 'd.id', '=', 't.id_driver')
+    ->select(
+        't.*',
+        'u.name as user_name',
+        'c.client_name',
+        'p.product_name',
+        'p.code_product',
+        'p.quality',
+        'd.driver_name'
+    )
+    ->when($search, function ($query) use ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('t.do_number', 'like', "%$search%")
+              ->orWhere('t.so_number', 'like', "%$search%")
+              ->orWhere('c.client_name', 'like', "%$search%")
+              ->orWhere('d.driver_name', 'like', "%$search%")
+              ->orWhere('t.lo_number', 'like', "$search%")
+              ->orWhere('p.product_name', 'like', "%$search%");
+        });
+    })
+    ->whereNotNull('t.do_number')
+    ->orderByDesc('t.id')
+    ->simplePaginate(10);
         // Ambil data untuk form select
         $products = DB::table('products')->get();
         $clients  = DB::table('clients')->get();
