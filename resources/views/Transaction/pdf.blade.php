@@ -342,7 +342,7 @@
     <td style="height:60px; border-bottom:1px solid #000; text-align:center;">
         ........................................................
         <br>
-         ({{ $transaction->driver_name}})
+         ({{ Str::upper($transaction->driver_name)}})
     </td>
     <!-- Tanda tangan Driver -->
     <td style="height:60px; border-bottom:1px solid #000; text-align:center;">
