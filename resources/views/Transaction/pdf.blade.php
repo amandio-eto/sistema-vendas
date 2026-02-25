@@ -327,14 +327,30 @@
     </table>
 
     <table style="margin-top:20px; width:100%; border-collapse:collapse;">
-    <tr>
-        <th class="text-center;" style="width:30%; text-align:center; font-size:12px; padding:6px;">
-            Resebido Por :
-        </th>
-        <td style="height:60px; border-bottom:1px solid #000;">
-         ........................................................
-        </td>
-    </tr>
+   <tr>
+    <!-- Kolom Clients -->
+    <th style="width:50%; text-align:center; font-size:12px; padding:6px;">
+        Motorista :
+    </th>
+    <!-- Kolom Driver -->
+    <th style="width:50%; text-align:center; font-size:12px; padding:6px;">
+        Recebido Por:
+    </th>
+</tr>
+<tr>
+    <!-- Tanda tangan Clients -->
+    <td style="height:60px; border-bottom:1px solid #000; text-align:center;">
+        ........................................................
+        <br>
+         ({{ $transaction->driver_name}})
+    </td>
+    <!-- Tanda tangan Driver -->
+    <td style="height:60px; border-bottom:1px solid #000; text-align:center;">
+        ........................................................
+        <br>
+       
+    </td>
+</tr>
 </table>
 
 
