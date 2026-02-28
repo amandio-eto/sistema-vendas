@@ -61,6 +61,27 @@ $notifications = DB::table('transaction')
                     </ul>
                 </li>
 
+
+               <li class="nxl-item nxl-hasmenu {{ request()->routeIs('rafa.*') ? 'active' : '' }}">
+                    <a href="javascript:void(0);" class="nxl-link">
+                        <span class="nxl-micon">
+                           <i class="bi bi-broadcast-pin"></i>
+                        </span>
+                        <span class="nxl-mtext">Rafa Fm 103.5</span>
+                        <span class="nxl-arrow">
+                            <i class="feather-chevron-right"></i>
+                        </span>
+                    </a>
+
+                    <ul class="nxl-submenu {{ request()->routeIs('rafa.*') ? 'show' : '' }}">
+                        <li class="nxl-item {{ request()->routeIs('rafa.index') ? 'active' : '' }}">
+                            <a class="nxl-link" href="{{ route('rafa.index') }}">
+                                <i class="bi bi-list"></i> List Rafa
+                            </a>
+                        </li>
+                    </ul>
+        </li>
+
                 <!-- Delivery Order -->
                 <li class="nxl-item nxl-hasmenu {{ request()->routeIs('transaction.*') ? 'active' : '' }}">
                     <a href="javascript:void(0);" class="nxl-link">

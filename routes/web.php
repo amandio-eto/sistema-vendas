@@ -6,6 +6,7 @@ use App\Http\Controllers\ClientSummaryReportController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\loController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RafaController;
 use App\Http\Controllers\reinputController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleOrderController;
@@ -60,6 +61,9 @@ Route::middleware(['auth', 'role:administrator,manager,staff'])
 });
 
 
+    #Rafa
+    Route::get('Rafa-Timor-Leste',[RafaController::class, 'index'])->name('rafa.index');
+    #EndRafa
     #Reinput
     Route::get('reinput',[reinputController::class, 'index'])->name('reinput.index');
     Route::post('reinput',[reinputController::class, 'store'])->name('reinput.post');
