@@ -76,7 +76,7 @@ $notifications = DB::table('transaction')
                     <ul class="nxl-submenu {{ request()->routeIs('rafa.*') ? 'show' : '' }}">
                         <li class="nxl-item {{ request()->routeIs('rafa.index') ? 'active' : '' }}">
                             <a class="nxl-link" href="{{ route('rafa.index') }}">
-                                <i class="bi bi-list"></i> List Rafa
+                              <i class="bi bi-boombox-fill"></i> Rafa FM 103.5
                             </a>
                         </li>
                     </ul>
