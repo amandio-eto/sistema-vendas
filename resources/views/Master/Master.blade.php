@@ -62,7 +62,7 @@ $notifications = DB::table('transaction')
                 </li>
 
 
-               <li class="nxl-item nxl-hasmenu {{ request()->routeIs('rafa.*') ? 'active' : '' }}">
+               {{-- <li class="nxl-item nxl-hasmenu {{ request()->routeIs('rafa.*') ? 'active' : '' }}">
                     <a href="javascript:void(0);" class="nxl-link">
                         <span class="nxl-micon">
                            <i class="bi bi-broadcast-pin"></i>
@@ -80,7 +80,7 @@ $notifications = DB::table('transaction')
                             </a>
                         </li>
                     </ul>
-        </li>
+        </li> --}}
 
                 <!-- Delivery Order -->
                 <li class="nxl-item nxl-hasmenu {{ request()->routeIs('transaction.*') ? 'active' : '' }}">
@@ -349,6 +349,9 @@ $notifications = DB::table('transaction')
             <a href="javascript:void(0);" class="nxl-head-mobile-toggler" id="mobile-collapse">
                 <div class="hamburger hamburger--arrowturn"><div class="hamburger-box"><div class="hamburger-inner"></div></div></div>
             </a>
+
+            <div class="dropdown nxl-h-item">
+</div>
             
 
             <div class="nxl-navigation-toggle d-flex align-items-center gap-2">
@@ -356,11 +359,20 @@ $notifications = DB::table('transaction')
                 <a href="javascript:void(0);" id="menu-expend-button" style="display:none;"><i class="feather-arrow-right"></i></a>
             </div>
             <div class="row" style="color: black;">
+
+              
            
         </div>
 
+        
+
             
         </div>
+
+      
+
+<!-- Audio Player (hidden) -->
+
         
 
         <div class="header-right d-flex align-items-center gap-3">
@@ -484,4 +496,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
+
 </script>
+
+
