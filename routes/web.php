@@ -48,7 +48,7 @@ use Nette\Utils\Json;
 
 
 Route::middleware(['auth', 'role:staff,administrator,manager'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+  
 
 
 
@@ -239,6 +239,8 @@ Route::middleware(['auth', 'role:administrator,manager'])
 #GROUP MIDDLEWARE HUSI ADMINISTRATOR
 Route::middleware(['auth', 'role:administrator'])
     ->group(function () {
+
+          Route::get('/dashboard', [DashboardController::class, 'index']);
     
     #6) Ida nee AuthController
     Route::get('users',[\App\Http\Controllers\AuthController::class,'users'])->name('users.list');
