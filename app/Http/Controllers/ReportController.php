@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
+
 
 class ReportController extends Controller
 {
@@ -146,6 +148,70 @@ class ReportController extends Controller
             "Content-Type"=>"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         ]);
     }
+
+
+
+     public function qdb(Request $request)
+    {
+        $transactions = $this->getFilteredTransactions($request)->get();
+
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setTitle('Vendas Import Quickbooks');
+
+    // Header
+    $headers = [
+        'Customer','Class','Date','No.Invoice','P.O NO.','Terms','Description','Class','Item','Site','Bin','Quantity','Rate','Amount','Memo'
+    ];
+
+    $sheet->fromArray($headers, null, 'A1');
+
+    // Data
+    $row = 2;
+    foreach ($transactions as $t) {
+        $sheet->fromArray([
+            $t->client_name,
+            "4 - HERA",
+            date('d-m-y', strtotime($t->created_at)),
+            "HR" . date('dmy', strtotime($t->created_at)) . $t->approve_number,
+            $t->do_number,
+            "",
+            "DO: {$t->do_number} LO: {$t->lo_number} CLIENT: {$t->client_name} DRIVER: {$t->driver_name}",
+            "4 - HERA",
+            $t->product_name,
+            "4 - HERA",
+            "",
+            number_format($t->quantity, 2),
+            0,
+            0,
+            "LO: {$t->plat_number} {$t->client_name} {$t->driver_name}"
+        ], null, 'A' . $row);
+
+        $row++;
+    }
+
+    // Writer CSV
+    $writer = new Csv($spreadsheet);
+    $writer->setDelimiter(',');
+    $writer->setEnclosure('"');
+    $writer->setLineEnding("\n");
+    $writer->setUseBOM(true); // biar Excel tidak rusak karakter
+
+    $filename = 'transactions_report_' . date('Ymd_His') . '.csv';
+
+    return response()->streamDownload(function () use ($writer) {
+        $writer->save('php://output');
+    }, $filename, [
+        "Content-Type" => "text/csv"
+    ]);
+    }
+
+
+
+
+
+
+
 
     /**
      * Reusable Filter Query

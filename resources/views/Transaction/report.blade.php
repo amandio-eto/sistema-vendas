@@ -90,25 +90,36 @@
                     </select>
                 </div>
 
-                <div class="col-md-2">
-                    <button type="submit"
-                            class="btn btn-primary btn-sm w-100 shadow-sm">
-                        <i class="bi bi-search"></i> Filter
-                    </button>
-                </div>
+                <div class="col-md-4">
+  
 
-                <div class="col-md-2 d-flex gap-2">
-                    <a href="{{ route('transactions.report.pdf', request()->all()) }}"
-                       target="_blank"
-                       class="btn btn-outline-danger btn-sm w-50 shadow-sm">
-                        PDF
-                    </a>
+    <div class="d-flex flex-wrap gap-2">
 
-                    <a href="{{ route('transactions.report.excel', request()->all()) }}"
-                       class="btn btn-outline-success btn-sm w-50 shadow-sm">
-                        Excel
-                    </a>
-                </div>
+        <button type="submit"
+                class="btn btn-primary btn-sm shadow-sm">
+            <i class="bi bi-search"></i> Filter
+        </button>
+
+        <a href="{{ route('transactions.report.pdf', request()->all()) }}"
+           target="_blank"
+           class="btn btn-danger btn-sm shadow-sm">
+            <i class="bi bi-file-pdf-fill text-white"></i> PDF
+        </a>
+
+        <a href="{{ route('transactions.report.excel', request()->all()) }}"
+           class="btn btn-success btn-sm shadow-sm">
+             <i class="bi bi-file-earmark-spreadsheet-fill"></i>  EXEL
+        </a>
+
+        <a href="{{ route('transactions.report.qbd') }}"
+           class="btn btn-success btn-sm shadow-sm">
+            QDB Export
+        </a>
+
+    </div>
+</div>
+
+            
 
             </form>
 

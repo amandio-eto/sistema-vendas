@@ -130,6 +130,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transactions/report', [ReportController::class, 'index'])->name('transactions.report');
     Route::get('/transactions/report/pdf', [ReportController::class, 'pdf'])->name('transactions.report.pdf');
     Route::get('/transactions/report/excel', [ReportController::class, 'excel'])->name('transactions.report.excel');
+    Route::get('/transactions/report/qdb', [ReportController::class, 'qdb'])->name('transactions.report.qbd');
+
     #End ReportController
     Route::put('/transactions/approve/{id}', [\App\Http\Controllers\TransactionController::class, 'approvededit'])->name('transaction.approvededit');
     Route::put('/transactions/status/{id}', [\App\Http\Controllers\TransactionController::class, 'statusedit'])->name('statusedit');
