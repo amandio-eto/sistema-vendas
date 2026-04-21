@@ -38,7 +38,7 @@ use Nette\Utils\Json;
     Route::redirect('/', '/login');
     #Ida Nee mak Route husi Controller AuthController
     Route::get('login',[\App\Http\Controllers\AuthController::class,'index'])->name('login');
-    Route::post('auth\login',[\App\Http\Controllers\AuthController::class,'dologin'])->name('dologin');
+    Route::post('auth/login',[\App\Http\Controllers\AuthController::class,'dologin'])->name('dologin');
 
 
 // Route::middleware(['auth', 'role:administrator,manager,staff'])
