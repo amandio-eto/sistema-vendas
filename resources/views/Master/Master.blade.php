@@ -268,7 +268,10 @@ $notifications = DB::table('transaction')
                 </li>
 
       
-               @if(Auth::user()->roles==='administrator' || Auth::user()->roles==='manager')
+              @auth
+    @if(in_array(auth()->user()->roles, ['administrator', 'manager']))
+
+   
 
 
                     
@@ -307,7 +310,8 @@ $notifications = DB::table('transaction')
                 <i class="bi bi-clock-history text-success"></i> Stock History
             </a>
         </li>
-            @endif
+        
+         @endauth
 
                 
 
