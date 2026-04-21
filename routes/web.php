@@ -56,9 +56,14 @@ use Nette\Utils\Json;
 Route::middleware(['auth', 'role:administrator,manager,staff'])
     ->group(function () {
 
+         Route::get('dashboard',[\App\Http\Controllers\DashboardController::class,'index'])->name('dashboard.index');
+
 
      
-});
+
+
+
+    
 
 
     #Rafa
@@ -87,7 +92,7 @@ Route::middleware(['auth', 'role:administrator,manager,staff'])
     #Summary EXEL 
     
 
-    Route::get('dashboard',[\App\Http\Controllers\DashboardController::class,'index'])->name('dashboard.index');
+   
     // LIST + FILTER (DATE RANGE)
     Route::get('/summary', [summaryexelController::class, 'index'])
         ->name('summaryexel.index');
@@ -205,6 +210,9 @@ Route::post('/inbox/mark-read', function () {
 
 
        
+});
+
+
 });
 #END MIDDLEWARE SATFF
 
