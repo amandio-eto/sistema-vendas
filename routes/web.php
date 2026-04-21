@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChecklistController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClientSummaryReportController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\loController;
@@ -177,11 +178,20 @@ use Nette\Utils\Json;
 //     return response()->json(['status' => 'ok']);
 // })->name('inbox.markRead');
 
-// });   
+// }); 
+
+
+Route::middleware(['auth', 'role:administrator,manager,staff'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+});
+
+
+
+
 
 Route::middleware(['auth', 'role:administrator,manager,staff'])->group(function () {
 
-    Route::get('dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard.index');
+    // Route::get('dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard.index');
 
     # Rafa
     Route::get('Rafa-Timor-Leste', [RafaController::class, 'index'])->name('rafa.index');
