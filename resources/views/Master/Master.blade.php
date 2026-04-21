@@ -381,7 +381,8 @@ $notifications = DB::table('transaction')
             <a href="javascript:void(0);" class="nxl-head-link light-button" style="display:none;"><i class="feather-sun"></i></a>
 
             <!-- Notifications -->
-            @if(Auth::user()->roles==='administrator' || Auth::user()->roles==='manager')
+          @auth
+             @if(in_array(auth()->user()->roles, ['administrator', 'manager']))
             <div class="dropdown nxl-h-item">
                 <a class="nxl-head-link" data-bs-toggle="dropdown" href="javascript:void(0);">
                     <i class="feather-bell"></i>
@@ -409,6 +410,7 @@ $notifications = DB::table('transaction')
                    </div>
             </div>
             @endif
+        @endauth
 
             <!-- Profile -->
             <div class="dropdown nxl-h-item">
