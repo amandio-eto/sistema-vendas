@@ -47,7 +47,7 @@ use Nette\Utils\Json;
 
 
 
-Route::middleware(['auth', 'role:staff,administrator,manager'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
 
 
