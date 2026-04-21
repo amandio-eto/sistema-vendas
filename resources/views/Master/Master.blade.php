@@ -268,14 +268,8 @@ $notifications = DB::table('transaction')
                 </li>
 
       
-              @auth
+@auth
     @if(in_array(auth()->user()->roles, ['administrator', 'manager']))
-
-   
-
-
-                    
-             
 
             <li class="nxl-item nxl-hasmenu {{ request()->routeIs('tank.*') ? 'active' : '' }}">
             <a href="javascript:void(0);" class="nxl-link">
@@ -311,6 +305,7 @@ $notifications = DB::table('transaction')
             </a>
         </li>
             @endif
+        @endauth
 
                 
 
