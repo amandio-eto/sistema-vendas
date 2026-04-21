@@ -426,7 +426,7 @@ $notifications = DB::table('transaction')
                             
                        
                         <h6>{{ Auth::user()->name }}</h6>
-                        <small>{{ maskEmail(Auth::user()->email) }}</small>
+                        <small>{{ (Auth::user()->email) }}</small>
                       
                     </div>
                     <a href="{{ route('profile.image') }}" class="dropdown-item"><i class="feather-user"></i> Change Profile</a>
