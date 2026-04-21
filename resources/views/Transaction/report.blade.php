@@ -111,7 +111,7 @@
              <i class="bi bi-file-earmark-spreadsheet-fill"></i>  EXEL
         </a>
 
-        <a href="{{ route('transactions.report.qbd') }}"
+        <a href="{{ route('transactions.report.qdb') }}"
            class="btn btn-success btn-sm shadow-sm">
             QDB Export
         </a>

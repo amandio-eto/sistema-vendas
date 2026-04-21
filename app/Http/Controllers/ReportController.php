@@ -10,6 +10,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 
+
 class ReportController extends Controller
 {
     /**
@@ -153,11 +154,11 @@ class ReportController extends Controller
 
      public function qdb(Request $request)
     {
-        $transactions = $this->getFilteredTransactions($request)->get();
 
+    $transactions = $this->getFilteredTransactions($request)->get();
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
-    $sheet->setTitle('Vendas Import Quickbooks');
+    $sheet->setTitle('Vendas Import Quickbooks eto');
 
     // Header
     $headers = [
@@ -197,14 +198,15 @@ class ReportController extends Controller
     $writer->setLineEnding("\n");
     $writer->setUseBOM(true); // biar Excel tidak rusak karakter
 
-    $filename = 'transactions_report_' . date('Ymd_His') . '.csv';
+    $filename = 'transactions_report_import' . date('Ymd_His') . '.csv';
 
     return response()->streamDownload(function () use ($writer) {
         $writer->save('php://output');
     }, $filename, [
         "Content-Type" => "text/csv"
     ]);
-    }
+
+}
 
 
 
