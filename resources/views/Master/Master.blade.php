@@ -422,8 +422,12 @@ $notifications = DB::table('transaction')
                 </a>
                 <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-user-dropdown">
                     <div class="dropdown-header">
+                        @auth
+                            
+                       
                         <h6>{{ Auth::user()->name }}</h6>
                         <small>{{ maskEmail(Auth::user()->email) }}</small>
+                         @endauth
                     </div>
                     <a href="{{ route('profile.image') }}" class="dropdown-item"><i class="feather-user"></i> Change Profile</a>
                     <a href="{{ route('password.edit') }}" class="dropdown-item"><i class="bi bi-key"></i> Change Password</a>
