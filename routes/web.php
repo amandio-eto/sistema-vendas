@@ -130,7 +130,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transactions/report', [ReportController::class, 'index'])->name('transactions.report');
     Route::get('/transactions/report/pdf', [ReportController::class, 'pdf'])->name('transactions.report.pdf');
     Route::get('/transactions/report/excel', [ReportController::class, 'excel'])->name('transactions.report.excel');
-    Route::get('/qdb-export/report',[ReportController::class, 'qdb'])->name('qdb.import');
+    Route::get('/qdb-export/report',[ReportController::class, 'qdb'])->name('import.qdb');
   
 
     #End ReportController
