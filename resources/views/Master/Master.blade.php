@@ -316,7 +316,8 @@ $notifications = DB::table('transaction')
 
 
                 <!-- Products + Auth (Admin only) -->
-                @if(Auth::user()->roles==='administrator')
+                @auth
+                @if(auth()->user()->roles === 'administrator')
                 <li class="nxl-item nxl-hasmenu {{ request()->routeIs('product.*') ? 'active' : '' }}">
                     <ul class="nxl-submenu {{ request()->routeIs('product.*') ? 'show' : '' }}">
                         <li class="nxl-item {{ request()->routeIs('product.index') ? 'active' : '' }}">
@@ -333,6 +334,7 @@ $notifications = DB::table('transaction')
                     </ul>
                 </li>
                 @endif
+                @endauth
             </ul>
         </div>
     </div>
