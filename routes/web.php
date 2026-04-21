@@ -133,7 +133,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/qdb-export/report', function(){
         return "Amandoio";
     });
+
+
+
+    Route::get('/zzz-test', function () {
+    return "ROUTE OK";
+});
   
+
+
+
+
 
     #End ReportController
     Route::put('/transactions/approve/{id}', [\App\Http\Controllers\TransactionController::class, 'approvededit'])->name('transaction.approvededit');
