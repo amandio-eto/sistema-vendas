@@ -37,35 +37,14 @@ use Nette\Utils\Json;
     Route::post('auth\login',[\App\Http\Controllers\AuthController::class,'dologin'])->name('dologin');
 
 
-    #
-
+Route::middleware(['auth', 'role:administrator,manager,staff'])
+    ->group(function (){
 
   
 
 
 
-
-
-
-
-
-
-
-
-#GROUP MIDDLEWARE STAFF
-Route::middleware(['auth', 'role:administrator,manager,staff'])
-    ->group(function () {
-
-         Route::get('dashboard',[\App\Http\Controllers\DashboardController::class,'index'])->name('dashboard.index');
-
-
-     
-
-
-
-    
-
-
+    Route::get('dashboard',[\App\Http\Controllers\DashboardController::class,'index'])->name('dashboard.index');
     #Rafa
     Route::get('Rafa-Timor-Leste',[RafaController::class, 'index'])->name('rafa.index');
     #EndRafa
@@ -121,16 +100,6 @@ Route::middleware(['auth', 'role:administrator,manager,staff'])
     Route::get('/inbox/{id}', [InboxController::class, 'show'])->name('inbox.show');
     Route::delete('/inbox/{id}', [InboxController::class, 'destroy'])->name('inbox.destroy');
     // routes/web.php
-Route::post('/inbox/mark-read', function () {
-    DB::table('inboxes')
-        ->where('receiver_id', Auth::id())
-        ->where('is_read', 0)
-        ->update(['is_read' => 1]);
-
-    return response()->json(['status' => 'ok']);
-})->name('inbox.markRead');
-
-    #End Inbox
 
 
 
@@ -138,13 +107,9 @@ Route::post('/inbox/mark-read', function () {
     Route::prefix('sale-orders')->group(function () {
     Route::get('/sales', [SaleOrderController::class, 'index'])->name('sale-orders.index');
     Route::post('/store', [SaleOrderController::class, 'store'])->name('sale-orders.store');
-
     // PDF report
     Route::get('/report/pdf', [SaleOrderController::class, 'pdfReport'])->name('sale-orders.pdf');
-
-
-
-
+    });
 
 
     Route::get('/client-summary', [ClientSummaryReportController::class, 'clientSummaryView'])->name('clientSummaryView.index');
@@ -152,16 +117,6 @@ Route::post('/inbox/mark-read', function () {
         ->name('reports.client-summary.pdf');
     Route::get('/client-summary/excel', [ClientSummaryReportController::class, 'exportClientSummaryExcel'])
         ->name('reports.client-summary.excel');
-
-
-
-
-    #End SalesController
-
-
-    #1)Dashboard
-
-    #EndDashboard
  
     #Report Controller
     Route::get('/transactions/report', [ReportController::class, 'index'])->name('transactions.report');
@@ -209,13 +164,17 @@ Route::post('/inbox/mark-read', function () {
     #End ClientController
 
 
-       
-});
 
+    Route::post('/inbox/mark-read', function () {
+    DB::table('inboxes')
+        ->where('receiver_id', Auth::id())
+        ->where('is_read', 0)
+        ->update(['is_read' => 1]);
 
-});
-#END MIDDLEWARE SATFF
+    return response()->json(['status' => 'ok']);
+})->name('inbox.markRead');
 
+});   
 
 
 #GROUP MIDDLEWARE HUSI MANAGER
