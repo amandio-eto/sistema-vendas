@@ -84,11 +84,9 @@ class AuthController extends Controller
                 'active' => 1
             ]);
 
-            // Regenerate session
-            $request->session()->regenerate();
-
+            // Regenerate sessio
             toastr()->success('Successfully','Message');
-            return redirect()->intended('/dashboard');
+            return redirect()->route('/dashboard');
         }
 
         // Login failed
