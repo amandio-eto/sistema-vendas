@@ -310,8 +310,7 @@ $notifications = DB::table('transaction')
                 <i class="bi bi-clock-history text-success"></i> Stock History
             </a>
         </li>
-        
-         @endauth
+            @endif
 
                 
 
