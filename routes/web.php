@@ -114,13 +114,13 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    #SalesController
-    Route::prefix('sale-orders')->group(function () {
-    Route::get('/sales', [SaleOrderController::class, 'index'])->name('sale-orders.index');
-    Route::post('/store', [SaleOrderController::class, 'store'])->name('sale-orders.store');
-    // PDF report
-    Route::get('/report/pdf', [SaleOrderController::class, 'pdfReport'])->name('sale-orders.pdf');
-    });
+    // #SalesController
+    // Route::prefix('sale-orders')->group(function () {
+    // Route::get('/sales', [SaleOrderController::class, 'index'])->name('sale-orders.index');
+    // Route::post('/store', [SaleOrderController::class, 'store'])->name('sale-orders.store');
+    // // PDF report
+    // Route::get('/report/pdf', [SaleOrderController::class, 'pdfReport'])->name('sale-orders.pdf');
+    // });
 
 
     Route::get('/client-summary', [ClientSummaryReportController::class, 'clientSummaryView'])->name('clientSummaryView.index');
