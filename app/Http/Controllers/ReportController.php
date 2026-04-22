@@ -152,7 +152,7 @@ class ReportController extends Controller
 
 
 
-     public function qdb(Request $request)
+     public function import(Request $request)
     {
 
     $transactions = $this->getFilteredTransactions($request)->get();
