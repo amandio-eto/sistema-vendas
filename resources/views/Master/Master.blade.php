@@ -345,7 +345,11 @@ $notifications = DB::table('transaction')
                 @endif
                 @endauth
             </ul>
+        
         </div>
+         
+
+        
     </div>
 </nav>
 
@@ -360,7 +364,8 @@ $notifications = DB::table('transaction')
             </a>
 
             <div class="dropdown nxl-h-item">
-</div>
+                
+            </div>
             
 
             <div class="nxl-navigation-toggle d-flex align-items-center gap-2">
@@ -368,6 +373,13 @@ $notifications = DB::table('transaction')
                 <a href="javascript:void(0);" id="menu-expend-button" style="display:none;"><i class="feather-arrow-right"></i></a>
             </div>
             <div class="row" style="color: black;">
+
+                 <div class="row timer">
+              <div class="clock text-center">
+                <div class="time" id="time">00:00:00</div>
+              
+            </div>
+          </div>
 
               
            

@@ -54,6 +54,43 @@
              {{-- <script type="text/javascript" src="https://app.secureprivacy.ai/script/69dddf7bfb21f836d6454269.js"></script> --}}
 
         <style>
+.timer {
+   
+  
+   
+   margin: 0;
+     font-family: 'DS-Digital', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #424346;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      border-radius: 20px;
+       font-family: 'DS-Digital', monospace;
+}
+
+.clock {
+    text-align: center;
+}
+
+.time {
+   
+    font-family: 'DS-Digital', monospace;
+    font-size: 19px;
+    letter-spacing: 5px;
+    /* text-shadow: 
+        0 0 10px #00ffcc,
+        0 0 20px #00ffcc,
+        0 0 40px #00ffcc; */
+}
+
+.date {
+    font-size: 15px;
+    margin-top: 15px;
+    color: #00ffaa;
+    text-shadow: 0 0 10px #00ffaa;
+}
 
 
 .pro-card{

@@ -162,14 +162,14 @@
                         <div>
                             <small class="text-muted">ETO Liter</small>
                             <h5 class="text-primary mb-0">
-                                {{ format_liter($row->eto_liter, 0) }}
+                                {{ format_liter($row->eto_liter ?? 0) }}
                             </h5>
                         </div>
 
                         <div>
                             <small class="text-muted">Client Liter</small>
                             <h5 class="text-success mb-0">
-                                {{ format_liter($row->client_liter, 0) }}
+                                {{ format_liter($row->client_liter ?? 0) }}
                             </h5>
                         </div>
 

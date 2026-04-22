@@ -21,7 +21,23 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
+  <script>
+function updateClock() {
+    const now = new Date();
+
+    let h = String(now.getHours()).padStart(2, '0');
+    let m = String(now.getMinutes()).padStart(2, '0');
+    let s = String(now.getSeconds()).padStart(2, '0');
+
+    document.getElementById("time").innerText = `${h}:${m}:${s}`;
+
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById("date").innerText = now.toLocaleDateString('en-US', options);
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+</script>
 
     @yield('footer')
 
