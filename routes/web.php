@@ -130,16 +130,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transactions/report', [ReportController::class, 'index'])->name('transactions.report');
     Route::get('/transactions/report/pdf', [ReportController::class, 'pdf'])->name('transactions.report.pdf');
     Route::get('/transactions/report/excel', [ReportController::class, 'excel'])->name('transactions.report.excel');
-    Route::get('/qdb-export/report', function(){
-        return "Amandoio";
-    });
-
-
-
-    Route::get('/zzz-test', function () {
-    return "ROUTE OK";
-});
-  
+    Route::get('/transactions/report/qdb', [ReportController::class, 'qdb'])->name('transactions.import');
 
 
 
@@ -196,11 +187,13 @@ Route::middleware(['auth'])->group(function () {
 
     return response()->json(['status' => 'ok']);
 })->name('inbox.markRead');
-
-
+   
 
 
 });
+  
+
+
 
 
 
