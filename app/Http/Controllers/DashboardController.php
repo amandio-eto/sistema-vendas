@@ -163,10 +163,39 @@ class DashboardController extends Controller
         $pieSeriesData = $productQuantitySummary->map(fn($p)=>['name'=>$p->quality,'y'=>(float)$p->total_quantity]);
         $chartTitle = 'Total Quantity Per Product Year (L)';
 
+
+      
+                $productToday = DB::table('transaction as t')
+    ->join('products as p', 'p.id', '=', 't.id_product')
+    ->join('clients as c', 'c.id', '=', 't.id_client')
+    ->select(
+        'p.product_name',
+
+        // SUM LITER ETO
+        DB::raw("
+            SUM(CASE 
+                WHEN c.tin = 10522139 THEN t.quantity 
+                ELSE 0 
+            END) as eto_liter
+        "),
+
+        // SUM LITER NON ETO
+        DB::raw("
+            SUM(CASE 
+                WHEN c.tin IS NULL OR c.tin != 10522139 THEN t.quantity 
+                ELSE 0 
+            END) as client_liter
+        ")
+    )
+    ->whereDate('t.created_at', Carbon::today())
+    ->groupBy('p.product_name')
+    ->orderBy('p.product_name')
+    ->get();
+
         return view('Dashboard.index', compact(
             'prod','categories','series','pieSeries','lineCategories','seriesData','currentYear',
             'clientMonthNames','clientMonthSeries','clientYearNames','clientYearSeries',
-            'pieSeriesData','chartTitle','month'
+            'pieSeriesData','chartTitle','month','productToday'
         ));
     }
 }

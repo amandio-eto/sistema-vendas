@@ -44,7 +44,47 @@
     <div class="alert alert-light text-center border">Data is Empty</div>
 </div>
 @endforelse
+
+
+<div class="row mt-2">
+    @foreach($productToday as $row)
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+
+                    <h6 class="fw-bold">
+                        {{ $row->product_name }}
+                    </h6>
+
+                    <div class="d-flex justify-content-between mt-3">
+
+                        <div>
+                            <small class="text-muted">ETO Liter</small>
+                            <h5 class="text-primary mb-0">
+                                {{ number_format($row->eto_liter, 0) }}
+                            </h5>
+                        </div>
+
+                        <div>
+                            <small class="text-muted">Client Liter</small>
+                            <h5 class="text-success mb-0">
+                                {{ number_format($row->client_liter, 0) }}
+                            </h5>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endforeach
 </div>
+
+
+
+</div>
+
+
 
 {{-- =======================
    CHARTS ROW 1
