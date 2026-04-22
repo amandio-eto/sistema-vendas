@@ -35,6 +35,9 @@ use Nette\Utils\Json;
 |
 */
 
+
+    Route::get('/transactions/import', [ReportController::class,'import'])->name('transactions.import');
+
     Route::redirect('/', '/login');
     #Ida Nee mak Route husi Controller AuthController
     Route::get('login',[\App\Http\Controllers\AuthController::class,'index'])->name('login');
@@ -130,7 +133,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transactions/report', [ReportController::class, 'index'])->name('transactions.report');
     Route::get('/transactions/report/pdf', [ReportController::class, 'pdf'])->name('transactions.report.pdf');
     Route::get('/transactions/report/excel', [ReportController::class, 'excel'])->name('transactions.report.excel');
-    Route::get('/transactions/import', [ReportController::class,'import'])->name('transactions.import');
+
    
 
 
