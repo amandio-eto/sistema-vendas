@@ -176,6 +176,15 @@ $notifications = DB::table('transaction')
                         </a>
                     </li>
 
+
+                     <li class="nxl-item {{ request()->routeIs('qbd.import') ? 'active' : '' }}">
+                        <a class="nxl-link" href="{{ route('qbd.import') }}">
+                            <i class="bi bi-journal"></i> EXPORT
+                        </a>
+                    </li>
+
+                  
+
                     <li class="nxl-item {{ request()->routeIs('clientSummaryView.index') ? 'active' : '' }}">
                         <a class="nxl-link" href="{{ route('clientSummaryView.index') }}">
                             <i class="bi bi-journal-bookmark text-warning"></i> Summary Client Report
