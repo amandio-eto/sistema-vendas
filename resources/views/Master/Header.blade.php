@@ -54,6 +54,79 @@
              {{-- <script type="text/javascript" src="https://app.secureprivacy.ai/script/69dddf7bfb21f836d6454269.js"></script> --}}
 
         <style>
+
+
+.pro-card{
+    border: none;
+    border-radius: 18px;
+    color: #fff;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transition: 0.25s ease;
+}
+
+.pro-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 14px 35px rgba(0,0,0,0.12);
+}
+
+/* HEADER */
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+.title{
+    font-size:14px;
+    letter-spacing:1px;
+    font-weight:600;
+    opacity:0.9;
+}
+
+/* ICON */
+.icon{
+    font-size:22px;
+    opacity:0.85;
+}
+
+/* BIG NUMBER (MAIN FOCUS) */
+.number{
+    font-size:52px;
+    font-weight:800;
+    line-height:1;
+    margin-top:10px;
+}
+
+/* LABEL */
+.label{
+    font-size:13px;
+    letter-spacing:2px;
+    opacity:0.9;
+    margin-top:5px;
+}
+
+/* FOOTER */
+.cardc_footer{
+    margin-top:18px;
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+    opacity:0.95;
+}
+
+/* ETO COLOR (orange fuel premium) */
+.pro-card.eto{
+    background: linear-gradient(135deg, #ffb300, #ff6f00);
+}
+
+/* CLIENT COLOR (blue clean corporate) */
+.pro-card.client{
+    background: linear-gradient(135deg, #1e88e5, #1565c0);
+}
+
+
+
     .table-hover tbody tr:hover {
         background-color: #f1f9ff !important;
     }

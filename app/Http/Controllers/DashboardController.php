@@ -192,10 +192,93 @@ class DashboardController extends Controller
     ->orderBy('p.product_name')
     ->get();
 
+
+
+    $doproductToday = DB::table('transaction as t')
+    ->leftJoin('products as p', 'p.id', '=', 't.id_product')
+    ->leftJoin('clients as c', 'c.id', '=', 't.id_client')
+    ->select(
+        'p.product_name',
+
+        // jumlah transaksi client
+        DB::raw("
+            SUM(CASE 
+                WHEN c.tin IS NULL OR c.tin != 10522139 
+                THEN 1 ELSE 0 END
+            ) as total_client_trans
+        "),
+
+        // jumlah transaksi ETO
+        DB::raw("
+            SUM(CASE 
+                WHEN c.tin = 10522139 
+                THEN 1 ELSE 0 END
+            ) as total_eto_trans
+        "),
+
+        // total liter client
+        DB::raw("
+            COALESCE(SUM(CASE 
+                WHEN c.tin IS NULL OR c.tin != 10522139 
+                THEN t.quantity ELSE 0 END
+            ),0) as total_client_liter
+        "),
+
+        // total liter ETO
+        DB::raw("
+            COALESCE(SUM(CASE 
+                WHEN c.tin = 10522139 
+                THEN t.quantity ELSE 0 END
+            ),0) as total_eto_liter
+        ")
+    )
+    ->whereDate('t.created_at', Carbon::today())
+    ->groupBy('p.product_name')
+    ->orderBy('p.product_name')
+    ->get();
+
+    $eto = DB::table('transaction as t')
+    ->leftJoin('clients as c', 'c.id', '=', 't.id_client')
+    ->where('c.tin', 10522139)
+    ->whereDate('t.created_at', Carbon::today())
+    ->selectRaw('COUNT(*) as total_transaksi, COALESCE(SUM(t.quantity),0) as total_liter')
+    ->first();
+
+
+    $client = DB::table('transaction as t')
+    ->leftJoin('clients as c', 'c.id', '=', 't.id_client')
+    ->whereDate('t.created_at', Carbon::today())
+    ->where(function($q){
+        $q->whereNull('c.tin')
+          ->orWhere('c.tin','!=',10522139);
+    })
+    ->selectRaw('COUNT(*) as total_transaksi, COALESCE(SUM(t.quantity),0) as total_liter')
+    ->first();
+
+
+    #########################################
+
+
+    $today = Carbon::today();
+    $totalTransactionToday = DB::table('transaction')
+    ->whereDate('created_at', $today)
+    ->count();
+
+/* =========================
+   TOTAL LITER HARI INI
+========================= */
+$totalLiterToday = DB::table('transaction')
+    ->whereDate('created_at', $today)
+    ->sum('quantity');
+
+/* default 0 jika null */
+$totalLiterToday = $totalLiterToday ?? 0;
+
         return view('Dashboard.index', compact(
+            'totalLiterToday','totalLiterToday',
             'prod','categories','series','pieSeries','lineCategories','seriesData','currentYear',
             'clientMonthNames','clientMonthSeries','clientYearNames','clientYearSeries',
-            'pieSeriesData','chartTitle','month','productToday'
+            'pieSeriesData','chartTitle','month','productToday','eto','client'
         ));
     }
 }
