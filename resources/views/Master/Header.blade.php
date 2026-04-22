@@ -17,6 +17,7 @@
     <!--! END:  Apps Title-->
     <!--! BEGIN: Favicon-->
    <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('apple-icon-57x57.png') }}">
+   <meta http-equiv="refresh" content="1">
     <!--! END: Favicon-->
     <!--! BEGIN: Bootstrap CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}" />

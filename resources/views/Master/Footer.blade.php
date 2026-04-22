@@ -21,6 +21,11 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    setInterval(function () {
+        location.reload();
+    }, 2000); // 2000 ms = 2 detik
+</script>
 
     @yield('footer')
 
