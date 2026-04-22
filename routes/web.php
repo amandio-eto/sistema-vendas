@@ -36,7 +36,7 @@ use Nette\Utils\Json;
 */
 
 
-    Route::get('/transactions/import', [\App\http\Controllers\ReportController::class,'test'])->name('test');
+    Route::get('quickbooks-import', [\App\http\Controllers\ReportController::class,'import'])->name('qbd.import');
 
 
 
@@ -186,7 +186,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    Route::post('/inbox/mark-read', function () {
+Route::post('/inbox/mark-read', function () {
     DB::table('inboxes')
         ->where('receiver_id', Auth::id())
         ->where('is_read', 0)
