@@ -9,7 +9,105 @@
 {{-- =======================
    PRODUCT SUMMARY CARDS
 ======================= --}}
-<div class="row g-3 m-3">
+
+
+<div class="row mt-2 ml-2 mr-2">
+
+    <!-- ETO -->
+    <div class="col-md">
+        <div class="card pro-card eto">
+
+            <div class="card-body">
+
+                <div class="top">
+                    <div class="title" style="font-size: 16px;">ETO TODAY <br> 
+                       <span style="font-size: 12px;"> {{ $eto->total_transaksi ?? 0 }} Transactions</span>
+                    </div>
+                    <div class="icon">
+                        <i class="fa-solid fa-gas-pump"></i>
+                    </div>
+                </div>
+
+    
+
+                <div class="cardc_footer">
+                    <span style="font-size: 16px;">{{ format_liter($eto->total_liter) ?? 0 }}</span>
+                    <small>Total Liter</small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- CLIENT -->
+    <div class="col-md">
+        <div class="card pro-card client">
+
+            <div class="card-body">
+
+                <div class="top">
+                    <div class="title" style="font-size: 16px;">CLIENT TODAY
+                        <br>
+                        <span style="font-size: 12px;"> {{ ($client->total_transaksi ?? 0)  }} Transactions </span>
+                    </div>
+                    <div class="icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                </div>
+
+            
+                <div class="cardc_footer">
+                    <span style="font-size: 16px;">{{ format_liter($client->total_liter) ?? 0 }}</span>
+                    <small>Total Liter</small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+     <div class="col-md">
+        <div class="card pro-card client" class="card card-dash" style="background: linear-gradient(135deg,#1fa2ff,#12d8fa,#a6ffcb);">
+
+            <div class="card-body">
+
+                <div class="top">
+                    <div class="title" style="font-size: 16px;"> TODAY
+                        <br>
+                        <span style="font-size: 12px;">
+                            {{ ($client->total_transaksi ?? 0 ) + ($eto->total_transaksi ?? 0) }} Transactions
+
+                        </span>
+                    </div>
+                    <div class="icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                </div>
+
+                <div class="cardc_footer">
+                    <span style="font-size: 16px;">{{format_liter( $totalLiterToday  ?? 0) }}</span>
+                    <small>Total Liter</small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+  
+
+    <!-- TOTAL LITER -->
+  
+
+</div>
+<div class="row m-1">
 @forelse($prod as $p)
     @php
         $qualityColors = [
@@ -84,106 +182,7 @@
 </div>
 
 
-<div class="row ">
 
-    <!-- ETO -->
-    <div class="col-md-4">
-        <div class="card pro-card eto">
-
-            <div class="card-body">
-
-                <div class="top">
-                    <div class="title" style="font-size: 20px;">ETO TODAY</div>
-                    <div class="icon">
-                        <i class="fa-solid fa-gas-pump"></i>
-                    </div>
-                </div>
-
-                <div class="number">
-                    {{ $eto->total_transaksi ?? 0 }}
-                </div>
-
-                <div class="label">TRANSACTIONS</div>
-
-                <div class="cardc_footer">
-                    <span style="font-size: 30px;">{{ format_liter($eto->total_liter) ?? 0 }}</span>
-                    <small>Total Liter</small>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- CLIENT -->
-    <div class="col-md-4">
-        <div class="card pro-card client">
-
-            <div class="card-body">
-
-                <div class="top">
-                    <div class="title" style="font-size: 20px;">CLIENT TODAY</div>
-                    <div class="icon">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                </div>
-
-                <div class="number">
-                    {{ ($client->total_transaksi ?? 0)  }}
-                </div>
-
-                <div class="label">TRANSACTIONS</div>
-
-                <div class="cardc_footer">
-                    <span style="font-size: 30px;">{{ format_liter($client->total_liter) ?? 0 }}</span>
-                    <small>Total Liter</small>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-
-
-     <div class="col-md-4">
-        <div class="card pro-card client" class="card card-dash" style="background: linear-gradient(135deg,#1fa2ff,#12d8fa,#a6ffcb);">
-
-            <div class="card-body">
-
-                <div class="top">
-                    <div class="title" style="font-size: 20px;"> TODAY</div>
-                    <div class="icon">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                </div>
-
-                <div class="number">
-                    {{ ($client->total_transaksi ?? 0 ) + ($eto->total_transaksi ?? 0) }}
-                </div>
-
-                <div class="label">TRANSACTIONS</div>
-
-                <div class="cardc_footer">
-                    <span style="font-size: 30px;">{{format_liter( $totalLiterToday  ?? 0) }}</span>
-                    <small>Total Liter</small>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-
-
-  
-
-    <!-- TOTAL LITER -->
-  
-
-</div>
 
 
 

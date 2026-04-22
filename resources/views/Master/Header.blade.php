@@ -92,7 +92,7 @@
 
 /* BIG NUMBER (MAIN FOCUS) */
 .number{
-    font-size:52px;
+    font-size:20px;
     font-weight:800;
     line-height:1;
     margin-top:10px;
@@ -141,9 +141,9 @@
     }
 
     #piechart {
-    width: 100%;
-    height: 600px; /* default desktop */
-    max-width: 100%;
+    width: 40%%;
+    height: 300px; /* default desktop */
+    max-width: 40%;
 }
 
 
