@@ -41,6 +41,12 @@ use Nette\Utils\Json;
 
 
 
+    Route::get('hello', function(){
+
+        return "Jose Amandio de Almeida";
+
+    });
+
     Route::redirect('/', '/login');
     #Ida Nee mak Route husi Controller AuthController
     Route::get('login',[\App\Http\Controllers\AuthController::class,'index'])->name('login');
