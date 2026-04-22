@@ -36,7 +36,10 @@ use Nette\Utils\Json;
 */
 
 
-    Route::get('/transactions/import', [ReportController::class,'import'])->name('transactions.import');
+    Route::get('/transactions/import', [\App\http\Controllers\ReportController::class,'test'])->name('test');
+
+
+
 
     Route::redirect('/', '/login');
     #Ida Nee mak Route husi Controller AuthController
