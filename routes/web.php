@@ -36,7 +36,7 @@ use Nette\Utils\Json;
 */
 
 
-    Route::get('quickbooks-import', [\App\http\Controllers\ReportController::class,'import'])->name('qbd.import');
+    // Route::get('quickbooks-import', [\App\http\Controllers\ReportController::class,'import'])->name('qbd.import');
 
 
 

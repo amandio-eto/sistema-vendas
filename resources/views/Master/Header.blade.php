@@ -51,7 +51,7 @@
             <script src="https://code.highcharts.com/modules/export-data.js"></script>
             <script src="https://code.highcharts.com/modules/accessibility.js"></script>
              <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-             <script type="text/javascript" src="https://app.secureprivacy.ai/script/69dddf7bfb21f836d6454269.js"></script>
+             {{-- <script type="text/javascript" src="https://app.secureprivacy.ai/script/69dddf7bfb21f836d6454269.js"></script> --}}
 
         <style>
     .table-hover tbody tr:hover {
