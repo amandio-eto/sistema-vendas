@@ -6,8 +6,6 @@
 <title>Login Image Slider</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-   <script type="text/javascript" src="https://app.secureprivacy.ai/script/69dddf7bfb21f836d6454269.js"></script>
-   <script type="text/javascript" src="https://app.secureprivacy.ai/script/69dddf7bfb21f836d6454269.js"></script>
 
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -172,52 +170,41 @@ button {
     <!-- SLIDER -->
     <div class="left">
 
-        <div class="slide active" style="background-image:url('e-eto.jpeg')">
+        <div class="slide active" style="background-image:url('https://picsum.photos/id/1015/1200/800')">
             <div class="slide-content">
                 <h2>Welcome</h2>
                 <p>Modern System</p>
-                <p>ELETRONIC SYSTEM ETO PAC HERA</p>
             </div>
         </div>
 
-     
-        <div class="slide" style="background-image:url('{{ asset('hera1.jpg') }}')"></div>
-        <div class="slide" style="background-image:url('{{ asset('hera3.jpeg') }}')"></div>
-        <div class="slide" style="background-image:url('{{ asset('hera4.jpg') }}')"></div>
-        <div class="slide" style="background-image:url('{{ asset('hera5.jpg') }}')"></div>
-        {{-- <div class="slide" style="background-image:url('{{ asset('image/slide6.jpg') }}')"></div>
+      <div class="slide active" style="background-image:url('{{ asset('images/slide1.jpg') }}')"></div>
+        <div class="slide" style="background-image:url('{{ asset('images/slide2.jpg') }}')"></div>
+        <div class="slide" style="background-image:url('{{ asset('images/slide3.jpg') }}')"></div>
+        <div class="slide" style="background-image:url('{{ asset('images/slide4.jpg') }}')"></div>
+        <div class="slide" style="background-image:url('{{ asset('images/slide5.jpg') }}')"></div>
+        <div class="slide" style="background-image:url('{{ asset('images/slide6.jpg') }}')"></div>
         <div class="slide" style="background-image:url('{{ asset('images/slide7.jpg') }}')"></div>
         <div class="slide" style="background-image:url('{{ asset('images/slide8.jpg') }}')"></div>
         <div class="slide" style="background-image:url('{{ asset('images/slide9.jpg') }}')"></div>
-        <div class="slide" style="background-image:url('{{ asset('images/slide10.jpg') }}')"></div> --}}
+        <div class="slide" style="background-image:url('{{ asset('images/slide10.jpg') }}')"></div>
     <div class="dots"></div>
     </div>
 
     <!-- LOGIN -->
     <div class="right">
         <div class="card">
-            <h2 style="text-align: center;">e-ETO Timor-Leste</h2>
-            <p style="text-align: center;">Login to your account</p>
+            <h2>Welcome Back</h2>
+            <p>Login to your account</p>
 
+            <input type="email" placeholder="Email">
+            <input type="password" placeholder="Password">
 
+            <button>Sign In</button>
 
-            <form action="{{ route('dologin') }}" method="POST" >
-                @csrf
-
-
-          
-            <input type="email" name="email" placeholder="Email">
-            <input type="password" name="password" placeholder="Password">
-
-            <button type="submit">Sign In</button>
-              </form>
-           <p class="mt-3" style="margin-top: 40px; text-align: center;">
-             Develop By ICT Esperanca Group
-            </p>
-
-           
+            <div style="text-align:center;margin-top:15px;">
+                Forgot password?
+            </div>
         </div>
-       
     </div>
 
 </div>
