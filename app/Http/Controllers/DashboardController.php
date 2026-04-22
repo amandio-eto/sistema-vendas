@@ -87,15 +87,22 @@ class DashboardController extends Controller
         }
 
         // ===================== CLIENT × PRODUCT (Bulan Saat Ini) =====================
+
         $clientMonthRows = DB::table('transaction as t')
-            ->join('products as p', 'p.id', '=', 't.id_product')
-            ->select('t.client_name', 'p.product_name', DB::raw('SUM(t.quantity) as total_quantity'))
-            ->whereYear('t.created_at', $currentYear)
-            ->whereMonth('t.created_at', $currentMonth) // Filter bulan ini
-            ->groupBy('t.client_name', 'p.product_name')
-            ->orderBy('t.client_name')
-            ->orderBy('p.product_name')
-            ->get();
+                ->join('products as p', 'p.id', '=', 't.id_product')
+                ->join('clients as c', 'c.id', '=', 't.id_client')
+                ->select(
+                    'c.client_name',
+                    'p.product_name',
+                    DB::raw('SUM(t.quantity) as total_quantity')
+                )
+                ->whereYear('t.created_at', $currentYear)
+                ->whereMonth('t.created_at', $currentMonth)
+                ->groupBy('t.id_client', 'c.client_name', 'p.product_name')
+                ->orderBy('c.client_name') // FIX DI SINI
+                ->orderBy('p.product_name')
+                ->get();
+        
 
         $clientMonthNames = $clientMonthRows->pluck('client_name')->unique()->values()->toArray();
         $clientMonthProducts = $clientMonthRows->pluck('product_name')->unique()->values()->toArray();
@@ -115,13 +122,18 @@ class DashboardController extends Controller
 
         // ===================== TOTAL CLIENT × PRODUCT (Tahun Ini) =====================
         $clientYearRows = DB::table('transaction as t')
-            ->join('products as p', 'p.id', '=', 't.id_product')
-            ->select('t.client_name', 'p.product_name', DB::raw('SUM(t.quantity) as total_quantity'))
-            ->whereYear('t.created_at', $currentYear)
-            ->groupBy('t.client_name', 'p.product_name')
-            ->orderBy('t.client_name')
-            ->orderBy('p.product_name')
-            ->get();
+                ->join('products as p', 'p.id', '=', 't.id_product')
+                ->join('clients as c', 'c.id', '=', 't.id_client') // TAMBAH INI
+                ->select(
+                    'c.client_name',
+                    'p.product_name',
+                    DB::raw('SUM(t.quantity) as total_quantity')
+                )
+                ->whereYear('t.created_at', $currentYear)
+                ->groupBy('t.id_client', 'c.client_name', 'p.product_name') // FIX GROUP BY
+                ->orderBy('c.client_name') // FIX ALIAS
+                ->orderBy('p.product_name')
+                ->get();
 
         $clientYearNames = $clientYearRows->pluck('client_name')->unique()->values()->toArray();
         $clientYearProducts = $clientYearRows->pluck('product_name')->unique()->values()->toArray();
